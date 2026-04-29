@@ -27,10 +27,15 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .modal{width:75%;max-width:380px;background:rgba(20,20,20,0.6);border:none;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.7);display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:28px 24px 24px;gap:20px;animation:fadeIn 0.6s ease-out forwards;}
 @keyframes fadeIn{from{opacity:0;filter:blur(8px);transform:translateY(12px);}to{opacity:1;filter:blur(0);transform:translateY(0);}}
 
-/* S1 slides */
-.s1-slide-side{width:80px;height:90vh;background:rgb(55,46,40);border-radius:12px;flex-shrink:0;background-size:cover;background-position:center;opacity:0.5;transition:opacity 0.2s;}
-.s1-slide-side:hover{opacity:0.75;}
-@media(max-width:599px){.s1-slide-side{display:none;}}
+/* Carousel */
+.carousel-wrap{width:100%;height:100%;background:rgb(28,23,20);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+.carousel-track{display:flex;align-items:center;justify-content:center;gap:12px;position:relative;width:100%;height:100%;}
+.c-card{position:absolute;border-radius:12px;overflow:hidden;background:rgb(42,36,32);background-size:cover;background-position:center;background-repeat:no-repeat;cursor:pointer;transition:all 0.45s cubic-bezier(0.4,0,0.2,1);flex-shrink:0;}
+.c-card.pos-center{z-index:5;opacity:1;}
+.c-card.pos-near-l,.c-card.pos-near-r{z-index:4;opacity:0.7;filter:blur(4px);}
+.c-card.pos-far-l,.c-card.pos-far-r{z-index:3;opacity:0.45;filter:blur(10px);}
+.c-card.pos-hidden{z-index:1;opacity:0;pointer-events:none;}
+@media(max-width:599px){.c-card.pos-far-l,.c-card.pos-far-r{opacity:0;pointer-events:none;}}
 
 /* S1 */
 .s1-title{color:#fff;font-size:36px;font-weight:300;font-family:'TiemposHeadline',serif;text-align:center;}
@@ -188,42 +193,41 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 
 <!-- SCREEN 1: Login -->
 <div class="screen active" id="screen1">
-<div style="width:100%;height:100%;background:rgb(28,23,20);display:flex;align-items:center;justify-content:center;gap:16px;overflow:hidden;">
-
-    <!-- Боковые слайды (заглушки) -->
-    <div class="s1-slide s1-slide-side" id="slideLeft" style="cursor:pointer;"></div>
-
-    <!-- Центральный блок -->
-    <div style="width:90%;max-width:420px;height:90vh;border-radius:12px;overflow:hidden;flex-shrink:0;animation:fadeIn 0.6s ease-out forwards;position:relative;">
-        <!-- Картинка — весь блок -->
-        <div id="s1BgImg" style="position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;"></div>
-        <!-- Blur слои снизу вверх -->
-        <div style="position:absolute;bottom:0;left:0;right:0;height:75%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;height:60%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;height:45%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
-        <!-- Контент поверх -->
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:24px;display:flex;flex-direction:column;gap:14px;">
-            <div style="text-align:center;display:flex;flex-direction:column;gap:8px;">
-                <div class="s1-title">Soma AI</div>
-                <div class="s1-sub">Познай себя через призму времени</div>
+<div class="carousel-wrap" id="carouselWrap">
+    <div class="carousel-track" id="carouselTrack">
+        <!-- 5 карточек, позиции назначаются JS -->
+        <div class="c-card" id="card0"></div>
+        <div class="c-card" id="card1"></div>
+        <div class="c-card" id="card2"></div>
+        <div class="c-card" id="card3"></div>
+        <div class="c-card" id="card4"></div>
+        <!-- Центральная карточка с контентом -->
+        <div class="c-card" id="cardCenter" style="pointer-events:none;">
+            <!-- Blur слои снизу вверх -->
+            <div style="position:absolute;bottom:0;left:0;right:0;height:75%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
+            <div style="position:absolute;bottom:0;left:0;right:0;height:60%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
+            <div style="position:absolute;bottom:0;left:0;right:0;height:45%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
+            <!-- Контент поверх -->
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:24px;display:flex;flex-direction:column;gap:14px;pointer-events:all;">
+                <div style="text-align:center;display:flex;flex-direction:column;gap:8px;">
+                    <div class="s1-title">Soma AI</div>
+                    <div class="s1-sub">Познай себя через призму времени</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                    <button class="auth-btn auth-google" id="googleBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                        Войти через Google
+                    </button>
+                    <button class="auth-btn auth-apple" id="appleBtn">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                        Войти через Apple
+                    </button>
+                    <button class="auth-btn auth-apple" id="guestBtn">Продолжить как гость</button>
+                </div>
+                <div class="s1-footer">Продолжая, ты соглашаешься с условиями использования</div>
             </div>
-            <div style="display:flex;flex-direction:column;gap:8px;">
-                <button class="auth-btn auth-google" id="googleBtn">
-                    <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                    Войти через Google
-                </button>
-                <button class="auth-btn auth-apple" id="appleBtn">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-                    Войти через Apple
-                </button>
-                <button class="auth-btn auth-apple" id="guestBtn">Продолжить как гость</button>
-            </div>
-            <div class="s1-footer">Продолжая, ты соглашаешься с условиями использования</div>
         </div>
     </div>
-
-    <!-- Правый слайд -->
-    <div class="s1-slide s1-slide-side" id="slideRight" style="cursor:pointer;"></div>
 </div>
 </div>
 
@@ -363,27 +367,98 @@ const imgUrl = `${BG}${Math.ceil(Math.random()*11)}.jpeg`;
 bgEl.style.backgroundImage = `url('${imgUrl}')`;
 bgFrame.style.backgroundImage = `url('${imgUrl}')`;
 
-// Screen 1 images
+// Carousel
 const allImgs = Array.from({length:11},(_,i)=>i+1).sort(()=>Math.random()-0.5);
 let s1Idx = 0;
-function setS1Images() {
-    const c = allImgs[s1Idx % allImgs.length];
-    const l = allImgs[(s1Idx - 1 + allImgs.length) % allImgs.length];
-    const r = allImgs[(s1Idx + 1) % allImgs.length];
-    document.getElementById('s1BgImg').style.backgroundImage = `url('${BG}${c}.jpeg')`;
-    document.getElementById('slideLeft').style.backgroundImage = `url('${BG}${l}.jpeg')`;
-    document.getElementById('slideRight').style.backgroundImage = `url('${BG}${r}.jpeg')`;
+const CARDS = ['card0','card1','card2','card3','card4'];
+// positions relative to center index: -2,-1,0,+1,+2
+// card at offset maps to pos-far-l, pos-near-l, pos-center, pos-near-r, pos-far-r
+
+function getCardDims() {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const cH = Math.min(vh * 0.9, 700);
+    const cW = Math.min(cH * 0.52, 420);
+    return { cW, cH, vw };
 }
-setS1Images();
-document.getElementById('slideLeft').addEventListener('click', () => { s1Idx = (s1Idx - 1 + allImgs.length) % allImgs.length; setS1Images(); });
-document.getElementById('slideRight').addEventListener('click', () => { s1Idx = (s1Idx + 1) % allImgs.length; setS1Images(); });
+
+function applyCarousel() {
+    const { cW, cH, vw } = getCardDims();
+    const nearW = cW * 0.75, nearH = cH * 0.75;
+    const farW  = cW * 0.45, farH  = cH * 0.45;
+    const gap = 12;
+
+    // center x of viewport
+    const cx = vw / 2;
+
+    // x positions for each slot (center of card)
+    const positions = [
+        cx - cW/2 - gap - nearW/2 - gap - farW/2,  // far-left
+        cx - cW/2 - gap - nearW/2,                   // near-left
+        cx,                                           // center
+        cx + cW/2 + gap + nearW/2,                   // near-right
+        cx + cW/2 + gap + nearW/2 + gap + farW/2,   // far-right
+    ];
+
+    const sizes = [
+        {w: farW,  h: farH},
+        {w: nearW, h: nearH},
+        {w: cW,    h: cH},
+        {w: nearW, h: nearH},
+        {w: farW,  h: farH},
+    ];
+
+    const posClasses = ['pos-far-l','pos-near-l','pos-center','pos-near-r','pos-far-r'];
+
+    CARDS.forEach((id, i) => {
+        const el = document.getElementById(id);
+        // which slot does this card occupy?
+        // card i shows image at index (s1Idx + i - 2 + 11) % 11
+        const slot = i; // card0=far-l, card1=near-l, card2=center, card3=near-r, card4=far-r
+        const imgIdx = ((s1Idx - 2 + i) % allImgs.length + allImgs.length) % allImgs.length;
+        el.style.backgroundImage = `url('${BG}${allImgs[imgIdx]}.jpeg')`;
+        el.style.width  = sizes[slot].w + 'px';
+        el.style.height = sizes[slot].h + 'px';
+        el.style.left   = (positions[slot] - sizes[slot].w/2) + 'px';
+        el.style.top    = '50%';
+        el.style.transform = 'translateY(-50%)';
+        el.className = 'c-card ' + posClasses[slot];
+    });
+
+    // cardCenter mirrors center card
+    const cc = document.getElementById('cardCenter');
+    cc.style.width  = cW + 'px';
+    cc.style.height = cH + 'px';
+    cc.style.left   = (cx - cW/2) + 'px';
+    cc.style.top    = '50%';
+    cc.style.transform = 'translateY(-50%)';
+    cc.className = 'c-card pos-center';
+    cc.style.backgroundImage = `url('${BG}${allImgs[s1Idx % allImgs.length]}.jpeg')`;
+}
+
+function carouselShift(dir) {
+    s1Idx = (s1Idx + dir + allImgs.length) % allImgs.length;
+    applyCarousel();
+    // sync bg
+    const imgUrl2 = `${BG}${allImgs[s1Idx]}.jpeg`;
+    bgEl.style.backgroundImage = `url('${imgUrl2}')`;
+    bgFrame.style.backgroundImage = `url('${imgUrl2}')`;
+}
+
+applyCarousel();
+window.addEventListener('resize', applyCarousel);
+
+// Click on side cards
+['card0','card1'].forEach(id => document.getElementById(id).addEventListener('click', () => carouselShift(-1)));
+['card3','card4'].forEach(id => document.getElementById(id).addEventListener('click', () => carouselShift(1)));
+
 // Swipe support
 let touchStartX = 0;
 document.getElementById('screen1').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
 document.getElementById('screen1').addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) > 50) { s1Idx = dx < 0 ? (s1Idx+1)%allImgs.length : (s1Idx-1+allImgs.length)%allImgs.length; setS1Images(); }
-});bgFrame.style.backgroundImage = `url('${imgUrl}')`;
+    if (Math.abs(dx) > 50) carouselShift(dx < 0 ? 1 : -1);
+});
 
 // Transition
 const overlayEl = document.getElementById('overlay');
