@@ -26,7 +26,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 /* Modal — для screen1 и screen1b */
 .modal{width:75%;max-width:380px;background:rgba(20,20,20,0.6);border:none;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.7);display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:28px 24px 24px;gap:20px;animation:fadeIn 0.6s ease-out forwards;}
 @keyframes fadeIn{from{opacity:0;filter:blur(8px);transform:translateY(12px);}to{opacity:1;filter:blur(0);transform:translateY(0);}}
-@keyframes shimmer{0%{left:-100%;}60%,100%{left:160%;}}
+@keyframes shimmer{0%{left:-120%;}65%,100%{left:180%;}}
 
 /* Carousel */
 .carousel-wrap{width:100%;height:100%;background:rgb(28,23,20);overflow:hidden;position:relative;}
@@ -149,11 +149,15 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .light .model-btn{background:rgba(60,45,35,0.25);color:rgb(40,28,20);font-weight:600;border:1px solid rgba(60,45,35,0.3);}
 .light .model-btn:hover{background:rgba(60,45,35,0.35);}
 .light .dropdown{background:rgb(235,220,200);border-color:rgba(60,45,35,0.2);}
-.light .ditem-name{color:rgb(40,28,20);}
-.light .ditem-desc{color:rgba(40,28,20,0.55);}
+.light .ditem-name{color:rgba(40,28,20,0.4);}
+.light .ditem-desc{color:rgba(40,28,20,0.35);}
 .light .ditem:hover{background:rgba(60,45,35,0.08);}
 .light .ditem.active{background:rgba(60,45,35,0.12);}
+.light .ditem.active .ditem-name{color:rgb(40,28,20);}
+.light .ditem.active .ditem-desc{color:rgba(40,28,20,0.6);}
 .light .ditem-check{color:rgb(40,28,20);}
+.light .ditem-star{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);opacity:0.35;}
+.light .ditem.active .ditem-star{opacity:1;filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);}
 .light .bubble{background:rgba(60,45,35,0.1);color:rgb(40,28,20);}
 .light .typing-bubble{background:rgba(60,45,35,0.1);}
 .light .typing-bubble span{background:rgba(60,45,35,0.4);}
@@ -207,9 +211,9 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 
     <!-- Slide 0: Login -->
     <div class="c-slide" id="slide0">
-        <div style="position:absolute;bottom:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:-2px;left:-2px;right:-2px;height:calc(90% + 2px);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:-2px;left:-2px;right:-2px;height:calc(75% + 2px);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:-2px;left:-2px;right:-2px;height:calc(55% + 2px);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
         <div style="position:absolute;bottom:0;left:0;right:0;padding:24px;display:flex;flex-direction:column;gap:20px;">
             <div style="text-align:center;display:flex;flex-direction:column;gap:8px;">
                 <div class="s1-title">Soma AI</div>
@@ -314,7 +318,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
             <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Тарифы</div>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:4px;opacity:0.5;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="rgba(210,190,165,0.8)" stroke-width="1.5" stroke-linejoin="round"/></svg>
         </div>
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:24px;display:flex;flex-direction:column;gap:8px;">
+        <div style="position:absolute;bottom:0;left:0;right:0;padding:0 24px 24px;display:flex;flex-direction:column;gap:8px;">
             <div style="padding:14px;background:rgba(255,255,255,0.06);border-radius:10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
                 <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;margin-bottom:8px;">Бесплатно</div>
                 <div style="display:flex;flex-direction:column;gap:5px;">
@@ -325,9 +329,9 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
                 </div>
             </div>
             <div style="position:relative;overflow:hidden;padding:14px;background:rgba(210,190,165,0.08);border-radius:10px;border:1px solid rgba(210,190,165,0.2);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
-                <div style="position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(105deg,transparent 30%,rgba(210,190,165,0.18) 50%,transparent 70%);animation:shimmer 2.8s ease-in-out infinite;pointer-events:none;"></div>
+                <div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.09) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;pointer-events:none;"></div>
                 <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;margin-bottom:8px;">Premium</div>
-                <div style="display:flex;flex-direction:column;gap:5px;">
+                <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px;">
                     <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;">· Всё из бесплатного плюс расширенные возможности</div>
                     <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;">· Режим Авто — нейронка сама выбирает подходящую модель под твой запрос</div>
                     <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;">· Консилиум — все четыре нейронки отвечают одновременно, ты выбираешь резонирующий ответ</div>
@@ -335,6 +339,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
                     <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;">· Приоритетная обработка запросов</div>
                     <div style="color:rgba(210,190,165,0.4);font-size:10px;line-height:1.5;margin-top:4px;">Подписка помогает покрывать расходы на работу нейронных сетей — вычислительные мощности, обучение моделей и поддержку серверов.</div>
                 </div>
+                <button class="premium-btn" style="position:relative;z-index:1;" onclick="document.getElementById('premiumOverlay').classList.add('show')">Купить Premium</button>
             </div>
         </div>
     </div>
@@ -445,6 +450,10 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
         <div class="premium-feature">
             <img class="premium-feature-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/2bbc8b9a0d432e5555230a006e52ec297b67b5b2/star.svg" alt="">
             <span>Неограниченная история сессий без удаления через 24 часа</span>
+        </div>
+        <div class="premium-feature">
+            <img class="premium-feature-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/2bbc8b9a0d432e5555230a006e52ec297b67b5b2/star.svg" alt="">
+            <span>PDF-саммари каждой сессии — краткое резюме разговора с ключевыми инсайтами</span>
         </div>
     </div>
     <button class="premium-btn">Подключить Premium</button>
