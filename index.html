@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АРХЕТИП - Твой ИИ-Проводник</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        input, textarea, [contenteditable] {
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .background {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: #000;
+            z-index: 0;
+        }
+
+        .modal {
+            position: relative;
+            z-index: 10;
+            width: 75%;
+            max-width: 380px;
+            height: 70vh;
+            background: rgba(20, 20, 20, 0.55);
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+
+        /* Header */
+        .chat-header {
+            padding: 12px 16px;
+            background: transparent;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .model-selector-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: #ccc;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.15s ease;
+        }
+
+        .model-selector-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% - 4px);
+            left: 16px;
+            background: rgba(30, 30, 30, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            min-width: 140px;
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+
+        .dropdown-menu.show {
+            display: flex;
+        }
+
+        .dropdown-item {
+            padding: 10px 14px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            cursor: pointer;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.15s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .dropdown-item.active {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        /* Chat area */
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: transparent;
+            scrollbar-width: none;
+        }
+
+        .chat-area::-webkit-scrollbar { display: none; }
+
+        .message {
+            display: flex;
+            animation: msgIn 0.4s ease-out forwards;
+        }
+
+        @keyframes msgIn {
+            from { opacity: 0; filter: blur(8px); transform: translateY(6px); }
+            to   { opacity: 1; filter: blur(0px); transform: translateY(0); }
+        }
+
+        .message.user { justify-content: flex-end; }
+
+        .message-bubble {
+            max-width: 80%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .message.ai .message-bubble {
+            background: rgba(255, 255, 255, 0.08);
+            color: #bbb;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .message.user .message-bubble {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+        }
+
+        /* Typing indicator */
+        .typing-bubble {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            width: fit-content;
+        }
+
+        .typing-bubble span {
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            animation: typing 1.2s infinite;
+        }
+
+        .typing-bubble span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-bubble span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0.3; transform: scale(1); }
+            30% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .empty-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: rgba(255, 255, 255, 0.3);
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        /* Input area */
+        .input-area {
+            padding: 12px 16px;
+            background: transparent;
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+            align-items: center;
+        }
+
+        .input-field {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #bbb;
+            padding: 0 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            outline: none;
+            transition: all 0.15s ease;
+            font-family: 'Inter', sans-serif;
+            resize: none;
+            height: 36px;
+            line-height: 36px;
+        }
+
+        .input-field::placeholder { color: rgba(255, 255, 255, 0.35); }
+
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .send-btn {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+            flex-shrink: 0;
+        }
+
+        .send-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .send-btn:active { transform: scale(0.95); }
+
+        .send-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    </style>
+</head>
+<body>
+    <div class="background" id="background"></div>
+
+    <div class="modal">
+        <div class="chat-header">
+            <button class="model-selector-btn" id="modelBtn">Тара</button>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <button class="dropdown-item active" data-model="tara">Тара</button>
+                <button class="dropdown-item" data-model="aura">Аура</button>
+                <button class="dropdown-item" data-model="karma">Карма</button>
+                <button class="dropdown-item" data-model="litera">Литера</button>
+            </div>
+        </div>
+
+        <div class="chat-area" id="chatArea">
+            <div class="empty-state">
+                Добро пожаловать, искатель.<br>Задай свой вопрос проводнику.
+            </div>
+        </div>
+
+        <div class="input-area">
+            <input
+                type="text"
+                class="input-field"
+                id="messageInput"
+                placeholder="Задай свой вопрос..."
+                autocomplete="off"
+            >
+            <button class="send-btn" id="sendBtn">
+                <svg viewBox="0 0 24 24">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const backgroundImages = [
+            'Baroque_Renaissance_background_c…_202604291141.jpeg',
+            'Human_bodies_in_motion_struggle_202604291222.jpeg',
+            'Human_bodies_in_motion_struggle_202604291224.jpeg',
+            'Renaissance_aesthetic_sfumato_te…_202604291224.jpeg',
+            'Velvet_paper_candlelit_atmosphere_202604291146 (2).jpeg',
+            'Woman_doing_craft_nature_202604291149.jpeg',
+            'Woman_doing_craft_nature_202604291154 (1).jpeg'
+        ];
+
+        const models = {
+            tara:   { name: 'Тара',   responses: ['Карты показывают путь, но выбор остаётся за тобой.', 'Прошлое учит, настоящее действует, будущее ждёт.', 'Расклад говорит: твой вопрос требует внутреннего размышления.'] },
+            aura:   { name: 'Аура',   responses: ['Твоя карма говорит о необходимости баланса.', 'Энергия вокруг тебя указывает на перемены.', 'Прошлые действия формируют настоящее.'] },
+            karma:  { name: 'Карма',  responses: ['Числа вибрируют с твоей сущностью.', 'Твой числовой код раскрывает скрытые истины.', 'Нумерология указывает на твой жизненный путь.'] },
+            litera: { name: 'Литера', responses: ['Твой вопрос отражает глубокие внутренние процессы.', 'Понимание себя — первый шаг к переменам.', 'Психика ищет ответы, которые уже внутри.'] }
+        };
+
+        let currentModel = 'tara';
+        let isTyping = false;
+
+        const background   = document.getElementById('background');
+        const chatArea     = document.getElementById('chatArea');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn      = document.getElementById('sendBtn');
+        const modelBtn     = document.getElementById('modelBtn');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+        // Random background
+        const randomImage = backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
+        background.style.backgroundImage = `url('./${randomImage}')`;
+
+        // Model dropdown
+        modelBtn.addEventListener('click', () => dropdownMenu.classList.toggle('show'));
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.chat-header')) dropdownMenu.classList.remove('show');
+        });
+
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', () => {
+                currentModel = item.dataset.model;
+                modelBtn.textContent = models[currentModel].name;
+                dropdownItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                dropdownMenu.classList.remove('show');
+            });
+        });
+
+        // Send message
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text || isTyping) return;
+
+            const emptyState = chatArea.querySelector('.empty-state');
+            if (emptyState) emptyState.remove();
+
+            messageInput.value = '';
+            isTyping = true;
+
+            // User message appears after 500ms with blur animation
+            setTimeout(() => {
+                addMessage(text, 'user');
+
+                // Delay proportional to message length, min 1s, max 4s
+                const delay = Math.min(Math.max(text.length * 30, 1000), 4000);
+                const typingEl = showTyping();
+
+                setTimeout(() => {
+                    typingEl.remove();
+                    isTyping = false;
+                    const model = models[currentModel];
+                    const response = model.responses[Math.floor(Math.random() * model.responses.length)];
+                    addMessage(response, 'ai');
+                }, delay);
+            }, 500);
+        }
+
+        function addMessage(text, sender) {
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+            bubble.textContent = text;
+            div.appendChild(bubble);
+            chatArea.appendChild(div);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function showTyping() {
+            const div = document.createElement('div');
+            div.className = 'message ai';
+            div.innerHTML = `<div class="typing-bubble"><span></span><span></span><span></span></div>`;
+            chatArea.appendChild(div);
+            chatArea.scrollTop = chatArea.scrollHeight;
+            return div;
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); sendMessage(); }
+        });
+
+        messageInput.focus();
+    </script>
+</body>
+</html>
