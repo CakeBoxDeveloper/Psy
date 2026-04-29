@@ -28,14 +28,26 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 @keyframes fadeIn{from{opacity:0;filter:blur(8px);transform:translateY(12px);}to{opacity:1;filter:blur(0);transform:translateY(0);}}
 
 /* Carousel */
-.carousel-wrap{width:100%;height:100%;background:rgb(28,23,20);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
-.carousel-track{display:flex;align-items:center;justify-content:center;gap:12px;position:relative;width:100%;height:100%;}
-.c-card{position:absolute;border-radius:12px;overflow:hidden;background:rgb(42,36,32);background-size:cover;background-position:center;background-repeat:no-repeat;cursor:pointer;transition:all 0.45s cubic-bezier(0.4,0,0.2,1);flex-shrink:0;}
-.c-card.pos-center{z-index:5;opacity:1;}
-.c-card.pos-near-l,.c-card.pos-near-r{z-index:4;opacity:0.7;filter:blur(4px);}
-.c-card.pos-far-l,.c-card.pos-far-r{z-index:3;opacity:0.45;filter:blur(10px);}
-.c-card.pos-hidden{z-index:1;opacity:0;pointer-events:none;}
-@media(max-width:599px){.c-card.pos-far-l,.c-card.pos-far-r{opacity:0;pointer-events:none;}}
+.carousel-wrap{width:100%;height:100%;background:rgb(28,23,20);overflow:hidden;position:relative;}
+.c-slide{
+    position:absolute;top:50%;transform:translateY(-50%);
+    border-radius:12px;overflow:hidden;
+    background:rgb(42,36,32);background-size:cover;background-position:center;background-repeat:no-repeat;
+    cursor:pointer;
+    transition:left 0.5s cubic-bezier(0.4,0,0.2,1),
+               width 0.5s cubic-bezier(0.4,0,0.2,1),
+               height 0.5s cubic-bezier(0.4,0,0.2,1),
+               opacity 0.5s ease,
+               filter 0.5s ease;
+}
+.c-slide.is-center{z-index:5;opacity:1;filter:none;cursor:default;}
+.c-slide.is-near{z-index:4;opacity:0.7;filter:blur(4px);}
+.c-slide.is-far{z-index:3;opacity:0.45;filter:blur(10px);}
+.c-slide.is-gone{z-index:1;opacity:0;pointer-events:none;transition:none;}
+.c-slide-content{position:absolute;bottom:0;left:0;right:0;padding:24px;display:flex;flex-direction:column;gap:14px;}
+.carousel-zone{position:absolute;top:0;bottom:0;width:40%;z-index:10;cursor:pointer;}
+.carousel-zone-l{left:0;}.carousel-zone-r{right:0;}
+@media(max-width:599px){.c-slide.is-far{opacity:0;pointer-events:none;}}
 
 /* S1 */
 .s1-title{color:#fff;font-size:36px;font-weight:300;font-family:'TiemposHeadline',serif;text-align:center;}
@@ -194,40 +206,85 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 <!-- SCREEN 1: Login -->
 <div class="screen active" id="screen1">
 <div class="carousel-wrap" id="carouselWrap">
-    <div class="carousel-track" id="carouselTrack">
-        <!-- 5 карточек, позиции назначаются JS -->
-        <div class="c-card" id="card0"></div>
-        <div class="c-card" id="card1"></div>
-        <div class="c-card" id="card2"></div>
-        <div class="c-card" id="card3"></div>
-        <div class="c-card" id="card4"></div>
-        <!-- Центральная карточка с контентом -->
-        <div class="c-card" id="cardCenter" style="pointer-events:none;">
-            <!-- Blur слои снизу вверх -->
-            <div style="position:absolute;bottom:0;left:0;right:0;height:75%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
-            <div style="position:absolute;bottom:0;left:0;right:0;height:60%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
-            <div style="position:absolute;bottom:0;left:0;right:0;height:45%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
-            <!-- Контент поверх -->
-            <div style="position:absolute;bottom:0;left:0;right:0;padding:24px;display:flex;flex-direction:column;gap:14px;pointer-events:all;">
-                <div style="text-align:center;display:flex;flex-direction:column;gap:8px;">
-                    <div class="s1-title">Soma AI</div>
-                    <div class="s1-sub">Познай себя через призму времени</div>
-                </div>
-                <div style="display:flex;flex-direction:column;gap:8px;">
-                    <button class="auth-btn auth-google" id="googleBtn">
-                        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                        Войти через Google
-                    </button>
-                    <button class="auth-btn auth-apple" id="appleBtn">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-                        Войти через Apple
-                    </button>
-                    <button class="auth-btn auth-apple" id="guestBtn">Продолжить как гость</button>
-                </div>
-                <div class="s1-footer">Продолжая, ты соглашаешься с условиями использования</div>
+
+    <!-- Slide 0: Login -->
+    <div class="c-slide" id="slide0">
+        <div style="position:absolute;bottom:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
+        <div class="c-slide-content">
+            <div style="text-align:center;display:flex;flex-direction:column;gap:8px;">
+                <div class="s1-title">Soma AI</div>
+                <div class="s1-sub">Познай себя через призму времени</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                <button class="auth-btn auth-google" id="googleBtn"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Войти через Google</button>
+                <button class="auth-btn auth-apple" id="appleBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>Войти через Apple</button>
+                <button class="auth-btn auth-apple" id="guestBtn">Продолжить как гость</button>
+            </div>
+            <div class="s1-footer">Продолжая, ты соглашаешься с условиями использования</div>
+        </div>
+    </div>
+
+    <!-- Slide 1: О нас -->
+    <div class="c-slide" id="slide1">
+        <div style="position:absolute;bottom:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
+        <div class="c-slide-content">
+            <div class="s1-title" style="font-size:28px;">О нас</div>
+            <div style="color:rgba(210,190,165,0.85);font-size:13px;line-height:1.7;">Soma AI — пространство для глубокого самопознания через призму времени. Мы объединяем психологию, архетипы и ИИ, чтобы помочь найти ответы внутри себя.</div>
+            <div style="color:rgba(210,190,165,0.4);font-size:11px;">Основан в 2024 · Более 10 000 сессий</div>
+        </div>
+    </div>
+
+    <!-- Slide 2: Как это работает -->
+    <div class="c-slide" id="slide2">
+        <div style="position:absolute;bottom:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
+        <div class="c-slide-content">
+            <div class="s1-title" style="font-size:28px;">Как это работает</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(210,190,165,0.15);color:rgba(210,190,165,0.6);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Выбери проводника — каждый видит мир по-своему</div></div>
+                <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(210,190,165,0.15);color:rgba(210,190,165,0.6);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Задай вопрос или просто начни разговор</div></div>
+                <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(210,190,165,0.15);color:rgba(210,190,165,0.6);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Получи ответ, основанный на твоём контексте</div></div>
+                <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(210,190,165,0.15);color:rgba(210,190,165,0.6);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Возвращайся — каждая сессия уникальна</div></div>
             </div>
         </div>
     </div>
+
+    <!-- Slide 3: Проводники -->
+    <div class="c-slide" id="slide3">
+        <div style="position:absolute;bottom:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
+        <div class="c-slide-content">
+            <div class="s1-title" style="font-size:28px;">Проводники</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(255,255,255,0.05);border-radius:8px;"><span style="color:rgba(210,190,165,0.9);font-size:13px;font-weight:500;">Тара</span><span style="color:rgba(210,190,165,0.4);font-size:11px;">Читает знаки и судьбу</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(255,255,255,0.05);border-radius:8px;"><span style="color:rgba(210,190,165,0.9);font-size:13px;font-weight:500;">Аура</span><span style="color:rgba(210,190,165,0.4);font-size:11px;">Чувствует энергию</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(255,255,255,0.05);border-radius:8px;"><span style="color:rgba(210,190,165,0.9);font-size:13px;font-weight:500;">Карма</span><span style="color:rgba(210,190,165,0.4);font-size:11px;">Закономерности в числах</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(255,255,255,0.05);border-radius:8px;"><span style="color:rgba(210,190,165,0.9);font-size:13px;font-weight:500;">Литера</span><span style="color:rgba(210,190,165,0.4);font-size:11px;">Помогает разобраться в себе</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: Тарифы -->
+    <div class="c-slide" id="slide4">
+        <div style="position:absolute;bottom:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
+        <div class="c-slide-content">
+            <div class="s1-title" style="font-size:28px;">Тарифы</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="padding:10px 12px;background:rgba(255,255,255,0.05);border-radius:8px;display:flex;justify-content:space-between;align-items:center;"><div><div style="color:rgba(210,190,165,0.9);font-size:13px;font-weight:500;">Бесплатно</div><div style="color:rgba(210,190,165,0.4);font-size:11px;">5 сессий в месяц</div></div><div style="color:rgba(210,190,165,0.6);font-size:16px;font-weight:600;">0 ₽</div></div>
+                <div style="padding:10px 12px;background:rgba(210,190,165,0.1);border-radius:8px;display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(210,190,165,0.2);"><div><div style="color:rgba(210,190,165,1);font-size:13px;font-weight:500;">Premium</div><div style="color:rgba(210,190,165,0.5);font-size:11px;">Безлимит + все модели</div></div><div style="color:rgba(210,190,165,1);font-size:16px;font-weight:600;">299 ₽</div></div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 </div>
 
@@ -367,75 +424,86 @@ const imgUrl = `${BG}${Math.ceil(Math.random()*11)}.jpeg`;
 bgEl.style.backgroundImage = `url('${imgUrl}')`;
 bgFrame.style.backgroundImage = `url('${imgUrl}')`;
 
-// Carousel
+// Carousel — 5 static DOM slides
 const allImgs = Array.from({length:11},(_,i)=>i+1).sort(()=>Math.random()-0.5);
-let s1Idx = 0;
-const CARDS = ['card0','card1','card2','card3','card4'];
-
-function getCardDims() {
-    const vw = window.innerWidth, vh = window.innerHeight;
-    const cH = Math.min(vh * 0.9, 700);
-    const cW = Math.min(cH * 0.52, 420);
-    return { cW, cH, vw };
+const N_SLIDES = 5;
+// Assign unique random bg to each slide
+const slideImgs = allImgs.slice(0, N_SLIDES);
+for(let i=0;i<N_SLIDES;i++){
+    document.getElementById('slide'+i).style.backgroundImage=`url('${BG}${slideImgs[i]}.jpeg')`;
 }
 
-function applyCarousel() {
-    const { cW, cH, vw } = getCardDims();
-    const nearW = cW * 0.75, nearH = cH * 0.75;
-    const farW  = cW * 0.45, farH  = cH * 0.45;
-    const gap = 12;
-    const cx = vw / 2;
+let curSlide = 0; // which slide is currently center
+let s1Busy = false;
 
-    const slots = [
-        { cls:'pos-far-l',  w:farW,  h:farH,  x: cx - cW/2 - gap - nearW - gap - farW/2 },
-        { cls:'pos-near-l', w:nearW, h:nearH, x: cx - cW/2 - gap - nearW/2 },
-        { cls:'pos-center', w:cW,    h:cH,    x: cx },
-        { cls:'pos-near-r', w:nearW, h:nearH, x: cx + cW/2 + gap + nearW/2 },
-        { cls:'pos-far-r',  w:farW,  h:farH,  x: cx + cW/2 + gap + nearW + gap + farW/2 },
-    ];
+function getDims(){
+    const vw=window.innerWidth, vh=window.innerHeight;
+    const cH=Math.min(vh*0.9,700), cW=Math.min(cH*0.52,420);
+    const nW=cW*0.75, nH=cH*0.75, fW=cW*0.45, fH=cH*0.45;
+    const gap=12, cx=vw/2;
+    return {cW,cH,nW,nH,fW,fH,gap,cx,vw};
+}
 
-    CARDS.forEach((id, i) => {
-        const el = document.getElementById(id);
-        const s = slots[i];
-        const imgIdx = ((s1Idx - 2 + i) % allImgs.length + allImgs.length) % allImgs.length;
-        el.style.backgroundImage = `url('${BG}${allImgs[imgIdx]}.jpeg')`;
-        el.style.width  = s.w + 'px';
-        el.style.height = s.h + 'px';
-        el.style.left   = (s.x - s.w/2) + 'px';
+function layoutSlides(animate){
+    const d=getDims();
+    for(let i=0;i<N_SLIDES;i++){
+        const el=document.getElementById('slide'+i);
+        // relative position to center slide, wrapped
+        let rel = i - curSlide;
+        if(rel > N_SLIDES/2)  rel -= N_SLIDES;
+        if(rel < -N_SLIDES/2) rel += N_SLIDES;
+
+        let w,h,cx2;
+        if(rel===0)       {w=d.cW;h=d.cH;cx2=d.cx;}
+        else if(rel===-1) {w=d.nW;h=d.nH;cx2=d.cx-d.cW/2-d.gap-d.nW/2;}
+        else if(rel===1)  {w=d.nW;h=d.nH;cx2=d.cx+d.cW/2+d.gap+d.nW/2;}
+        else if(rel===-2) {w=d.fW;h=d.fH;cx2=d.cx-d.cW/2-d.gap-d.nW-d.gap-d.fW/2;}
+        else              {w=d.fW;h=d.fH;cx2=d.cx+d.cW/2+d.gap+d.nW+d.gap+d.fW/2;}
+
+        el.style.transition = animate
+            ? 'left 0.5s cubic-bezier(0.4,0,0.2,1),width 0.5s cubic-bezier(0.4,0,0.2,1),height 0.5s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease,filter 0.5s ease'
+            : 'none';
+        el.style.width  = w+'px';
+        el.style.height = h+'px';
+        el.style.left   = (cx2-w/2)+'px';
         el.style.top    = '50%';
         el.style.transform = 'translateY(-50%)';
-        el.className = 'c-card ' + s.cls;
-    });
+        el.style.position  = 'absolute';
 
-    const cc = document.getElementById('cardCenter');
-    cc.style.width  = cW + 'px';
-    cc.style.height = cH + 'px';
-    cc.style.left   = (cx - cW/2) + 'px';
-    cc.style.top    = '50%';
-    cc.style.transform = 'translateY(-50%)';
-    cc.className = 'c-card pos-center';
-    cc.style.backgroundImage = `url('${BG}${allImgs[s1Idx % allImgs.length]}.jpeg')`;
+        const abs=Math.abs(rel);
+        el.className = 'c-slide'+(abs===0?' is-center':abs===1?' is-near':' is-far');
+        el.style.zIndex = abs===0?5:abs===1?4:3;
+    }
+    bgEl.style.backgroundImage    = `url('${BG}${slideImgs[curSlide]}.jpeg')`;
+    bgFrame.style.backgroundImage = `url('${BG}${slideImgs[curSlide]}.jpeg')`;
 }
 
-function carouselShift(dir) {
-    s1Idx = (s1Idx + dir + allImgs.length) % allImgs.length;
-    applyCarousel();
-    const url = `${BG}${allImgs[s1Idx]}.jpeg`;
-    bgEl.style.backgroundImage = `url('${url}')`;
-    bgFrame.style.backgroundImage = `url('${url}')`;
+function carouselShift(dir){
+    if(s1Busy) return;
+    s1Busy=true;
+    curSlide=(curSlide+dir+N_SLIDES)%N_SLIDES;
+    layoutSlides(true);
+    setTimeout(()=>{s1Busy=false;},520);
 }
 
-applyCarousel();
-window.addEventListener('resize', applyCarousel);
+layoutSlides(false);
+window.addEventListener('resize',()=>layoutSlides(false));
 
-['card0','card1'].forEach(id => document.getElementById(id).addEventListener('click', () => carouselShift(-1)));
-['card3','card4'].forEach(id => document.getElementById(id).addEventListener('click', () => carouselShift(1)));
+document.getElementById('carouselWrap').addEventListener('click', e=>{
+    if(e.target.closest('.is-center')) return;
+    carouselShift(e.clientX < window.innerWidth/2 ? -1 : 1);
+});
 
-let touchStartX = 0;
-document.getElementById('screen1').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
-document.getElementById('screen1').addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) > 50) carouselShift(dx < 0 ? 1 : -1);
+let touchStartX=0;
+document.getElementById('screen1').addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;});
+document.getElementById('screen1').addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-touchStartX;
+    if(Math.abs(dx)>50) carouselShift(dx<0?1:-1);
+});
+document.getElementById('screen1').addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;});
+document.getElementById('screen1').addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-touchStartX;
+    if(Math.abs(dx)>50) carouselShift(dx<0?1:-1);
 });
 
 // Transition
@@ -463,7 +531,7 @@ function init() {
     }
 }
 
-// S1
+// S1b
 document.getElementById('googleBtn').addEventListener('click', () => {
     localStorage.setItem(KEY_USER, JSON.stringify({p:'google',ts:Date.now()}));
     goTo('screen1b');
