@@ -15,15 +15,16 @@
 input,textarea,select{-webkit-user-select:text;user-select:text;}
 html,body{width:100%;height:100%;background:#000;display:flex;justify-content:center;align-items:center;overflow:hidden;font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;}
 
-.bg{position:fixed;top:0;left:0;width:100%;height:100%;background-size:contain;background-repeat:no-repeat;background-position:center;background-color:#000;z-index:0;transition:opacity 0.5s ease;}
+.bg{position:fixed;top:0;left:0;width:100%;height:100%;background-size:cover;background-repeat:no-repeat;background-position:center;background-color:#000;z-index:0;transition:opacity 0.5s ease;filter:blur(32px) brightness(0.4);transform:scale(1.1);}
+.bg-frame{position:fixed;top:0;left:0;width:100%;height:100%;background-size:contain;background-repeat:no-repeat;background-position:center;z-index:1;pointer-events:none;}
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:999;opacity:0;pointer-events:none;transition:opacity 0.5s ease;}
 .overlay.on{opacity:1;pointer-events:all;}
 
 .screen{position:relative;z-index:10;display:none;justify-content:center;align-items:center;width:100%;height:100%;}
 .screen.active{display:flex;}
 
-/* Modal */
-.modal{width:75%;max-width:380px;background:rgba(20,20,20,0.55);border:none;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,0.6);display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:28px 24px 24px;gap:20px;animation:fadeIn 0.6s ease-out forwards;}
+/* Modal — для screen1 и screen1b */
+.modal{width:75%;max-width:380px;background:rgba(20,20,20,0.6);border:none;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.7);display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:28px 24px 24px;gap:20px;animation:fadeIn 0.6s ease-out forwards;}
 @keyframes fadeIn{from{opacity:0;filter:blur(8px);transform:translateY(12px);}to{opacity:1;filter:blur(0);transform:translateY(0);}}
 
 /* S1 */
@@ -56,11 +57,15 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .chat-header-left{display:flex;align-items:center;}
 .model-btn{background:rgba(255,255,255,0.08);border:none;color:rgba(210,190,165,0.85);font-size:13px;font-weight:500;cursor:pointer;padding:8px 16px;border-radius:8px;font-family:'Inter',sans-serif;transition:all 0.15s;}
 .model-btn:hover{background:rgba(255,255,255,0.12);color:rgba(210,190,165,1);}
-.dropdown{position:absolute;top:calc(100% - 4px);left:16px;background:rgba(42,36,32,0.75);border:1px solid rgba(210,190,165,0.15);border-radius:8px;min-width:150px;z-index:100;display:none;flex-direction:column;overflow:hidden;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+.dropdown{position:absolute;top:calc(100% + 4px);left:16px;background:rgba(42,36,32,0.75);border:1px solid rgba(210,190,165,0.15);border-radius:10px;min-width:200px;z-index:100;display:none;flex-direction:column;overflow:hidden;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
 .dropdown.show{display:flex;}
-.ditem{padding:10px 14px;background:none;border:none;color:rgba(210,190,165,0.7);font-size:12px;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:all 0.15s;}
-.ditem:hover{background:rgba(255,255,255,0.06);color:rgba(210,190,165,1);}
-.ditem.active{background:rgba(255,255,255,0.08);color:rgba(210,190,165,1);}
+.ditem{padding:10px 14px;background:none;border:none;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:all 0.15s;display:flex;flex-direction:column;gap:2px;}
+.ditem:hover{background:rgba(255,255,255,0.06);}
+.ditem.active{background:rgba(255,255,255,0.08);}
+.ditem-name{font-size:13px;font-weight:500;color:rgba(210,190,165,0.9);}
+.ditem.active .ditem-name{color:rgba(210,190,165,1);}
+.ditem-desc{font-size:11px;color:rgba(210,190,165,0.45);}
+.ditem.active .ditem-desc{color:rgba(210,190,165,0.6);}
 .bulb-btn{width:36px;height:36px;background:rgba(255,255,255,0.06);border:none;color:rgba(210,190,165,0.6);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
 .bulb-btn:hover{background:rgba(255,255,255,0.1);color:rgba(210,190,165,1);}
 .bulb-btn svg{width:16px;height:16px;}
@@ -86,23 +91,30 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .send-btn:active{transform:scale(0.95);}
 .send-btn img{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
 
+/* Transitions for theme switch */
+.s2-wrap,.s2-inner,.model-btn,.bubble,.input-field,.send-btn,.bulb-btn,.empty-state,.ditem-name,.ditem-desc{transition:background 0.4s ease,color 0.4s ease,filter 0.4s ease;}
+
 /* Light theme */
-.light .s2-wrap{background:rgba(210,190,165,0.15);}
-.light .s2-inner{background:rgba(210,190,165,0.9);}
-.light .model-btn{background:rgba(42,36,32,0.12);color:rgba(42,36,32,0.85);}
-.light .model-btn:hover{background:rgba(42,36,32,0.2);}
-.light .dropdown{background:rgba(210,190,165,0.9);border-color:rgba(42,36,32,0.15);}
-.light .ditem{color:rgba(42,36,32,0.7);}
-.light .ditem:hover,.light .ditem.active{background:rgba(42,36,32,0.1);color:rgba(42,36,32,1);}
-.light .bubble{background:rgba(42,36,32,0.08);color:rgba(42,36,32,0.85);}
-.light .typing-bubble{background:rgba(42,36,32,0.08);}
-.light .typing-bubble span{background:rgba(42,36,32,0.4);}
-.light .empty-state{color:rgba(42,36,32,0.35);}
-.light .input-field{background:rgba(42,36,32,0.08);color:rgba(42,36,32,0.85);}
-.light .input-field::placeholder{color:rgba(42,36,32,0.35);}
-.light .input-field:focus{background:rgba(42,36,32,0.12);}
-.light .send-btn,.light .bulb-btn{background:rgba(42,36,32,0.08);color:rgba(42,36,32,0.6);}
-.light .send-btn img,.light .submit-btn img{filter:invert(20%) sepia(10%) saturate(200%) hue-rotate(10deg) brightness(40%);}
+.light .s2-wrap{background:rgba(235,220,200,0.25);}
+.light .s2-inner{background:rgba(230,215,195,0.92);}
+.light .model-btn{background:rgba(60,45,35,0.12);color:rgba(50,35,25,0.9);}
+.light .model-btn:hover{background:rgba(60,45,35,0.2);}
+.light .dropdown{background:rgba(230,215,195,0.95);border-color:rgba(60,45,35,0.15);}
+.light .ditem-name{color:rgba(50,35,25,0.9);}
+.light .ditem-desc{color:rgba(50,35,25,0.5);}
+.light .ditem:hover,.light .ditem.active{background:rgba(60,45,35,0.1);}
+.light .bubble{background:rgba(60,45,35,0.1);color:rgba(50,35,25,0.9);}
+.light .typing-bubble{background:rgba(60,45,35,0.1);}
+.light .typing-bubble span{background:rgba(60,45,35,0.4);}
+.light .empty-state{color:rgba(50,35,25,0.4);}
+.light .input-field{background:rgba(60,45,35,0.08);color:rgba(50,35,25,0.9);}
+.light .input-field::placeholder{color:rgba(50,35,25,0.35);}
+.light .input-field:focus{background:rgba(60,45,35,0.13);}
+.light .send-btn{background:rgba(60,45,35,0.08);}
+.light .bulb-btn{background:rgba(60,45,35,0.08);color:rgba(50,35,25,0.6);}
+.light .bulb-btn:hover{background:rgba(60,45,35,0.15);color:rgba(50,35,25,1);}
+.light .send-btn img{filter:invert(15%) sepia(15%) saturate(300%) hue-rotate(10deg) brightness(35%);}
+.light .chat-header-right .bulb-btn svg{stroke:rgba(50,35,25,0.6);}
 
 /* End modal */
 .end-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
@@ -120,6 +132,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 </head>
 <body>
 <div class="bg" id="bg"></div>
+<div class="bg-frame" id="bgFrame"></div>
 <div class="overlay" id="overlay"></div>
 
 <!-- SCREEN 1: Login -->
@@ -152,8 +165,6 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
         <select class="fselect"><option value="" disabled selected>Выберите тему</option><option>Отношения и любовь</option><option>Карьера и деньги</option><option>Здоровье и энергия</option><option>Смысл и предназначение</option><option>Тревога и страхи</option><option>Семья и близкие</option><option>Одиночество</option><option>Другое</option></select></div>
         <div><div class="flabel">Как вы себя чувствуете сейчас?</div>
         <select class="fselect"><option value="" disabled selected>Выберите состояние</option><option>Потерян и не знаю куда идти</option><option>Тревожно и неспокойно</option><option>Устал и нет сил</option><option>Ищу ответы на вопросы</option><option>Хочу перемен</option><option>В целом хорошо, но есть вопросы</option><option>Чувствую внутренний конфликт</option></select></div>
-        <div><div class="flabel">Что вам ближе?</div>
-        <select class="fselect"><option value="" disabled selected>Выберите подход</option><option>Таро и карты судьбы</option><option>Нумерология и числа</option><option>Кармология и прошлые жизни</option><option>Психология и самопознание</option><option>Всё интересно</option></select></div>
         <div><div class="flabel">Ваш возраст</div>
         <select class="fselect"><option value="" disabled selected>Выберите диапазон</option><option>До 20 лет</option><option>20–30 лет</option><option>30–40 лет</option><option>40–50 лет</option><option>Старше 50</option></select></div>
         <div><div class="flabel">Как часто обращаетесь за советом?</div>
@@ -176,10 +187,10 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
         <div class="chat-header-left">
             <button class="model-btn" id="modelBtn">Тара</button>
             <div class="dropdown" id="dropdown">
-                <button class="ditem active" data-model="tara">Тара</button>
-                <button class="ditem" data-model="aura">Аура</button>
-                <button class="ditem" data-model="karma">Карма</button>
-                <button class="ditem" data-model="litera">Литера</button>
+                <button class="ditem active" data-model="tara"><span class="ditem-name">Тара</span><span class="ditem-desc">Таролог · карты и судьба</span></button>
+                <button class="ditem" data-model="aura"><span class="ditem-name">Аура</span><span class="ditem-desc">Кармолог · энергия и баланс</span></button>
+                <button class="ditem" data-model="karma"><span class="ditem-name">Карма</span><span class="ditem-desc">Нумеролог · числа и путь</span></button>
+                <button class="ditem" data-model="litera"><span class="ditem-name">Литера</span><span class="ditem-desc">Психолог · самопознание</span></button>
             </div>
         </div>
         <div class="chat-header-right">
@@ -224,7 +235,10 @@ const KEY_SURVEY = 'soma_survey';
 
 // Random BG
 const bgEl = document.getElementById('bg');
-bgEl.style.backgroundImage = `url('${BG}${Math.ceil(Math.random()*11)}.jpeg')`;
+const bgFrame = document.getElementById('bgFrame');
+const imgUrl = `${BG}${Math.ceil(Math.random()*11)}.jpeg`;
+bgEl.style.backgroundImage = `url('${imgUrl}')`;
+bgFrame.style.backgroundImage = `url('${imgUrl}')`;bgFrame.style.backgroundImage = `url('${imgUrl}')`;
 
 // Transition
 const overlayEl = document.getElementById('overlay');
@@ -233,7 +247,9 @@ function goTo(id) {
     setTimeout(() => {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        bgEl.style.opacity = id === 'screen2' ? '0' : '1';
+        const hide = id === 'screen2';
+        bgEl.style.opacity = hide ? '0' : '1';
+        bgFrame.style.opacity = hide ? '0' : '1';
         overlayEl.classList.remove('on');
         if (id === 'screen2') initChat();
     }, 500);
@@ -245,6 +261,7 @@ function init() {
         document.getElementById('screen1').classList.remove('active');
         document.getElementById('screen2').classList.add('active');
         bgEl.style.opacity = '0';
+        bgFrame.style.opacity = '0';
         initChat();
     }
 }
@@ -305,7 +322,6 @@ ditems.forEach(d => d.addEventListener('click', () => {
     dropdown.classList.remove('show');
 }));
 
-bulbBtn.addEventListener('click', () => endOverlay.classList.toggle('show'));
 document.getElementById('endMenu').addEventListener('click', () => {
     endOverlay.classList.remove('show');
     [KEY_USER, KEY_CHAT, KEY_SURVEY].forEach(k => localStorage.removeItem(k));
