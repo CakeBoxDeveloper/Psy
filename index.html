@@ -30,23 +30,19 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 /* Carousel */
 .carousel-wrap{width:100%;height:100%;background:rgb(28,23,20);overflow:hidden;position:relative;}
 .c-slide{
-    position:absolute;top:50%;transform:translateY(-50%);
+    position:absolute;top:50%;left:50%;
     border-radius:12px;overflow:hidden;
     background:rgb(42,36,32);background-size:cover;background-position:center;background-repeat:no-repeat;
     cursor:pointer;
-    transition:left 0.5s cubic-bezier(0.4,0,0.2,1),
-               width 0.5s cubic-bezier(0.4,0,0.2,1),
-               height 0.5s cubic-bezier(0.4,0,0.2,1),
+    transform-origin:center center;
+    transition:transform 0.5s cubic-bezier(0.4,0,0.2,1),
                opacity 0.5s ease,
                filter 0.5s ease;
 }
 .c-slide.is-center{z-index:5;opacity:1;filter:none;cursor:default;}
 .c-slide.is-near{z-index:4;opacity:0.7;filter:blur(4px);}
 .c-slide.is-far{z-index:3;opacity:0.45;filter:blur(10px);}
-.c-slide.is-gone{z-index:1;opacity:0;pointer-events:none;transition:none;}
 .c-slide-content{position:absolute;bottom:0;left:0;right:0;padding:24px;display:flex;flex-direction:column;gap:14px;}
-.carousel-zone{position:absolute;top:0;bottom:0;width:40%;z-index:10;cursor:pointer;}
-.carousel-zone-l{left:0;}.carousel-zone-r{right:0;}
 @media(max-width:599px){.c-slide.is-far{opacity:0;pointer-events:none;}}
 
 /* S1 */
@@ -446,29 +442,30 @@ function getDims(){
 
 function layoutSlides(animate){
     const d=getDims();
+    const gap=12;
+    // offsets from center (as fraction of cW)
+    const nearOff = d.cW/2 + gap + d.nW/2;
+    const farOff  = d.cW/2 + gap + d.nW + gap + d.fW/2;
+
     for(let i=0;i<N_SLIDES;i++){
         const el=document.getElementById('slide'+i);
-        // relative position to center slide, wrapped
         let rel = i - curSlide;
         if(rel > N_SLIDES/2)  rel -= N_SLIDES;
         if(rel < -N_SLIDES/2) rel += N_SLIDES;
 
-        let w,h,cx2;
-        if(rel===0)       {w=d.cW;h=d.cH;cx2=d.cx;}
-        else if(rel===-1) {w=d.nW;h=d.nH;cx2=d.cx-d.cW/2-d.gap-d.nW/2;}
-        else if(rel===1)  {w=d.nW;h=d.nH;cx2=d.cx+d.cW/2+d.gap+d.nW/2;}
-        else if(rel===-2) {w=d.fW;h=d.fH;cx2=d.cx-d.cW/2-d.gap-d.nW-d.gap-d.fW/2;}
-        else              {w=d.fW;h=d.fH;cx2=d.cx+d.cW/2+d.gap+d.nW+d.gap+d.fW/2;}
+        let tx, scale;
+        if     (rel===0)  { tx=0;         scale=1; }
+        else if(rel===-1) { tx=-nearOff;  scale=d.nW/d.cW; }
+        else if(rel===1)  { tx= nearOff;  scale=d.nW/d.cW; }
+        else if(rel===-2) { tx=-farOff;   scale=d.fW/d.cW; }
+        else              { tx= farOff;   scale=d.fW/d.cW; }
 
         el.style.transition = animate
-            ? 'left 0.5s cubic-bezier(0.4,0,0.2,1),width 0.5s cubic-bezier(0.4,0,0.2,1),height 0.5s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease,filter 0.5s ease'
+            ? 'transform 0.5s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease,filter 0.5s ease'
             : 'none';
-        el.style.width  = w+'px';
-        el.style.height = h+'px';
-        el.style.left   = (cx2-w/2)+'px';
-        el.style.top    = '50%';
-        el.style.transform = 'translateY(-50%)';
-        el.style.position  = 'absolute';
+        el.style.width  = d.cW+'px';
+        el.style.height = d.cH+'px';
+        el.style.transform = `translate(calc(-50% + ${tx}px), -50%) scale(${scale})`;
 
         const abs=Math.abs(rel);
         el.className = 'c-slide'+(abs===0?' is-center':abs===1?' is-near':' is-far');
