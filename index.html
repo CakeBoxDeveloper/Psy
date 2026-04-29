@@ -194,11 +194,15 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
     <div class="s1-slide s1-slide-side" id="slideLeft" style="cursor:pointer;"></div>
 
     <!-- Центральный блок -->
-    <div style="width:90%;max-width:420px;height:90vh;background:rgb(42,36,32);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;flex-shrink:0;animation:fadeIn 0.6s ease-out forwards;">
-        <!-- Картинка сверху -->
-        <div id="s1BgImg" style="flex:1;background-size:cover;background-position:center;background-repeat:no-repeat;min-height:0;"></div>
-        <!-- Контент снизу -->
-        <div style="padding:24px;display:flex;flex-direction:column;gap:14px;background:rgb(42,36,32);">
+    <div style="width:90%;max-width:420px;height:90vh;border-radius:12px;overflow:hidden;flex-shrink:0;animation:fadeIn 0.6s ease-out forwards;position:relative;">
+        <!-- Картинка — весь блок -->
+        <div id="s1BgImg" style="position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;"></div>
+        <!-- Blur слои снизу вверх -->
+        <div style="position:absolute;bottom:0;left:0;right:0;height:75%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:60%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:45%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
+        <!-- Контент поверх -->
+        <div style="position:absolute;bottom:0;left:0;right:0;padding:24px;display:flex;flex-direction:column;gap:14px;">
             <div style="text-align:center;display:flex;flex-direction:column;gap:8px;">
                 <div class="s1-title">Soma AI</div>
                 <div class="s1-sub">Познай себя через призму времени</div>
