@@ -23,7 +23,7 @@
         html, body {
             width: 100%;
             height: 100%;
-            background: #000;
+            background: #2a2420;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -33,31 +33,33 @@
         }
 
         .background {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-color: #000;
-            z-index: 0;
+            display: none;
         }
 
         .modal {
             position: relative;
             z-index: 10;
-            width: 75%;
-            max-width: 380px;
-            height: 70vh;
-            background: rgba(20, 20, 20, 0.55);
+            width: 100%;
+            height: 100vh;
+            max-width: 100%;
+            background: rgba(42, 36, 32, 0.95);
             border: none;
-            border-radius: 8px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border-radius: 0;
+            box-shadow: none;
             display: flex;
             flex-direction: column;
+            align-items: center;
             overflow: hidden;
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+
+        .modal-inner {
+            width: 100%;
+            max-width: 480px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Header */
@@ -71,7 +73,7 @@
         .model-selector-btn {
             background: rgba(255, 255, 255, 0.08);
             border: none;
-            color: #ccc;
+            color: rgba(210, 190, 165, 0.85);
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
@@ -83,22 +85,23 @@
 
         .model-selector-btn:hover {
             background: rgba(255, 255, 255, 0.12);
-            color: #fff;
+            color: rgba(210, 190, 165, 1);
         }
 
         .dropdown-menu {
             position: absolute;
             top: calc(100% - 4px);
             left: 16px;
-            background: rgba(30, 30, 30, 0.98);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(42, 36, 32, 0.6);
+            border: 1px solid rgba(210, 190, 165, 0.15);
             border-radius: 8px;
             min-width: 140px;
             z-index: 100;
             display: none;
             flex-direction: column;
             overflow: hidden;
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
 
         .dropdown-menu.show {
@@ -109,7 +112,7 @@
             padding: 10px 14px;
             background: none;
             border: none;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(210, 190, 165, 0.7);
             font-size: 12px;
             cursor: pointer;
             text-align: left;
@@ -118,13 +121,13 @@
         }
 
         .dropdown-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: #fff;
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(210, 190, 165, 1);
         }
 
         .dropdown-item.active {
-            background: rgba(255, 255, 255, 0.12);
-            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(210, 190, 165, 1);
         }
 
         /* Chat area */
@@ -165,13 +168,13 @@
         }
 
         .message.ai .message-bubble {
-            background: rgba(255, 255, 255, 0.08);
-            color: #bbb;
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(210, 190, 165, 0.8);
         }
 
         .message.user .message-bubble {
-            background: rgba(255, 255, 255, 0.12);
-            color: #fff;
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(210, 190, 165, 0.8);
         }
 
         /* Typing indicator */
@@ -248,9 +251,9 @@
         .send-btn {
             width: 36px;
             height: 36px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.06);
             border: none;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.35);
             border-radius: 8px;
             cursor: pointer;
             display: flex;
@@ -261,20 +264,16 @@
         }
 
         .send-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .send-btn:active { transform: scale(0.95); }
 
-        .send-btn svg {
-            width: 14px;
-            height: 14px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+        .send-btn img {
+            width: 16px;
+            height: 16px;
+            filter: invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);
         }
     </style>
 </head>
@@ -282,6 +281,7 @@
     <div class="background" id="background"></div>
 
     <div class="modal">
+      <div class="modal-inner">
         <div class="chat-header">
             <button class="model-selector-btn" id="modelBtn">Тара</button>
             <div class="dropdown-menu" id="dropdownMenu">
@@ -307,23 +307,15 @@
                 autocomplete="off"
             >
             <button class="send-btn" id="sendBtn">
-                <svg viewBox="0 0 24 24">
-                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
+                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/b10a442f83ac8d558d211780dd24e855f47e9e2c/dove-.svg" alt="send">
             </button>
         </div>
+      </div>
     </div>
 
     <script>
         const backgroundImages = [
-            'Baroque_Renaissance_background_c…_202604291141.jpeg',
-            'Human_bodies_in_motion_struggle_202604291222.jpeg',
-            'Human_bodies_in_motion_struggle_202604291224.jpeg',
-            'Renaissance_aesthetic_sfumato_te…_202604291224.jpeg',
-            'Velvet_paper_candlelit_atmosphere_202604291146 (2).jpeg',
-            'Woman_doing_craft_nature_202604291149.jpeg',
-            'Woman_doing_craft_nature_202604291154 (1).jpeg'
+            '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'
         ];
 
         const models = {
@@ -346,7 +338,7 @@
 
         // Random background
         const randomImage = backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
-        background.style.backgroundImage = `url('./${randomImage}')`;
+        background.style.backgroundImage = `url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/BG/${randomImage}.jpeg')`;
 
         // Model dropdown
         modelBtn.addEventListener('click', () => dropdownMenu.classList.toggle('show'));
