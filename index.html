@@ -371,12 +371,9 @@ bgFrame.style.backgroundImage = `url('${imgUrl}')`;
 const allImgs = Array.from({length:11},(_,i)=>i+1).sort(()=>Math.random()-0.5);
 let s1Idx = 0;
 const CARDS = ['card0','card1','card2','card3','card4'];
-// positions relative to center index: -2,-1,0,+1,+2
-// card at offset maps to pos-far-l, pos-near-l, pos-center, pos-near-r, pos-far-r
 
 function getCardDims() {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
+    const vw = window.innerWidth, vh = window.innerHeight;
     const cH = Math.min(vh * 0.9, 700);
     const cW = Math.min(cH * 0.52, 420);
     return { cW, cH, vw };
@@ -387,45 +384,29 @@ function applyCarousel() {
     const nearW = cW * 0.75, nearH = cH * 0.75;
     const farW  = cW * 0.45, farH  = cH * 0.45;
     const gap = 12;
-
-    // center x of viewport
     const cx = vw / 2;
 
-    // x positions for each slot (center of card)
-    const positions = [
-        cx - cW/2 - gap - nearW/2 - gap - farW/2,  // far-left
-        cx - cW/2 - gap - nearW/2,                   // near-left
-        cx,                                           // center
-        cx + cW/2 + gap + nearW/2,                   // near-right
-        cx + cW/2 + gap + nearW/2 + gap + farW/2,   // far-right
+    const slots = [
+        { cls:'pos-far-l',  w:farW,  h:farH,  x: cx - cW/2 - gap - nearW - gap - farW/2 },
+        { cls:'pos-near-l', w:nearW, h:nearH, x: cx - cW/2 - gap - nearW/2 },
+        { cls:'pos-center', w:cW,    h:cH,    x: cx },
+        { cls:'pos-near-r', w:nearW, h:nearH, x: cx + cW/2 + gap + nearW/2 },
+        { cls:'pos-far-r',  w:farW,  h:farH,  x: cx + cW/2 + gap + nearW + gap + farW/2 },
     ];
-
-    const sizes = [
-        {w: farW,  h: farH},
-        {w: nearW, h: nearH},
-        {w: cW,    h: cH},
-        {w: nearW, h: nearH},
-        {w: farW,  h: farH},
-    ];
-
-    const posClasses = ['pos-far-l','pos-near-l','pos-center','pos-near-r','pos-far-r'];
 
     CARDS.forEach((id, i) => {
         const el = document.getElementById(id);
-        // which slot does this card occupy?
-        // card i shows image at index (s1Idx + i - 2 + 11) % 11
-        const slot = i; // card0=far-l, card1=near-l, card2=center, card3=near-r, card4=far-r
+        const s = slots[i];
         const imgIdx = ((s1Idx - 2 + i) % allImgs.length + allImgs.length) % allImgs.length;
         el.style.backgroundImage = `url('${BG}${allImgs[imgIdx]}.jpeg')`;
-        el.style.width  = sizes[slot].w + 'px';
-        el.style.height = sizes[slot].h + 'px';
-        el.style.left   = (positions[slot] - sizes[slot].w/2) + 'px';
+        el.style.width  = s.w + 'px';
+        el.style.height = s.h + 'px';
+        el.style.left   = (s.x - s.w/2) + 'px';
         el.style.top    = '50%';
         el.style.transform = 'translateY(-50%)';
-        el.className = 'c-card ' + posClasses[slot];
+        el.className = 'c-card ' + s.cls;
     });
 
-    // cardCenter mirrors center card
     const cc = document.getElementById('cardCenter');
     cc.style.width  = cW + 'px';
     cc.style.height = cH + 'px';
@@ -439,20 +420,17 @@ function applyCarousel() {
 function carouselShift(dir) {
     s1Idx = (s1Idx + dir + allImgs.length) % allImgs.length;
     applyCarousel();
-    // sync bg
-    const imgUrl2 = `${BG}${allImgs[s1Idx]}.jpeg`;
-    bgEl.style.backgroundImage = `url('${imgUrl2}')`;
-    bgFrame.style.backgroundImage = `url('${imgUrl2}')`;
+    const url = `${BG}${allImgs[s1Idx]}.jpeg`;
+    bgEl.style.backgroundImage = `url('${url}')`;
+    bgFrame.style.backgroundImage = `url('${url}')`;
 }
 
 applyCarousel();
 window.addEventListener('resize', applyCarousel);
 
-// Click on side cards
 ['card0','card1'].forEach(id => document.getElementById(id).addEventListener('click', () => carouselShift(-1)));
 ['card3','card4'].forEach(id => document.getElementById(id).addEventListener('click', () => carouselShift(1)));
 
-// Swipe support
 let touchStartX = 0;
 document.getElementById('screen1').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
 document.getElementById('screen1').addEventListener('touchend', e => {
