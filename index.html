@@ -1,417 +1,359 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>АРХЕТИП - Твой ИИ-Проводник</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soma AI</title>
+<style>
+@font-face {
+    font-family:'TiemposHeadline';
+    src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Light.woff') format('woff'),
+        url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Light.ttf') format('truetype');
+    font-weight:300;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;}
+input,textarea,select{-webkit-user-select:text;user-select:text;}
+html,body{width:100%;height:100%;background:#000;display:flex;justify-content:center;align-items:center;overflow:hidden;font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;}
 
-        input, textarea, [contenteditable] {
-            -webkit-user-select: text;
-            user-select: text;
-        }
+.bg{position:fixed;top:0;left:0;width:100%;height:100%;background-size:contain;background-repeat:no-repeat;background-position:center;background-color:#000;z-index:0;transition:opacity 0.5s ease;}
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:999;opacity:0;pointer-events:none;transition:opacity 0.5s ease;}
+.overlay.on{opacity:1;pointer-events:all;}
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            background: #2a2420;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            -webkit-font-smoothing: antialiased;
-        }
+.screen{position:relative;z-index:10;display:none;justify-content:center;align-items:center;width:100%;height:100%;}
+.screen.active{display:flex;}
 
-        .background {
-            display: none;
-        }
+/* Modal */
+.modal{width:75%;max-width:380px;background:rgba(20,20,20,0.55);border:none;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,0.6);display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:28px 24px 24px;gap:20px;animation:fadeIn 0.6s ease-out forwards;}
+@keyframes fadeIn{from{opacity:0;filter:blur(8px);transform:translateY(12px);}to{opacity:1;filter:blur(0);transform:translateY(0);}}
 
-        .modal {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            height: 100vh;
-            max-width: 100%;
-            background: rgba(42, 36, 32, 0.95);
-            border: none;
-            border-radius: 0;
-            box-shadow: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow: hidden;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-        }
+/* S1 */
+.s1-title{color:#fff;font-size:36px;font-weight:300;font-family:'TiemposHeadline',serif;text-align:center;}
+.s1-sub{color:rgba(210,190,165,0.6);font-size:12px;text-align:center;line-height:1.6;}
+.auth-btn{width:100%;height:42px;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.15s;font-family:'Inter',sans-serif;}
+.auth-google{background:rgba(255,255,255,0.92);color:#222;}
+.auth-google:hover{background:#fff;}
+.auth-apple{background:rgba(255,255,255,0.08);color:rgba(210,190,165,0.85);}
+.auth-apple:hover{background:rgba(255,255,255,0.13);}
+.auth-btn:active{transform:scale(0.98);}
+.s1-footer{text-align:center;color:rgba(210,190,165,0.3);font-size:10px;line-height:1.5;}
 
-        .modal-inner {
-            width: 100%;
-            max-width: 480px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
+/* S1b Survey */
+.s1b-title{color:rgba(210,190,165,0.9);font-size:22px;font-weight:300;font-family:'TiemposHeadline',serif;text-align:center;}
+.fields{display:flex;flex-direction:column;gap:12px;}
+.flabel{color:rgba(210,190,165,0.55);font-size:11px;letter-spacing:0.3px;margin-bottom:4px;}
+.fselect{width:100%;background:rgba(255,255,255,0.08);border:none;color:rgba(210,190,165,0.85);padding:10px 32px 10px 12px;border-radius:8px;font-size:12px;outline:none;font-family:'Inter',sans-serif;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(210,190,165,0.5)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:background 0.15s;}
+.fselect:focus{background-color:rgba(255,255,255,0.12);}
+.fselect option{background:#2a2420;color:rgba(210,190,165,0.85);}
+.submit-btn{width:100%;height:42px;background:rgba(255,255,255,0.08);border:none;color:rgba(210,190,165,0.85);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-family:'Inter',sans-serif;transition:all 0.15s;}
+.submit-btn:hover{background:rgba(255,255,255,0.12);color:rgba(210,190,165,1);}
+.submit-btn:active{transform:scale(0.98);}
+.submit-btn img{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
 
-        /* Header */
-        .chat-header {
-            padding: 12px 16px;
-            background: transparent;
-            flex-shrink: 0;
-            position: relative;
-        }
+/* S2 Chat */
+.s2-wrap{width:100%;height:100vh;background:rgba(42,36,32,0.95);display:flex;flex-direction:column;align-items:center;}
+.s2-inner{width:100%;max-width:480px;height:100%;display:flex;flex-direction:column;}
+.chat-header{padding:12px 16px;background:transparent;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:space-between;}
+.chat-header-left{display:flex;align-items:center;}
+.model-btn{background:rgba(255,255,255,0.08);border:none;color:rgba(210,190,165,0.85);font-size:13px;font-weight:500;cursor:pointer;padding:8px 16px;border-radius:8px;font-family:'Inter',sans-serif;transition:all 0.15s;}
+.model-btn:hover{background:rgba(255,255,255,0.12);color:rgba(210,190,165,1);}
+.dropdown{position:absolute;top:calc(100% - 4px);left:16px;background:rgba(42,36,32,0.75);border:1px solid rgba(210,190,165,0.15);border-radius:8px;min-width:150px;z-index:100;display:none;flex-direction:column;overflow:hidden;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+.dropdown.show{display:flex;}
+.ditem{padding:10px 14px;background:none;border:none;color:rgba(210,190,165,0.7);font-size:12px;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:all 0.15s;}
+.ditem:hover{background:rgba(255,255,255,0.06);color:rgba(210,190,165,1);}
+.ditem.active{background:rgba(255,255,255,0.08);color:rgba(210,190,165,1);}
+.bulb-btn{width:36px;height:36px;background:rgba(255,255,255,0.06);border:none;color:rgba(210,190,165,0.6);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.bulb-btn:hover{background:rgba(255,255,255,0.1);color:rgba(210,190,165,1);}
+.bulb-btn svg{width:16px;height:16px;}
+.chat-area{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 16px;display:flex;flex-direction:column;gap:10px;background:transparent;scrollbar-width:none;}
+.chat-area::-webkit-scrollbar{display:none;}
+.message{display:flex;animation:msgIn 0.4s ease-out forwards;}
+@keyframes msgIn{from{opacity:0;filter:blur(8px);transform:translateY(6px);}to{opacity:1;filter:blur(0);transform:translateY(0);}}
+.message.user{justify-content:flex-end;}
+.bubble{max-width:80%;padding:8px 12px;border-radius:8px;font-size:12px;line-height:1.5;word-wrap:break-word;word-break:break-word;background:rgba(255,255,255,0.06);color:rgba(210,190,165,0.8);}
+.typing-bubble{display:flex;align-items:center;gap:4px;padding:10px 14px;background:rgba(255,255,255,0.06);border-radius:8px;width:fit-content;}
+.typing-bubble span{width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:50%;animation:typing 1.2s infinite;}
+.typing-bubble span:nth-child(2){animation-delay:0.2s;}
+.typing-bubble span:nth-child(3){animation-delay:0.4s;}
+@keyframes typing{0%,60%,100%{opacity:0.3;transform:scale(1);}30%{opacity:1;transform:scale(1.2);}}
+.empty-state{display:flex;align-items:center;justify-content:center;height:100%;color:rgba(210,190,165,0.3);text-align:center;font-size:12px;line-height:1.8;}
+.input-area{padding:12px 16px;background:transparent;display:flex;gap:8px;flex-shrink:0;align-items:center;}
+.input-field{flex:1;background:rgba(255,255,255,0.06);border:none;color:rgba(210,190,165,0.85);padding:0 12px;border-radius:8px;font-size:12px;outline:none;transition:all 0.15s;font-family:'Inter',sans-serif;height:36px;line-height:36px;}
+.input-field::placeholder{color:rgba(210,190,165,0.35);}
+.input-field:focus{background:rgba(255,255,255,0.1);}
+.send-btn{width:36px;height:36px;background:rgba(255,255,255,0.06);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.send-btn:hover{background:rgba(255,255,255,0.1);}
+.send-btn:active{transform:scale(0.95);}
+.send-btn img{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
 
-        .model-selector-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: none;
-            color: rgba(210, 190, 165, 0.85);
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.15s ease;
-        }
-
-        .model-selector-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-            color: rgba(210, 190, 165, 1);
-        }
-
-        .dropdown-menu {
-            position: absolute;
-            top: calc(100% - 4px);
-            left: 16px;
-            background: rgba(42, 36, 32, 0.6);
-            border: 1px solid rgba(210, 190, 165, 0.15);
-            border-radius: 8px;
-            min-width: 140px;
-            z-index: 100;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-        }
-
-        .dropdown-menu.show {
-            display: flex;
-        }
-
-        .dropdown-item {
-            padding: 10px 14px;
-            background: none;
-            border: none;
-            color: rgba(210, 190, 165, 0.7);
-            font-size: 12px;
-            cursor: pointer;
-            text-align: left;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.15s ease;
-        }
-
-        .dropdown-item:hover {
-            background: rgba(255, 255, 255, 0.06);
-            color: rgba(210, 190, 165, 1);
-        }
-
-        .dropdown-item.active {
-            background: rgba(255, 255, 255, 0.08);
-            color: rgba(210, 190, 165, 1);
-        }
-
-        /* Chat area */
-        .chat-area {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 12px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            background: transparent;
-            scrollbar-width: none;
-        }
-
-        .chat-area::-webkit-scrollbar { display: none; }
-
-        .message {
-            display: flex;
-            animation: msgIn 0.4s ease-out forwards;
-        }
-
-        @keyframes msgIn {
-            from { opacity: 0; filter: blur(8px); transform: translateY(6px); }
-            to   { opacity: 1; filter: blur(0px); transform: translateY(0); }
-        }
-
-        .message.user { justify-content: flex-end; }
-
-        .message-bubble {
-            max-width: 80%;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            line-height: 1.5;
-            word-wrap: break-word;
-            word-break: break-word;
-        }
-
-        .message.ai .message-bubble {
-            background: rgba(255, 255, 255, 0.06);
-            color: rgba(210, 190, 165, 0.8);
-        }
-
-        .message.user .message-bubble {
-            background: rgba(255, 255, 255, 0.06);
-            color: rgba(210, 190, 165, 0.8);
-        }
-
-        /* Typing indicator */
-        .typing-bubble {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 10px 14px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            width: fit-content;
-        }
-
-        .typing-bubble span {
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 50%;
-            animation: typing 1.2s infinite;
-        }
-
-        .typing-bubble span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-bubble span:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes typing {
-            0%, 60%, 100% { opacity: 0.3; transform: scale(1); }
-            30% { opacity: 1; transform: scale(1.2); }
-        }
-
-        .empty-state {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: rgba(255, 255, 255, 0.3);
-            text-align: center;
-            font-size: 12px;
-            line-height: 1.6;
-        }
-
-        /* Input area */
-        .input-area {
-            padding: 12px 16px;
-            background: transparent;
-            display: flex;
-            gap: 8px;
-            flex-shrink: 0;
-            align-items: center;
-        }
-
-        .input-field {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.06);
-            border: none;
-            color: #bbb;
-            padding: 0 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            outline: none;
-            transition: all 0.15s ease;
-            font-family: 'Inter', sans-serif;
-            resize: none;
-            height: 36px;
-            line-height: 36px;
-        }
-
-        .input-field::placeholder { color: rgba(255, 255, 255, 0.35); }
-
-        .input-field:focus {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .send-btn {
-            width: 36px;
-            height: 36px;
-            background: rgba(255, 255, 255, 0.06);
-            border: none;
-            color: rgba(255, 255, 255, 0.35);
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.15s ease;
-            flex-shrink: 0;
-        }
-
-        .send-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .send-btn:active { transform: scale(0.95); }
-
-        .send-btn img {
-            width: 16px;
-            height: 16px;
-            filter: invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);
-        }
-    </style>
+/* End modal */
+.end-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+.end-overlay.show{display:flex;}
+.end-modal{width:75%;max-width:320px;background:rgba(42,36,32,0.95);border-radius:10px;padding:24px 20px;display:flex;flex-direction:column;gap:16px;animation:fadeIn 0.3s ease-out forwards;}
+.end-title{color:rgba(210,190,165,0.9);font-size:16px;font-weight:500;font-family:'TiemposHeadline',serif;line-height:1.3;}
+.end-desc{color:rgba(210,190,165,0.55);font-size:12px;line-height:1.6;}
+.end-btns{display:flex;gap:8px;}
+.end-btn{flex:1;height:38px;border:none;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
+.end-btn-menu{background:rgba(255,255,255,0.08);color:rgba(210,190,165,0.8);}
+.end-btn-menu:hover{background:rgba(255,255,255,0.12);}
+.end-btn-new{background:rgba(210,190,165,0.15);color:rgba(210,190,165,1);}
+.end-btn-new:hover{background:rgba(210,190,165,0.22);}
+</style>
 </head>
 <body>
-    <div class="background" id="background"></div>
+<div class="bg" id="bg"></div>
+<div class="overlay" id="overlay"></div>
 
-    <div class="modal">
-      <div class="modal-inner">
-        <div class="chat-header">
-            <button class="model-selector-btn" id="modelBtn">Тара</button>
-            <div class="dropdown-menu" id="dropdownMenu">
-                <button class="dropdown-item active" data-model="tara">Тара</button>
-                <button class="dropdown-item" data-model="aura">Аура</button>
-                <button class="dropdown-item" data-model="karma">Карма</button>
-                <button class="dropdown-item" data-model="litera">Литера</button>
-            </div>
-        </div>
-
-        <div class="chat-area" id="chatArea">
-            <div class="empty-state">
-                Добро пожаловать, искатель.<br>Задай свой вопрос проводнику.
-            </div>
-        </div>
-
-        <div class="input-area">
-            <input
-                type="text"
-                class="input-field"
-                id="messageInput"
-                placeholder="Задай свой вопрос..."
-                autocomplete="off"
-            >
-            <button class="send-btn" id="sendBtn">
-                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/b10a442f83ac8d558d211780dd24e855f47e9e2c/dove-.svg" alt="send">
-            </button>
-        </div>
-      </div>
+<!-- SCREEN 1: Login -->
+<div class="screen active" id="screen1">
+<div class="modal">
+    <div style="text-align:center;display:flex;flex-direction:column;gap:10px;">
+        <div class="s1-title">Soma AI</div>
+        <div class="s1-sub">Познай себя через призму времени</div>
     </div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+        <button class="auth-btn auth-google" id="googleBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Войти через Google
+        </button>
+        <button class="auth-btn auth-apple" id="appleBtn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            Войти через Apple
+        </button>
+    </div>
+    <div class="s1-footer">Продолжая, вы соглашаетесь с условиями использования</div>
+</div>
+</div>
 
-    <script>
-        const backgroundImages = [
-            '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'
-        ];
+<!-- SCREEN 1b: Survey -->
+<div class="screen" id="screen1b">
+<div class="modal" style="max-height:90vh;overflow-y:auto;scrollbar-width:none;">
+    <div class="s1b-title">Расскажи о себе</div>
+    <div class="fields">
+        <div><div class="flabel">Что вас беспокоит?</div>
+        <select class="fselect"><option value="" disabled selected>Выберите тему</option><option>Отношения и любовь</option><option>Карьера и деньги</option><option>Здоровье и энергия</option><option>Смысл и предназначение</option><option>Тревога и страхи</option><option>Семья и близкие</option><option>Одиночество</option><option>Другое</option></select></div>
+        <div><div class="flabel">Как вы себя чувствуете сейчас?</div>
+        <select class="fselect"><option value="" disabled selected>Выберите состояние</option><option>Потерян и не знаю куда идти</option><option>Тревожно и неспокойно</option><option>Устал и нет сил</option><option>Ищу ответы на вопросы</option><option>Хочу перемен</option><option>В целом хорошо, но есть вопросы</option><option>Чувствую внутренний конфликт</option></select></div>
+        <div><div class="flabel">Что вам ближе?</div>
+        <select class="fselect"><option value="" disabled selected>Выберите подход</option><option>Таро и карты судьбы</option><option>Нумерология и числа</option><option>Кармология и прошлые жизни</option><option>Психология и самопознание</option><option>Всё интересно</option></select></div>
+        <div><div class="flabel">Ваш возраст</div>
+        <select class="fselect"><option value="" disabled selected>Выберите диапазон</option><option>До 20 лет</option><option>20–30 лет</option><option>30–40 лет</option><option>40–50 лет</option><option>Старше 50</option></select></div>
+        <div><div class="flabel">Как часто обращаетесь за советом?</div>
+        <select class="fselect"><option value="" disabled selected>Выберите вариант</option><option>Впервые пробую</option><option>Иногда, в трудные моменты</option><option>Регулярно, это часть жизни</option><option>Скептически, но интересно</option></select></div>
+        <div><div class="flabel">Чего ожидаете от сессии?</div>
+        <select class="fselect"><option value="" disabled selected>Выберите цель</option><option>Получить ясность и направление</option><option>Выговориться и быть услышанным</option><option>Узнать что-то о своей судьбе</option><option>Найти решение конкретной ситуации</option><option>Просто попробовать</option></select></div>
+    </div>
+    <button class="submit-btn" id="submitBtn">
+        <span>Начать сессию</span>
+        <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/b10a442f83ac8d558d211780dd24e855f47e9e2c/dove-.svg" alt="">
+    </button>
+</div>
+</div>
 
-        const models = {
-            tara:   { name: 'Тара',   responses: ['Карты показывают путь, но выбор остаётся за тобой.', 'Прошлое учит, настоящее действует, будущее ждёт.', 'Расклад говорит: твой вопрос требует внутреннего размышления.'] },
-            aura:   { name: 'Аура',   responses: ['Твоя карма говорит о необходимости баланса.', 'Энергия вокруг тебя указывает на перемены.', 'Прошлые действия формируют настоящее.'] },
-            karma:  { name: 'Карма',  responses: ['Числа вибрируют с твоей сущностью.', 'Твой числовой код раскрывает скрытые истины.', 'Нумерология указывает на твой жизненный путь.'] },
-            litera: { name: 'Литера', responses: ['Твой вопрос отражает глубокие внутренние процессы.', 'Понимание себя — первый шаг к переменам.', 'Психика ищет ответы, которые уже внутри.'] }
-        };
+<!-- SCREEN 2: Chat -->
+<div class="screen" id="screen2">
+<div class="s2-wrap">
+<div class="s2-inner">
+    <div class="chat-header">
+        <div class="chat-header-left">
+            <button class="model-btn" id="modelBtn">Тара</button>
+            <div class="dropdown" id="dropdown">
+                <button class="ditem active" data-model="tara">Тара</button>
+                <button class="ditem" data-model="aura">Аура</button>
+                <button class="ditem" data-model="karma">Карма</button>
+                <button class="ditem" data-model="litera">Литера</button>
+            </div>
+        </div>
+        <button class="bulb-btn" id="bulbBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21h6M12 3a6 6 0 0 1 6 6c0 2.22-1.2 4.16-3 5.2V17H9v-2.8A6 6 0 0 1 6 9a6 6 0 0 1 6-6z"/></svg>
+        </button>
+    </div>
+    <div class="chat-area" id="chatArea"></div>
+    <div class="input-area">
+        <input type="text" class="input-field" id="msgInput" placeholder="Задай свой вопрос..." autocomplete="off">
+        <button class="send-btn" id="sendBtn">
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/b10a442f83ac8d558d211780dd24e855f47e9e2c/dove-.svg" alt="">
+        </button>
+    </div>
+</div>
+</div>
+</div>
 
-        let currentModel = 'tara';
-        let isTyping = false;
+<!-- End session modal -->
+<div class="end-overlay" id="endOverlay">
+<div class="end-modal">
+    <div class="end-title">Рада, что вы нашли ответ на вопрос</div>
+    <div class="end-desc">Вы можете начать новую сессию с чистого листа или вернуться в главное меню.</div>
+    <div class="end-btns">
+        <button class="end-btn end-btn-menu" id="endMenu">В меню</button>
+        <button class="end-btn end-btn-new" id="endNew">Новая сессия</button>
+    </div>
+</div>
+</div>
 
-        const background   = document.getElementById('background');
-        const chatArea     = document.getElementById('chatArea');
-        const messageInput = document.getElementById('messageInput');
-        const sendBtn      = document.getElementById('sendBtn');
-        const modelBtn     = document.getElementById('modelBtn');
-        const dropdownMenu = document.getElementById('dropdownMenu');
-        const dropdownItems = document.querySelectorAll('.dropdown-item');
+<script>
+const BG = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/BG/';
+const DOVE = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/b10a442f83ac8d558d211780dd24e855f47e9e2c/dove-.svg';
+const KEY_USER = 'soma_user';
+const KEY_CHAT = 'soma_chat';
+const KEY_SURVEY = 'soma_survey';
 
-        // Random background
-        const randomImage = backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
-        background.style.backgroundImage = `url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/BG/${randomImage}.jpeg')`;
+// Random BG
+const bgEl = document.getElementById('bg');
+bgEl.style.backgroundImage = `url('${BG}${Math.ceil(Math.random()*11)}.jpeg')`;
 
-        // Model dropdown
-        modelBtn.addEventListener('click', () => dropdownMenu.classList.toggle('show'));
+// Transition
+const overlayEl = document.getElementById('overlay');
+function goTo(id) {
+    overlayEl.classList.add('on');
+    setTimeout(() => {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        bgEl.style.opacity = id === 'screen2' ? '0' : '1';
+        overlayEl.classList.remove('on');
+        if (id === 'screen2') initChat();
+    }, 500);
+}
 
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.chat-header')) dropdownMenu.classList.remove('show');
-        });
+// Init — check if already logged in
+(function init() {
+    if (localStorage.getItem(KEY_USER)) {
+        document.getElementById('screen1').classList.remove('active');
+        document.getElementById('screen2').classList.add('active');
+        bgEl.style.opacity = '0';
+        initChat();
+    }
+})();
 
-        dropdownItems.forEach(item => {
-            item.addEventListener('click', () => {
-                currentModel = item.dataset.model;
-                modelBtn.textContent = models[currentModel].name;
-                dropdownItems.forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-                dropdownMenu.classList.remove('show');
-            });
-        });
+// S1
+document.getElementById('googleBtn').addEventListener('click', () => {
+    localStorage.setItem(KEY_USER, JSON.stringify({p:'google',ts:Date.now()}));
+    goTo('screen1b');
+});
+document.getElementById('appleBtn').addEventListener('click', () => {
+    localStorage.setItem(KEY_USER, JSON.stringify({p:'apple',ts:Date.now()}));
+    goTo('screen1b');
+});
 
-        // Send message
-        function sendMessage() {
-            const text = messageInput.value.trim();
-            if (!text || isTyping) return;
+// S1b
+document.getElementById('submitBtn').addEventListener('click', () => {
+    const vals = Array.from(document.querySelectorAll('#screen1b .fselect')).map(s => s.value);
+    localStorage.setItem(KEY_SURVEY, JSON.stringify(vals));
+    goTo('screen2');
+});
 
-            const emptyState = chatArea.querySelector('.empty-state');
-            if (emptyState) emptyState.remove();
+// Chat
+const models = {
+    tara:   {name:'Тара',   r:['Карты показывают путь, но выбор остаётся за тобой.','Прошлое учит, настоящее действует, будущее ждёт.','Расклад говорит: твой вопрос требует внутреннего размышления.']},
+    aura:   {name:'Аура',   r:['Твоя карма говорит о необходимости баланса.','Энергия вокруг тебя указывает на перемены.','Прошлые действия формируют настоящее.']},
+    karma:  {name:'Карма',  r:['Числа вибрируют с твоей сущностью.','Твой числовой код раскрывает скрытые истины.','Нумерология указывает на твой жизненный путь.']},
+    litera: {name:'Литера', r:['Твой вопрос отражает глубокие внутренние процессы.','Понимание себя — первый шаг к переменам.','Психика ищет ответы, которые уже внутри.']}
+};
+let curModel = 'tara', isTyping = false;
 
-            messageInput.value = '';
-            isTyping = true;
+const modelBtn = document.getElementById('modelBtn');
+const dropdown = document.getElementById('dropdown');
+const ditems   = document.querySelectorAll('.ditem');
+const chatArea = document.getElementById('chatArea');
+const msgInput = document.getElementById('msgInput');
+const sendBtn  = document.getElementById('sendBtn');
+const bulbBtn  = document.getElementById('bulbBtn');
+const endOverlay = document.getElementById('endOverlay');
 
-            // User message appears after 500ms with blur animation
-            setTimeout(() => {
-                addMessage(text, 'user');
+modelBtn.addEventListener('click', () => dropdown.classList.toggle('show'));
+document.addEventListener('click', e => {
+    if (!e.target.closest('.chat-header-left')) dropdown.classList.remove('show');
+    if (!e.target.closest('.end-modal') && !e.target.closest('.bulb-btn')) endOverlay.classList.remove('show');
+});
+ditems.forEach(d => d.addEventListener('click', () => {
+    curModel = d.dataset.model;
+    modelBtn.textContent = models[curModel].name;
+    ditems.forEach(i => i.classList.remove('active'));
+    d.classList.add('active');
+    dropdown.classList.remove('show');
+}));
 
-                // Delay proportional to message length, min 1s, max 4s
-                const delay = Math.min(Math.max(text.length * 30, 1000), 4000);
-                const typingEl = showTyping();
+bulbBtn.addEventListener('click', () => endOverlay.classList.toggle('show'));
+document.getElementById('endMenu').addEventListener('click', () => {
+    endOverlay.classList.remove('show');
+    [KEY_USER, KEY_CHAT, KEY_SURVEY].forEach(k => localStorage.removeItem(k));
+    goTo('screen1');
+});
+document.getElementById('endNew').addEventListener('click', () => {
+    endOverlay.classList.remove('show');
+    localStorage.removeItem(KEY_CHAT);
+    chatArea.innerHTML = '';
+    showPlaceholder();
+});
 
-                setTimeout(() => {
-                    typingEl.remove();
-                    isTyping = false;
-                    const model = models[currentModel];
-                    const response = model.responses[Math.floor(Math.random() * model.responses.length)];
-                    addMessage(response, 'ai');
-                }, delay);
-            }, 500);
+function initChat() {
+    const raw = localStorage.getItem(KEY_CHAT);
+    if (raw) {
+        const data = JSON.parse(raw);
+        if (Date.now() - data.ts < 86400000) {
+            data.msgs.forEach(m => addMsg(m.t, m.s, false));
+            return;
         }
+        localStorage.removeItem(KEY_CHAT);
+    }
+    showPlaceholder();
+}
 
-        function addMessage(text, sender) {
-            const div = document.createElement('div');
-            div.className = `message ${sender}`;
-            const bubble = document.createElement('div');
-            bubble.className = 'message-bubble';
-            bubble.textContent = text;
-            div.appendChild(bubble);
-            chatArea.appendChild(div);
-            chatArea.scrollTop = chatArea.scrollHeight;
-        }
+function showPlaceholder() {
+    chatArea.innerHTML = `<div class="empty-state">Задавайте любые вопросы.<br>Переключайте модели для ответа на них.<br><span style="opacity:0.5;font-size:11px;">Все сообщения удаляются через 24 часа.</span></div>`;
+}
 
-        function showTyping() {
-            const div = document.createElement('div');
-            div.className = 'message ai';
-            div.innerHTML = `<div class="typing-bubble"><span></span><span></span><span></span></div>`;
-            chatArea.appendChild(div);
-            chatArea.scrollTop = chatArea.scrollHeight;
-            return div;
-        } 
+function saveChat() {
+    const msgs = Array.from(chatArea.querySelectorAll('.message')).map(el => ({
+        s: el.classList.contains('user') ? 'user' : 'ai',
+        t: el.querySelector('.bubble').textContent
+    }));
+    localStorage.setItem(KEY_CHAT, JSON.stringify({ts: Date.now(), msgs}));
+}
 
-        sendBtn.addEventListener('click', sendMessage);
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') { e.preventDefault(); sendMessage(); }
-        });
+function addMsg(text, sender, animate) {
+    const div = document.createElement('div');
+    div.className = `message ${sender}`;
+    if (!animate) div.style.animation = 'none';
+    const b = document.createElement('div');
+    b.className = 'bubble';
+    b.textContent = text;
+    div.appendChild(b);
+    chatArea.appendChild(div);
+    chatArea.scrollTop = chatArea.scrollHeight;
+}
 
-        messageInput.focus();
-    </script>
+function showTyping() {
+    const div = document.createElement('div');
+    div.className = 'message ai';
+    div.innerHTML = `<div class="typing-bubble"><span></span><span></span><span></span></div>`;
+    chatArea.appendChild(div);
+    chatArea.scrollTop = chatArea.scrollHeight;
+    return div;
+}
+
+function send() {
+    const text = msgInput.value.trim();
+    if (!text || isTyping) return;
+    msgInput.value = '';
+    isTyping = true;
+    const empty = chatArea.querySelector('.empty-state');
+    if (empty) empty.remove();
+    setTimeout(() => {
+        addMsg(text, 'user', true);
+        const delay = Math.min(Math.max(text.length * 30, 1000), 4000);
+        const t = showTyping();
+        setTimeout(() => {
+            t.remove();
+            isTyping = false;
+            const r = models[curModel].r;
+            addMsg(r[Math.floor(Math.random() * r.length)], 'ai', true);
+            saveChat();
+        }, delay);
+    }, 500);
+}
+
+sendBtn.addEventListener('click', send);
+msgInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); send(); } });
+</script>
 </body>
 </html>
