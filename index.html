@@ -59,13 +59,32 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .model-btn:hover{background:rgba(255,255,255,0.12);color:rgba(210,190,165,1);}
 .dropdown{position:absolute;top:calc(100% + 4px);left:16px;background:rgba(42,36,32,0.75);border:1px solid rgba(210,190,165,0.15);border-radius:10px;min-width:200px;z-index:100;display:none;flex-direction:column;overflow:hidden;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
 .dropdown.show{display:flex;}
-.ditem{padding:10px 14px;background:none;border:none;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:all 0.15s;display:flex;flex-direction:column;gap:2px;}
+.ditem{padding:10px 14px;background:none;border:none;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:all 0.15s;display:flex;align-items:center;gap:8px;}
 .ditem:hover{background:rgba(255,255,255,0.06);}
 .ditem.active{background:rgba(255,255,255,0.08);}
+.ditem-text{display:flex;flex-direction:column;gap:2px;flex:1;}
 .ditem-name{font-size:13px;font-weight:500;color:rgba(210,190,165,0.9);}
 .ditem.active .ditem-name{color:rgba(210,190,165,1);}
 .ditem-desc{font-size:11px;color:rgba(210,190,165,0.45);}
 .ditem.active .ditem-desc{color:rgba(210,190,165,0.6);}
+.ditem-check{font-size:12px;color:rgba(210,190,165,0.9);opacity:0;flex-shrink:0;}
+.ditem.active .ditem-check{opacity:1;}
+.ditem-star{width:14px;height:14px;flex-shrink:0;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
+.ditem-divider{height:1px;background:rgba(210,190,165,0.1);margin:4px 0;}
+
+/* Premium modal */
+.premium-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:600;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.premium-overlay.show{display:flex;}
+.premium-modal{width:80%;max-width:340px;background:rgba(42,36,32,0.97);border-radius:12px;padding:28px 22px 22px;display:flex;flex-direction:column;gap:16px;animation:fadeIn 0.3s ease-out forwards;}
+.premium-title{color:rgba(210,190,165,1);font-size:20px;font-weight:700;font-family:'TiemposHeadline',serif;text-align:center;line-height:1.3;}
+.premium-desc{color:rgba(210,190,165,0.65);font-size:12px;line-height:1.7;text-align:center;}
+.premium-features{display:flex;flex-direction:column;gap:8px;}
+.premium-feature{display:flex;align-items:flex-start;gap:10px;color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;}
+.premium-feature-icon{width:14px;height:14px;flex-shrink:0;margin-top:1px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
+.premium-btn{width:100%;height:42px;background:rgba(210,190,165,0.2);border:1px solid rgba(210,190,165,0.3);color:rgba(210,190,165,1);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
+.premium-btn:hover{background:rgba(210,190,165,0.3);}
+.premium-close{background:none;border:none;color:rgba(210,190,165,0.4);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;text-align:center;transition:all 0.15s;}
+.premium-close:hover{color:rgba(210,190,165,0.7);}
 .bulb-btn{width:36px;height:36px;background:rgba(255,255,255,0.06);border:none;color:rgba(210,190,165,0.6);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
 .bulb-btn:hover{background:rgba(255,255,255,0.1);color:rgba(210,190,165,1);}
 .bulb-btn svg{width:16px;height:16px;}
@@ -187,10 +206,31 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
         <div class="chat-header-left">
             <button class="model-btn" id="modelBtn">Тара</button>
             <div class="dropdown" id="dropdown">
-                <button class="ditem active" data-model="tara"><span class="ditem-name">Тара</span><span class="ditem-desc">Таролог · карты и судьба</span></button>
-                <button class="ditem" data-model="aura"><span class="ditem-name">Аура</span><span class="ditem-desc">Кармолог · энергия и баланс</span></button>
-                <button class="ditem" data-model="karma"><span class="ditem-name">Карма</span><span class="ditem-desc">Нумеролог · числа и путь</span></button>
-                <button class="ditem" data-model="litera"><span class="ditem-name">Литера</span><span class="ditem-desc">Психолог · самопознание</span></button>
+                <button class="ditem active" data-model="tara">
+                    <div class="ditem-text"><span class="ditem-name">Тара</span><span class="ditem-desc">Таролог · карты и судьба</span></div>
+                    <span class="ditem-check">✓</span>
+                </button>
+                <button class="ditem" data-model="aura">
+                    <div class="ditem-text"><span class="ditem-name">Аура</span><span class="ditem-desc">Кармолог · энергия и баланс</span></div>
+                    <span class="ditem-check">✓</span>
+                </button>
+                <button class="ditem" data-model="karma">
+                    <div class="ditem-text"><span class="ditem-name">Карма</span><span class="ditem-desc">Нумеролог · числа и путь</span></div>
+                    <span class="ditem-check">✓</span>
+                </button>
+                <button class="ditem" data-model="litera">
+                    <div class="ditem-text"><span class="ditem-name">Литера</span><span class="ditem-desc">Психолог · самопознание</span></div>
+                    <span class="ditem-check">✓</span>
+                </button>
+                <div class="ditem-divider"></div>
+                <button class="ditem ditem-premium" data-premium="consilium">
+                    <div class="ditem-text"><span class="ditem-name">Консилиум</span><span class="ditem-desc">Мнения всех проводников</span></div>
+                    <img class="ditem-star" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/2bbc8b9a0d432e5555230a006e52ec297b67b5b2/star.svg" alt="">
+                </button>
+                <button class="ditem ditem-premium" data-premium="auto">
+                    <div class="ditem-text"><span class="ditem-name">Авто</span><span class="ditem-desc">Выбирает лучшего проводника</span></div>
+                    <img class="ditem-star" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/2bbc8b9a0d432e5555230a006e52ec297b67b5b2/star.svg" alt="">
+                </button>
             </div>
         </div>
         <div class="chat-header-right">
@@ -210,6 +250,30 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
         </button>
     </div>
 </div>
+</div>
+</div>
+
+<!-- Premium modal -->
+<div class="premium-overlay" id="premiumOverlay">
+<div class="premium-modal">
+    <div class="premium-title">Soma AI Premium</div>
+    <div class="premium-desc">Откройте полный доступ к возможностям всех проводников и эксклюзивным режимам.</div>
+    <div class="premium-features">
+        <div class="premium-feature">
+            <img class="premium-feature-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/2bbc8b9a0d432e5555230a006e52ec297b67b5b2/star.svg" alt="">
+            <span>Консилиум — ответ содержит мнения всех проводников одновременно</span>
+        </div>
+        <div class="premium-feature">
+            <img class="premium-feature-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/2bbc8b9a0d432e5555230a006e52ec297b67b5b2/star.svg" alt="">
+            <span>Авто — система сама выбирает наиболее компетентного проводника</span>
+        </div>
+        <div class="premium-feature">
+            <img class="premium-feature-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/2bbc8b9a0d432e5555230a006e52ec297b67b5b2/star.svg" alt="">
+            <span>Неограниченная история сессий без удаления через 24 часа</span>
+        </div>
+    </div>
+    <button class="premium-btn">Подключить Premium</button>
+    <button class="premium-close" id="premiumClose">Не сейчас</button>
 </div>
 </div>
 
@@ -301,6 +365,7 @@ const sendBtn  = document.getElementById('sendBtn');
 const themeBtn = document.getElementById('themeBtn');
 const menuBtn  = document.getElementById('menuBtn');
 const endOverlay = document.getElementById('endOverlay');
+const premiumOverlay = document.getElementById('premiumOverlay');
 
 let isLight = false;
 themeBtn.addEventListener('click', () => {
@@ -313,14 +378,22 @@ modelBtn.addEventListener('click', () => dropdown.classList.toggle('show'));
 document.addEventListener('click', e => {
     if (!e.target.closest('.chat-header-left')) dropdown.classList.remove('show');
     if (!e.target.closest('.end-modal') && !e.target.closest('#menuBtn')) endOverlay.classList.remove('show');
+    if (!e.target.closest('.premium-modal') && !e.target.closest('.ditem-premium')) premiumOverlay.classList.remove('show');
 });
 ditems.forEach(d => d.addEventListener('click', () => {
+    if (d.dataset.premium) {
+        dropdown.classList.remove('show');
+        premiumOverlay.classList.add('show');
+        return;
+    }
     curModel = d.dataset.model;
     modelBtn.textContent = models[curModel].name;
     ditems.forEach(i => i.classList.remove('active'));
     d.classList.add('active');
     dropdown.classList.remove('show');
 }));
+
+document.getElementById('premiumClose').addEventListener('click', () => premiumOverlay.classList.remove('show'));
 
 document.getElementById('endMenu').addEventListener('click', () => {
     endOverlay.classList.remove('show');
