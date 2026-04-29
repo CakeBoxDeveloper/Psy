@@ -42,7 +42,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .c-slide.is-center{z-index:5;opacity:1;filter:none;cursor:default;}
 .c-slide.is-near{z-index:4;opacity:0.7;filter:blur(4px);}
 .c-slide.is-far{z-index:3;opacity:0.45;filter:blur(10px);}
-.c-slide-content{position:absolute;top:0;left:0;right:0;padding:24px;display:flex;flex-direction:column;gap:14px;}
+.c-slide-content{position:absolute;top:0;left:0;right:0;bottom:0;padding:24px;display:flex;flex-direction:column;gap:14px;}
 .c-slide-content *::-webkit-scrollbar{display:none;}
 @media(max-width:599px){.c-slide.is-far{opacity:0;pointer-events:none;}}
 
@@ -209,7 +209,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
         <div style="position:absolute;bottom:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
         <div style="position:absolute;bottom:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
         <div style="position:absolute;bottom:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
-        <div class="c-slide-content">
+        <div style="position:absolute;bottom:0;left:0;right:0;padding:24px;display:flex;flex-direction:column;gap:20px;">
             <div style="text-align:center;display:flex;flex-direction:column;gap:8px;">
                 <div class="s1-title">Soma AI</div>
                 <div class="s1-sub">Познай себя через призму времени</div>
@@ -225,15 +225,12 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 
     <!-- Slide 1: О нас -->
     <div class="c-slide" id="slide1">
-        <div style="position:absolute;top:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;top:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;top:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to bottom,black 0%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,transparent 100%);pointer-events:none;"></div>
-        <div class="c-slide-content">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2px;">
+        <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;flex-shrink:0;">
                 <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">О нас</div>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:4px;opacity:0.5;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="rgba(210,190,165,0.8)" stroke-width="1.5" stroke-linejoin="round"/></svg>
             </div>
-            <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:10px;">
+            <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;gap:10px;">
                 <div style="padding:10px 12px;background:rgba(255,255,255,0.06);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
                     <div style="color:rgba(210,190,165,0.85);font-size:13px;line-height:1.7;">Soma AI — пространство для глубокого самопознания через призму времени. Мы объединяем психологию, архетипы и искусственный интеллект, чтобы помочь тебе найти ответы внутри себя.</div>
                 </div>
@@ -253,15 +250,12 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 
     <!-- Slide 2: Как это работает -->
     <div class="c-slide" id="slide2">
-        <div style="position:absolute;top:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;top:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;top:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to bottom,black 0%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,transparent 100%);pointer-events:none;"></div>
-        <div class="c-slide-content">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2px;">
+        <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;flex-shrink:0;">
                 <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Как это работает</div>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:4px;opacity:0.5;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="rgba(210,190,165,0.8)" stroke-width="1.5" stroke-linejoin="round"/></svg>
             </div>
-            <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:8px;">
+            <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;gap:8px;">
                 <div style="padding:10px 12px;background:rgba(255,255,255,0.06);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:rgba(210,190,165,0.65);font-size:12px;line-height:1.6;">Модели обучены на классической литературе, философских трактатах, юнгианской психологии и архетипических текстах — от Данте до Юнга. Они не предсказывают, а отражают.</div>
                 <div style="display:flex;flex-direction:column;gap:6px;">
                     <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgba(255,255,255,0.05);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);"><div style="width:20px;height:20px;border-radius:50%;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Выбери модель — каждая видит мир по-своему и отвечает в рамках своей традиции</div></div>
@@ -276,15 +270,12 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 
     <!-- Slide 3: Модели -->
     <div class="c-slide" id="slide3">
-        <div style="position:absolute;top:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;top:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;top:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to bottom,black 0%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,transparent 100%);pointer-events:none;"></div>
-        <div class="c-slide-content" style="display:flex;flex-direction:column;">
+        <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;flex-shrink:0;">
                 <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Модели</div>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:4px;opacity:0.5;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="rgba(210,190,165,0.8)" stroke-width="1.5" stroke-linejoin="round"/></svg>
             </div>
-            <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:5px;">
+            <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;gap:5px;">
                 <div style="padding:9px 11px;background:rgba(255,255,255,0.05);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
                     <div style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;margin-bottom:3px;">Тара</div>
                     <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Обучена на текстах таро, астрологии и символической традиции. Читает ситуацию через архетипы и знаки — находит скрытые смыслы там, где ты видишь случайность.</div>
