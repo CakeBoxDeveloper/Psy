@@ -53,11 +53,18 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 /* S2 Chat */
 .s2-wrap{width:100%;height:100vh;background:rgba(28,23,20,0.98);display:flex;flex-direction:column;align-items:center;justify-content:center;}
 .s2-inner{width:90%;max-width:420px;height:90vh;display:flex;flex-direction:column;background:rgba(42,36,32,0.95);border-radius:12px;overflow:hidden;}
+@media(max-width:599px){
+    .s2-wrap{background:rgba(42,36,32,0.95);}
+    .s2-inner{width:100%;max-width:100%;height:100vh;border-radius:0;}
+    .bg{filter:none !important;transform:none !important;}
+    .bg-frame{display:none;}
+    #screen1 .modal,#screen1b .modal{width:100%;max-width:100%;border-radius:0;min-height:100vh;}
+}
 .chat-header{padding:12px 16px;background:transparent;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:space-between;}
 .chat-header-left{display:flex;align-items:center;}
 .model-btn{background:rgba(255,255,255,0.08);border:none;color:rgba(210,190,165,0.85);font-size:13px;font-weight:500;cursor:pointer;padding:8px 16px;border-radius:8px;font-family:'Inter',sans-serif;transition:all 0.15s;}
 .model-btn:hover{background:rgba(255,255,255,0.12);color:rgba(210,190,165,1);}
-.dropdown{position:absolute;top:calc(100% + 4px);left:16px;background:rgba(42,36,32,0.75);border:1px solid rgba(210,190,165,0.15);border-radius:10px;min-width:200px;z-index:100;display:none;flex-direction:column;overflow:hidden;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+.dropdown{position:absolute;top:calc(100% + 4px);left:16px;background:rgba(42,36,32,0.98);border:1px solid rgba(210,190,165,0.12);border-radius:10px;min-width:220px;z-index:100;display:none;flex-direction:column;overflow:hidden;backdrop-filter:none;}
 .dropdown.show{display:flex;}
 .ditem{padding:10px 14px;background:none;border:none;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:all 0.15s;display:flex;align-items:center;gap:8px;}
 .ditem:hover{background:rgba(255,255,255,0.06);}
@@ -65,12 +72,12 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .ditem-text{display:flex;flex-direction:column;gap:2px;flex:1;}
 .ditem-name{font-size:13px;font-weight:500;color:rgba(210,190,165,0.9);}
 .ditem.active .ditem-name{color:rgba(210,190,165,1);}
-.ditem-desc{font-size:11px;color:rgba(210,190,165,0.45);}
-.ditem.active .ditem-desc{color:rgba(210,190,165,0.6);}
+.ditem-desc{font-size:11px;color:rgba(210,190,165,0.4);}
+.ditem.active .ditem-desc{color:rgba(210,190,165,0.55);}
 .ditem-check{font-size:12px;color:rgba(210,190,165,0.9);opacity:0;flex-shrink:0;}
 .ditem.active .ditem-check{opacity:1;}
 .ditem-star{width:14px;height:14px;flex-shrink:0;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
-.ditem-divider{height:1px;background:rgba(210,190,165,0.1);margin:4px 0;}
+.ditem-divider{display:none;}
 
 /* Premium modal */
 .premium-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:600;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
@@ -101,14 +108,15 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .typing-bubble span:nth-child(3){animation-delay:0.4s;}
 @keyframes typing{0%,60%,100%{opacity:0.3;transform:scale(1);}30%{opacity:1;transform:scale(1.2);}}
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:rgba(210,190,165,0.3);text-align:center;font-size:12px;line-height:1.8;}
+.empty-state img{filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(60%);opacity:0.5;}
 .input-area{padding:12px 16px;background:transparent;display:flex;gap:8px;flex-shrink:0;align-items:center;}
 .input-field{flex:1;background:rgba(255,255,255,0.06);border:none;color:rgba(210,190,165,0.85);padding:0 12px;border-radius:8px;font-size:12px;outline:none;transition:all 0.15s;font-family:'Inter',sans-serif;height:36px;line-height:36px;}
-.input-field::placeholder{color:rgba(210,190,165,0.35);}
+.input-field::placeholder{color:rgba(210,190,165,0.3);}
 .input-field:focus{background:rgba(255,255,255,0.1);}
 .send-btn{width:36px;height:36px;background:rgba(255,255,255,0.06);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
 .send-btn:hover{background:rgba(255,255,255,0.1);}
 .send-btn:active{transform:scale(0.95);}
-.send-btn img{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
+.send-btn img{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(60%);opacity:0.7;}
 
 /* Transitions for theme switch */
 .s2-wrap,.s2-inner,.model-btn,.bubble,.input-field,.send-btn,.bulb-btn,.empty-state,.ditem-name,.ditem-desc{transition:background 0.4s ease,color 0.4s ease,filter 0.4s ease;}
@@ -139,8 +147,8 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .end-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
 .end-overlay.show{display:flex;}
 .end-modal{width:75%;max-width:320px;background:rgba(42,36,32,0.95);border-radius:10px;padding:24px 20px;display:flex;flex-direction:column;gap:16px;animation:fadeIn 0.3s ease-out forwards;}
-.end-title{color:rgba(210,190,165,0.9);font-size:16px;font-weight:500;font-family:'TiemposHeadline',serif;line-height:1.3;}
-.end-desc{color:rgba(210,190,165,0.55);font-size:12px;line-height:1.6;}
+.end-title{color:rgba(210,190,165,0.95);font-size:17px;font-weight:700;font-family:'TiemposHeadline',serif;line-height:1.3;text-align:center;}
+.end-desc{color:rgba(210,190,165,0.55);font-size:12px;line-height:1.6;text-align:center;}
 .end-btns{display:flex;gap:8px;}
 .end-btn{flex:1;height:38px;border:none;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
 .end-btn-menu{background:rgba(255,255,255,0.08);color:rgba(210,190,165,0.8);}
@@ -172,12 +180,14 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
         </button>
     </div>
     <div class="s1-footer">Продолжая, вы соглашаетесь с условиями использования</div>
+    <button id="guestBtn" style="background:none;border:none;color:rgba(210,190,165,0.4);font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;text-align:center;padding:0;transition:color 0.15s;" onmouseover="this.style.color='rgba(210,190,165,0.7)'" onmouseout="this.style.color='rgba(210,190,165,0.4)'">Продолжить как гость</button>
 </div>
 </div>
 
 <!-- SCREEN 1b: Survey -->
 <div class="screen" id="screen1b">
-<div class="modal" style="max-height:90vh;overflow-y:auto;scrollbar-width:none;">
+<div style="width:100%;height:100%;background:rgba(28,23,20,0.98);display:flex;align-items:center;justify-content:center;">
+<div style="width:90%;max-width:420px;height:90vh;display:flex;flex-direction:column;background:rgba(42,36,32,0.95);border-radius:12px;overflow:hidden;padding:28px 24px 24px;gap:16px;overflow-y:auto;scrollbar-width:none;">
     <div class="s1b-title">Расскажи о себе</div>
     <div class="fields">
         <div><div class="flabel">Что вас беспокоит?</div>
@@ -197,8 +207,8 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
     </button>
 </div>
 </div>
-
-<!-- SCREEN 2: Chat -->
+</div>
+</div>
 <div class="screen" id="screen2">
 <div class="s2-wrap">
 <div class="s2-inner">
@@ -207,28 +217,27 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
             <button class="model-btn" id="modelBtn">Тара</button>
             <div class="dropdown" id="dropdown">
                 <button class="ditem active" data-model="tara">
-                    <div class="ditem-text"><span class="ditem-name">Тара</span><span class="ditem-desc">Таролог · карты и судьба</span></div>
+                    <div class="ditem-text"><span class="ditem-name">Тара</span><span class="ditem-desc">Читает знаки и раскладывает судьбу</span></div>
                     <span class="ditem-check">✓</span>
                 </button>
                 <button class="ditem" data-model="aura">
-                    <div class="ditem-text"><span class="ditem-name">Аура</span><span class="ditem-desc">Кармолог · энергия и баланс</span></div>
+                    <div class="ditem-text"><span class="ditem-name">Аура</span><span class="ditem-desc">Чувствует энергию и причины событий</span></div>
                     <span class="ditem-check">✓</span>
                 </button>
                 <button class="ditem" data-model="karma">
-                    <div class="ditem-text"><span class="ditem-name">Карма</span><span class="ditem-desc">Нумеролог · числа и путь</span></div>
+                    <div class="ditem-text"><span class="ditem-name">Карма</span><span class="ditem-desc">Видит скрытые закономерности в числах</span></div>
                     <span class="ditem-check">✓</span>
                 </button>
                 <button class="ditem" data-model="litera">
-                    <div class="ditem-text"><span class="ditem-name">Литера</span><span class="ditem-desc">Психолог · самопознание</span></div>
+                    <div class="ditem-text"><span class="ditem-name">Литера</span><span class="ditem-desc">Слушает и помогает разобраться в себе</span></div>
                     <span class="ditem-check">✓</span>
-                </button>
-                <div class="ditem-divider"></div>
-                <button class="ditem ditem-premium" data-premium="consilium">
-                    <div class="ditem-text"><span class="ditem-name">Консилиум</span><span class="ditem-desc">Мнения всех проводников</span></div>
-                    <img class="ditem-star" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/2bbc8b9a0d432e5555230a006e52ec297b67b5b2/star.svg" alt="">
                 </button>
                 <button class="ditem ditem-premium" data-premium="auto">
                     <div class="ditem-text"><span class="ditem-name">Авто</span><span class="ditem-desc">Выбирает лучшего проводника</span></div>
+                    <img class="ditem-star" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/2bbc8b9a0d432e5555230a006e52ec297b67b5b2/star.svg" alt="">
+                </button>
+                <button class="ditem ditem-premium" data-premium="consilium">
+                    <div class="ditem-text"><span class="ditem-name">Консилиум</span><span class="ditem-desc">Мнения всех проводников сразу</span></div>
                     <img class="ditem-star" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/2bbc8b9a0d432e5555230a006e52ec297b67b5b2/star.svg" alt="">
                 </button>
             </div>
@@ -339,6 +348,10 @@ document.getElementById('appleBtn').addEventListener('click', () => {
     localStorage.setItem(KEY_USER, JSON.stringify({p:'apple',ts:Date.now()}));
     goTo('screen1b');
 });
+document.getElementById('guestBtn').addEventListener('click', () => {
+    localStorage.setItem(KEY_USER, JSON.stringify({p:'guest',ts:Date.now()}));
+    goTo('screen1b');
+});
 
 // S1b
 document.getElementById('submitBtn').addEventListener('click', () => {
@@ -421,7 +434,7 @@ function initChat() {
 }
 
 function showPlaceholder() {
-    chatArea.innerHTML = `<div class="empty-state"><img src="${HOURGLASS}" style="width:36px;height:36px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);margin-bottom:14px;opacity:0.6;"><div>Задавайте любые вопросы.<br>Переключайте модели для ответа на них.<br><span style="opacity:0.5;font-size:11px;">Все сообщения удаляются через 24 часа.</span></div></div>`;
+    chatArea.innerHTML = `<div class="empty-state"><img src="${HOURGLASS}" style="width:36px;height:36px;margin-bottom:14px;"><div>Задавайте любые вопросы.<br>Переключайте модели для ответа на них.<br><span style="font-size:11px;">Все сообщения удаляются через 24 часа.</span></div></div>`;
 }
 
 function saveChat() {
