@@ -27,6 +27,11 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .modal{width:75%;max-width:380px;background:rgba(20,20,20,0.6);border:none;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.7);display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:28px 24px 24px;gap:20px;animation:fadeIn 0.6s ease-out forwards;}
 @keyframes fadeIn{from{opacity:0;filter:blur(8px);transform:translateY(12px);}to{opacity:1;filter:blur(0);transform:translateY(0);}}
 
+/* S1 slides */
+.s1-slide-side{width:80px;height:90vh;background:rgb(55,46,40);border-radius:12px;flex-shrink:0;background-size:cover;background-position:center;opacity:0.5;transition:opacity 0.2s;}
+.s1-slide-side:hover{opacity:0.75;}
+@media(max-width:599px){.s1-slide-side{display:none;}}
+
 /* S1 */
 .s1-title{color:#fff;font-size:36px;font-weight:300;font-family:'TiemposHeadline',serif;text-align:center;}
 .s1-sub{color:rgba(210,190,165,0.6);font-size:12px;text-align:center;line-height:1.6;}
@@ -39,14 +44,16 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .s1-footer{text-align:center;color:rgba(210,190,165,0.3);font-size:10px;line-height:1.5;}
 
 /* S1b Survey */
-.s1b-title{color:rgba(210,190,165,0.9);font-size:22px;font-weight:300;font-family:'TiemposHeadline',serif;text-align:center;}
-.fields{display:flex;flex-direction:column;gap:12px;}
-.flabel{color:rgba(210,190,165,0.55);font-size:11px;letter-spacing:0.3px;margin-bottom:4px;}
-.fselect{width:100%;background:rgba(255,255,255,0.08);border:none;color:rgba(210,190,165,0.85);padding:10px 32px 10px 12px;border-radius:8px;font-size:12px;outline:none;font-family:'Inter',sans-serif;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(210,190,165,0.5)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:background 0.15s;}
-.fselect:focus{background-color:rgba(255,255,255,0.12);}
-.fselect option{background:#2a2420;color:rgba(210,190,165,0.85);}
-.submit-btn{width:100%;height:42px;background:rgba(255,255,255,0.08);border:none;color:rgba(210,190,165,0.85);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-family:'Inter',sans-serif;transition:all 0.15s;}
-.submit-btn:hover{background:rgba(255,255,255,0.12);color:rgba(210,190,165,1);}
+.s1b-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.s1b-title{color:rgb(210,190,165);font-size:20px;font-weight:300;font-family:'TiemposHeadline',serif;}
+.s1b-icon{width:18px;height:18px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
+.fields{display:flex;flex-direction:column;gap:12px;flex:1;}
+.flabel{color:rgb(180,165,145);font-size:11px;letter-spacing:0.3px;margin-bottom:4px;}
+.fselect{width:100%;background:rgb(55,46,40);border:none;color:rgb(210,190,165);padding:10px 32px 10px 12px;border-radius:8px;font-size:12px;outline:none;font-family:'Inter',sans-serif;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(210,190,165,0.6)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:background 0.15s;}
+.fselect:focus{background-color:rgb(65,54,47);}
+.fselect option{background:rgb(42,36,32);color:rgb(210,190,165);}
+.submit-btn{width:100%;height:42px;background:rgb(55,46,40);border:none;color:rgb(210,190,165);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-family:'Inter',sans-serif;transition:all 0.15s;margin-top:auto;}
+.submit-btn:hover{background:rgb(65,54,47);}
 .submit-btn:active{transform:scale(0.98);}
 .submit-btn img{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
 
@@ -119,29 +126,46 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .send-btn img{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(60%);opacity:0.7;}
 
 /* Transitions for theme switch */
-.s2-wrap,.s2-inner,.model-btn,.bubble,.input-field,.send-btn,.bulb-btn,.empty-state,.ditem-name,.ditem-desc{transition:background 0.4s ease,color 0.4s ease,filter 0.4s ease;}
+.s2-wrap,.s2-inner,.model-btn,.bubble,.input-field,.send-btn,.bulb-btn,.empty-state,.ditem-name,.ditem-desc,.dropdown,.end-modal,.premium-modal{transition:background 0.4s ease,color 0.4s ease,filter 0.4s ease;}
 
 /* Light theme */
-.light .s2-wrap{background:rgba(235,220,200,0.25);}
-.light .s2-inner{background:rgba(230,215,195,0.92);}
-.light .model-btn{background:rgba(60,45,35,0.12);color:rgba(50,35,25,0.9);}
-.light .model-btn:hover{background:rgba(60,45,35,0.2);}
-.light .dropdown{background:rgba(230,215,195,0.95);border-color:rgba(60,45,35,0.15);}
-.light .ditem-name{color:rgba(50,35,25,0.9);}
-.light .ditem-desc{color:rgba(50,35,25,0.5);}
-.light .ditem:hover,.light .ditem.active{background:rgba(60,45,35,0.1);}
-.light .bubble{background:rgba(60,45,35,0.1);color:rgba(50,35,25,0.9);}
+.light .s2-wrap{background:rgb(220,205,185);}
+.light .s2-inner{background:rgb(235,220,200);}
+.light .model-btn{background:rgba(60,45,35,0.25);color:rgb(40,28,20);font-weight:600;border:1px solid rgba(60,45,35,0.3);}
+.light .model-btn:hover{background:rgba(60,45,35,0.35);}
+.light .dropdown{background:rgb(235,220,200);border-color:rgba(60,45,35,0.2);}
+.light .ditem-name{color:rgb(40,28,20);}
+.light .ditem-desc{color:rgba(40,28,20,0.55);}
+.light .ditem:hover{background:rgba(60,45,35,0.08);}
+.light .ditem.active{background:rgba(60,45,35,0.12);}
+.light .ditem-check{color:rgb(40,28,20);}
+.light .bubble{background:rgba(60,45,35,0.1);color:rgb(40,28,20);}
 .light .typing-bubble{background:rgba(60,45,35,0.1);}
 .light .typing-bubble span{background:rgba(60,45,35,0.4);}
-.light .empty-state{color:rgba(50,35,25,0.4);}
-.light .input-field{background:rgba(60,45,35,0.08);color:rgba(50,35,25,0.9);}
-.light .input-field::placeholder{color:rgba(50,35,25,0.35);}
-.light .input-field:focus{background:rgba(60,45,35,0.13);}
-.light .send-btn{background:rgba(60,45,35,0.08);}
-.light .bulb-btn{background:rgba(60,45,35,0.08);color:rgba(50,35,25,0.6);}
-.light .bulb-btn:hover{background:rgba(60,45,35,0.15);color:rgba(50,35,25,1);}
-.light .send-btn img{filter:invert(15%) sepia(15%) saturate(300%) hue-rotate(10deg) brightness(35%);}
-.light .chat-header-right .bulb-btn svg{stroke:rgba(50,35,25,0.6);}
+.light .empty-state{color:rgba(40,28,20,0.4);}
+.light .empty-state img{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);opacity:0.5;}
+.light .input-field{background:rgba(60,45,35,0.1);color:rgb(40,28,20);}
+.light .input-field::placeholder{color:rgba(40,28,20,0.35);}
+.light .input-field:focus{background:rgba(60,45,35,0.15);}
+.light .send-btn{background:rgba(60,45,35,0.1);}
+.light .send-btn img{filter:invert(15%) sepia(15%) saturate(300%) hue-rotate(10deg) brightness(35%);opacity:0.7;}
+.light .bulb-btn{background:rgba(60,45,35,0.1);color:rgba(40,28,20,0.7);}
+.light .bulb-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28,20);}
+.light .bulb-btn svg{stroke:rgba(40,28,20,0.7);}
+/* Модалки в светлой теме */
+.light .end-modal{background:rgb(235,220,200);}
+.light .end-title{color:rgb(40,28,20);}
+.light .end-desc{color:rgba(40,28,20,0.6);}
+.light .end-btn-menu{background:rgba(60,45,35,0.12);color:rgb(40,28,20);}
+.light .end-btn-new{background:rgba(60,45,35,0.2);color:rgb(40,28,20);}
+.light .premium-modal{background:rgb(235,220,200);}
+.light .premium-title{color:rgb(40,28,20);}
+.light .premium-desc{color:rgba(40,28,20,0.6);}
+.light .premium-feature{color:rgba(40,28,20,0.8);}
+.light .premium-btn{background:rgba(60,45,35,0.2);border-color:rgba(60,45,35,0.3);color:rgb(40,28,20);}
+.light .premium-close{color:rgba(40,28,20,0.4);}
+/* Убираем bg в светлой теме */
+.light ~ .bg, .light ~ .bg-frame{display:none !important;}
 
 /* End modal */
 .end-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
@@ -164,42 +188,64 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 
 <!-- SCREEN 1: Login -->
 <div class="screen active" id="screen1">
-<div class="modal">
-    <div style="text-align:center;display:flex;flex-direction:column;gap:10px;">
-        <div class="s1-title">Soma AI</div>
-        <div class="s1-sub">Познай себя через призму времени</div>
+<div style="width:100%;height:100%;background:rgb(28,23,20);display:flex;align-items:center;justify-content:center;gap:16px;overflow:hidden;">
+
+    <!-- Боковые слайды (заглушки) -->
+    <div class="s1-slide s1-slide-side" id="slideLeft" style="cursor:pointer;"></div>
+
+    <!-- Центральный блок -->
+    <div style="width:90%;max-width:420px;height:90vh;background:rgb(42,36,32);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;flex-shrink:0;animation:fadeIn 0.6s ease-out forwards;">
+        <!-- Картинка сверху -->
+        <div id="s1BgImg" style="flex:1;background-size:cover;background-position:center;background-repeat:no-repeat;min-height:0;"></div>
+        <!-- Контент снизу -->
+        <div style="padding:24px;display:flex;flex-direction:column;gap:14px;background:rgb(42,36,32);">
+            <div style="text-align:center;display:flex;flex-direction:column;gap:8px;">
+                <div class="s1-title">Soma AI</div>
+                <div class="s1-sub">Познай себя через призму времени</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                <button class="auth-btn auth-google" id="googleBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    Войти через Google
+                </button>
+                <button class="auth-btn auth-apple" id="appleBtn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                    Войти через Apple
+                </button>
+                <button class="auth-btn auth-apple" id="guestBtn">Продолжить как гость</button>
+            </div>
+            <div class="s1-footer">Продолжая, ты соглашаешься с условиями использования</div>
+        </div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:10px;">
-        <button class="auth-btn auth-google" id="googleBtn">
-            <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-            Войти через Google
-        </button>
-        <button class="auth-btn auth-apple" id="appleBtn">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-            Войти через Apple
-        </button>
-    </div>
-    <div class="s1-footer">Продолжая, вы соглашаетесь с условиями использования</div>
-    <button id="guestBtn" style="background:none;border:none;color:rgba(210,190,165,0.4);font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;text-align:center;padding:0;transition:color 0.15s;" onmouseover="this.style.color='rgba(210,190,165,0.7)'" onmouseout="this.style.color='rgba(210,190,165,0.4)'">Продолжить как гость</button>
+
+    <!-- Правый слайд -->
+    <div class="s1-slide s1-slide-side" id="slideRight" style="cursor:pointer;"></div>
 </div>
 </div>
 
 <!-- SCREEN 1b: Survey -->
 <div class="screen" id="screen1b">
-<div style="width:100%;height:100%;background:rgba(28,23,20,0.98);display:flex;align-items:center;justify-content:center;">
-<div style="width:90%;max-width:420px;height:90vh;display:flex;flex-direction:column;background:rgba(42,36,32,0.95);border-radius:12px;overflow:hidden;padding:28px 24px 24px;gap:16px;overflow-y:auto;scrollbar-width:none;">
-    <div class="s1b-title">Расскажи о себе</div>
-    <div class="fields">
-        <div><div class="flabel">Что вас беспокоит?</div>
-        <select class="fselect"><option value="" disabled selected>Выберите тему</option><option>Отношения и любовь</option><option>Карьера и деньги</option><option>Здоровье и энергия</option><option>Смысл и предназначение</option><option>Тревога и страхи</option><option>Семья и близкие</option><option>Одиночество</option><option>Другое</option></select></div>
-        <div><div class="flabel">Как вы себя чувствуете сейчас?</div>
-        <select class="fselect"><option value="" disabled selected>Выберите состояние</option><option>Потерян и не знаю куда идти</option><option>Тревожно и неспокойно</option><option>Устал и нет сил</option><option>Ищу ответы на вопросы</option><option>Хочу перемен</option><option>В целом хорошо, но есть вопросы</option><option>Чувствую внутренний конфликт</option></select></div>
-        <div><div class="flabel">Ваш возраст</div>
-        <select class="fselect"><option value="" disabled selected>Выберите диапазон</option><option>До 20 лет</option><option>20–30 лет</option><option>30–40 лет</option><option>40–50 лет</option><option>Старше 50</option></select></div>
-        <div><div class="flabel">Как часто обращаетесь за советом?</div>
-        <select class="fselect"><option value="" disabled selected>Выберите вариант</option><option>Впервые пробую</option><option>Иногда, в трудные моменты</option><option>Регулярно, это часть жизни</option><option>Скептически, но интересно</option></select></div>
-        <div><div class="flabel">Чего ожидаете от сессии?</div>
-        <select class="fselect"><option value="" disabled selected>Выберите цель</option><option>Получить ясность и направление</option><option>Выговориться и быть услышанным</option><option>Узнать что-то о своей судьбе</option><option>Найти решение конкретной ситуации</option><option>Просто попробовать</option></select></div>
+<div style="width:100%;height:100%;background:rgb(28,23,20);display:flex;align-items:center;justify-content:center;">
+<div style="width:90%;max-width:420px;height:90vh;display:flex;flex-direction:column;background:rgb(42,36,32);border-radius:12px;overflow:hidden;padding:28px 24px 24px;gap:16px;">
+    <div class="s1b-header">
+        <div class="s1b-title">Расскажи о себе</div>
+        <img class="s1b-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/039080ffd25b01f8a0cc35ca478071d4c4b675ab/feather.svg" alt="">
+    </div>
+    <div class="fields" style="overflow-y:auto;scrollbar-width:none;flex:1;">
+        <div><div class="flabel">Что тебя беспокоит?</div>
+        <select class="fselect"><option value="" disabled selected>Выбери тему</option><option>Отношения и любовь</option><option>Карьера и деньги</option><option>Здоровье и энергия</option><option>Смысл и предназначение</option><option>Тревога и страхи</option><option>Семья и близкие</option><option>Одиночество</option><option>Другое</option></select></div>
+        <div><div class="flabel">Как ты себя чувствуешь сейчас?</div>
+        <select class="fselect"><option value="" disabled selected>Выбери состояние</option><option>Потерян и не знаю куда идти</option><option>Тревожно и неспокойно</option><option>Устал и нет сил</option><option>Ищу ответы на вопросы</option><option>Хочу перемен</option><option>В целом хорошо, но есть вопросы</option><option>Чувствую внутренний конфликт</option></select></div>
+        <div><div class="flabel">Твой возраст</div>
+        <select class="fselect"><option value="" disabled selected>Выбери диапазон</option><option>До 20 лет</option><option>20–30 лет</option><option>30–40 лет</option><option>40–50 лет</option><option>Старше 50</option></select></div>
+        <div><div class="flabel">Как часто обращаешься за советом?</div>
+        <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Впервые пробую</option><option>Иногда, в трудные моменты</option><option>Регулярно, это часть жизни</option><option>Скептически, но интересно</option></select></div>
+        <div><div class="flabel">Чего ожидаешь от сессии?</div>
+        <select class="fselect"><option value="" disabled selected>Выбери цель</option><option>Получить ясность и направление</option><option>Выговориться и быть услышанным</option><option>Узнать что-то о своей судьбе</option><option>Найти решение конкретной ситуации</option><option>Просто попробовать</option></select></div>
+        <div><div class="flabel">Есть ли у тебя конкретный вопрос?</div>
+        <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Да, есть чёткий вопрос</option><option>Скорее ощущение, чем вопрос</option><option>Хочу просто поговорить</option><option>Не знаю с чего начать</option></select></div>
+        <div><div class="flabel">Как ты относишься к мистическому?</div>
+        <select class="fselect"><option value="" disabled selected>Выбери позицию</option><option>Верю и практикую</option><option>Открыт, но с сомнениями</option><option>Скептик, но любопытен</option><option>Интересует только психология</option></select></div>
     </div>
     <button class="submit-btn" id="submitBtn">
         <span>Начать сессию</span>
@@ -289,7 +335,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 <!-- End session modal -->
 <div class="end-overlay" id="endOverlay">
 <div class="end-modal">
-    <div class="end-title">Рада, что вы нашли ответ на вопрос</div>
+    <div class="end-title">Вопрос решён?</div>
     <div class="end-desc">Вы можете начать новую сессию с чистого листа или вернуться в главное меню.</div>
     <div class="end-btns">
         <button class="end-btn end-btn-menu" id="endMenu">В меню</button>
@@ -311,31 +357,52 @@ const bgEl = document.getElementById('bg');
 const bgFrame = document.getElementById('bgFrame');
 const imgUrl = `${BG}${Math.ceil(Math.random()*11)}.jpeg`;
 bgEl.style.backgroundImage = `url('${imgUrl}')`;
-bgFrame.style.backgroundImage = `url('${imgUrl}')`;bgFrame.style.backgroundImage = `url('${imgUrl}')`;
+bgFrame.style.backgroundImage = `url('${imgUrl}')`;
+
+// Screen 1 images
+const allImgs = Array.from({length:11},(_,i)=>i+1).sort(()=>Math.random()-0.5);
+let s1Idx = 0;
+function setS1Images() {
+    const c = allImgs[s1Idx % allImgs.length];
+    const l = allImgs[(s1Idx - 1 + allImgs.length) % allImgs.length];
+    const r = allImgs[(s1Idx + 1) % allImgs.length];
+    document.getElementById('s1BgImg').style.backgroundImage = `url('${BG}${c}.jpeg')`;
+    document.getElementById('slideLeft').style.backgroundImage = `url('${BG}${l}.jpeg')`;
+    document.getElementById('slideRight').style.backgroundImage = `url('${BG}${r}.jpeg')`;
+}
+setS1Images();
+document.getElementById('slideLeft').addEventListener('click', () => { s1Idx = (s1Idx - 1 + allImgs.length) % allImgs.length; setS1Images(); });
+document.getElementById('slideRight').addEventListener('click', () => { s1Idx = (s1Idx + 1) % allImgs.length; setS1Images(); });
+// Swipe support
+let touchStartX = 0;
+document.getElementById('screen1').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.getElementById('screen1').addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) { s1Idx = dx < 0 ? (s1Idx+1)%allImgs.length : (s1Idx-1+allImgs.length)%allImgs.length; setS1Images(); }
+});bgFrame.style.backgroundImage = `url('${imgUrl}')`;
 
 // Transition
 const overlayEl = document.getElementById('overlay');
 function goTo(id) {
     overlayEl.classList.add('on');
-    setTimeout(() => {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        const hide = id === 'screen2';
-        bgEl.style.opacity = hide ? '0' : '1';
-        bgFrame.style.opacity = hide ? '0' : '1';
-        overlayEl.classList.remove('on');
-        if (id === 'screen2') initChat();
-    }, 500);
+    setTimeout(() => { switchScreen(id); }, 500);
+}
+
+function switchScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    // screen1 и screen1b имеют свой фон — скрываем bg
+    const needBg = id === 'screen2';
+    bgEl.style.display = needBg ? 'block' : 'none';
+    bgFrame.style.display = needBg ? 'block' : 'none';
+    overlayEl.classList.remove('on');
+    if (id === 'screen2') initChat();
 }
 
 // Init — check if already logged in — вызывается в конце скрипта
 function init() {
     if (localStorage.getItem(KEY_USER)) {
-        document.getElementById('screen1').classList.remove('active');
-        document.getElementById('screen2').classList.add('active');
-        bgEl.style.opacity = '0';
-        bgFrame.style.opacity = '0';
-        initChat();
+        switchScreen('screen2');
     }
 }
 
@@ -383,7 +450,10 @@ const premiumOverlay = document.getElementById('premiumOverlay');
 let isLight = false;
 themeBtn.addEventListener('click', () => {
     isLight = !isLight;
-    document.getElementById('screen2').classList.toggle('light', isLight);
+    const s2 = document.getElementById('screen2');
+    s2.classList.toggle('light', isLight);
+    bgEl.style.display = isLight ? 'none' : 'block';
+    bgFrame.style.display = isLight ? 'none' : 'block';
 });
 menuBtn.addEventListener('click', () => endOverlay.classList.toggle('show'));
 
