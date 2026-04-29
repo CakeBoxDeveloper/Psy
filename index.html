@@ -42,12 +42,12 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .c-slide.is-center{z-index:5;opacity:1;filter:none;cursor:default;}
 .c-slide.is-near{z-index:4;opacity:0.7;filter:blur(4px);}
 .c-slide.is-far{z-index:3;opacity:0.45;filter:blur(10px);}
-.c-slide-content{position:absolute;bottom:0;left:0;right:0;padding:24px;display:flex;flex-direction:column;gap:14px;}
+.c-slide-content{position:absolute;top:0;left:0;right:0;padding:24px;display:flex;flex-direction:column;gap:14px;}
 .c-slide-content *::-webkit-scrollbar{display:none;}
 @media(max-width:599px){.c-slide.is-far{opacity:0;pointer-events:none;}}
 
 /* S1 */
-.s1-title{color:#fff;font-size:36px;font-weight:300;font-family:'TiemposHeadline',serif;text-align:center;}
+.s1-title{color:rgba(210,190,165,1);font-size:36px;font-weight:300;font-family:'TiemposHeadline',serif;text-align:center;}
 .s1-sub{color:rgba(210,190,165,0.6);font-size:12px;text-align:center;line-height:1.6;}
 .auth-btn{width:100%;height:42px;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.15s;font-family:'Inter',sans-serif;}
 .auth-google{background:rgba(255,255,255,0.92);color:#222;}
@@ -225,72 +225,87 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 
     <!-- Slide 1: О нас -->
     <div class="c-slide" id="slide1">
-        <div style="position:absolute;bottom:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;top:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;top:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;top:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to bottom,black 0%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,transparent 100%);pointer-events:none;"></div>
         <div class="c-slide-content">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2px;">
-                <div class="s1-title" style="font-size:28px;text-align:left;">О нас</div>
+                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">О нас</div>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:4px;opacity:0.5;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="rgba(210,190,165,0.8)" stroke-width="1.5" stroke-linejoin="round"/></svg>
             </div>
-            <div style="color:rgba(210,190,165,0.85);font-size:13px;line-height:1.7;">Soma AI — пространство для глубокого самопознания через призму времени. Мы объединяем психологию, архетипы и искусственный интеллект, чтобы помочь тебе найти ответы внутри себя.</div>
-            <div style="color:rgba(210,190,165,0.5);font-size:12px;line-height:1.6;">Каждая сессия — это разговор с моделью, обученной на тысячах текстов о человеческой природе, символах и внутренних конфликтах. Не гадание — осмысление.</div>
-            <div style="color:rgba(210,190,165,0.35);font-size:11px;margin-top:2px;">Основан в 2024 · Более 10 000 сессий</div>
+            <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:10px;">
+                <div style="padding:10px 12px;background:rgba(255,255,255,0.06);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+                    <div style="color:rgba(210,190,165,0.85);font-size:13px;line-height:1.7;">Soma AI — пространство для глубокого самопознания через призму времени. Мы объединяем психологию, архетипы и искусственный интеллект, чтобы помочь тебе найти ответы внутри себя.</div>
+                </div>
+                <div style="padding:10px 12px;background:rgba(255,255,255,0.06);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+                    <div style="color:rgba(210,190,165,0.6);font-size:12px;line-height:1.6;">Каждая сессия — это разговор с моделью, обученной на тысячах текстов о человеческой природе, символах и внутренних конфликтах. Не гадание — осмысление.</div>
+                </div>
+                <div style="padding:10px 12px;background:rgba(255,255,255,0.06);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+                    <div style="color:rgba(210,190,165,0.7);font-size:12px;line-height:1.7;">В основе каждой модели — нейронная сеть, дообученная на специализированных корпусах текстов. Тара работает с символическими системами, Аура — с энергетическими паттернами, Карма — с числовыми закономерностями, Литера — с нарративной психологией. Каждая нейронка видит твой запрос через свою призму и отвечает в рамках своей традиции.</div>
+                </div>
+                <div style="padding:10px 12px;background:rgba(255,255,255,0.06);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+                    <div style="color:rgba(210,190,165,0.5);font-size:11px;line-height:1.6;">Мы не претендуем на предсказание будущего. Soma AI — инструмент рефлексии, который помогает структурировать внутренний опыт и посмотреть на ситуацию с разных сторон.</div>
+                </div>
+                <div style="color:rgba(210,190,165,0.3);font-size:11px;padding:0 2px;">Основан в 2024 · Более 10 000 сессий</div>
+            </div>
         </div>
     </div>
 
     <!-- Slide 2: Как это работает -->
     <div class="c-slide" id="slide2">
-        <div style="position:absolute;bottom:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;top:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;top:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;top:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to bottom,black 0%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,transparent 100%);pointer-events:none;"></div>
         <div class="c-slide-content">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2px;">
-                <div class="s1-title" style="font-size:28px;text-align:left;">Как это работает</div>
+                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Как это работает</div>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:4px;opacity:0.5;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="rgba(210,190,165,0.8)" stroke-width="1.5" stroke-linejoin="round"/></svg>
             </div>
-            <div style="padding:10px 12px;background:rgba(255,255,255,0.06);border-radius:8px;color:rgba(210,190,165,0.65);font-size:12px;line-height:1.6;margin-bottom:4px;">Модели обучены на классической литературе, философских трактатах, юнгианской психологии и архетипических текстах — от Данте до Юнга. Они не предсказывают, а отражают.</div>
-            <div style="display:flex;flex-direction:column;gap:6px;">
-                <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Выбери модель — каждая видит мир по-своему</div></div>
-                <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Задай вопрос или просто начни разговор</div></div>
-                <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Получи ответ, основанный на твоём контексте</div></div>
-                <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Возвращайся — каждая сессия уникальна</div></div>
+            <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:8px;">
+                <div style="padding:10px 12px;background:rgba(255,255,255,0.06);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:rgba(210,190,165,0.65);font-size:12px;line-height:1.6;">Модели обучены на классической литературе, философских трактатах, юнгианской психологии и архетипических текстах — от Данте до Юнга. Они не предсказывают, а отражают.</div>
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgba(255,255,255,0.05);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);"><div style="width:20px;height:20px;border-radius:50%;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Выбери модель — каждая видит мир по-своему и отвечает в рамках своей традиции</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgba(255,255,255,0.05);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);"><div style="width:20px;height:20px;border-radius:50%;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Задай вопрос или просто начни разговор — нейронка подстроится под твой стиль общения</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgba(255,255,255,0.05);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);"><div style="width:20px;height:20px;border-radius:50%;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Получи ответ, основанный на твоём контексте — не шаблонный, а сформированный под твой запрос</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgba(255,255,255,0.05);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);"><div style="width:20px;height:20px;border-radius:50%;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Возвращайся — каждая сессия уникальна, модели не хранят историю между сессиями</div></div>
+                </div>
+                <div style="padding:10px 12px;background:rgba(255,255,255,0.05);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:rgba(210,190,165,0.5);font-size:11px;line-height:1.6;">Под капотом — языковые модели с контекстным окном до 32 000 токенов. Это значит, что в рамках одной сессии модель удерживает весь разговор и строит ответы с учётом всего сказанного ранее. Чем больше ты рассказываешь — тем точнее отражение.</div>
             </div>
         </div>
     </div>
 
     <!-- Slide 3: Модели -->
     <div class="c-slide" id="slide3">
-        <div style="position:absolute;bottom:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;top:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;top:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;top:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to bottom,black 0%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,transparent 100%);pointer-events:none;"></div>
         <div class="c-slide-content" style="display:flex;flex-direction:column;">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;flex-shrink:0;">
-                <div class="s1-title" style="font-size:28px;text-align:left;">Модели</div>
+                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Модели</div>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:4px;opacity:0.5;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="rgba(210,190,165,0.8)" stroke-width="1.5" stroke-linejoin="round"/></svg>
             </div>
             <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:5px;">
-                <div style="padding:9px 11px;background:rgba(255,255,255,0.05);border-radius:8px;">
+                <div style="padding:9px 11px;background:rgba(255,255,255,0.05);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
                     <div style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;margin-bottom:3px;">Тара</div>
                     <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Обучена на текстах таро, астрологии и символической традиции. Читает ситуацию через архетипы и знаки — находит скрытые смыслы там, где ты видишь случайность.</div>
                 </div>
-                <div style="padding:9px 11px;background:rgba(255,255,255,0.05);border-radius:8px;">
+                <div style="padding:9px 11px;background:rgba(255,255,255,0.05);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
                     <div style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;margin-bottom:3px;">Аура</div>
                     <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Обучена на текстах об энергетических практиках, телесной психологии и причинно-следственных связях. Чувствует, что стоит за событиями — не что произошло, а почему.</div>
                 </div>
-                <div style="padding:9px 11px;background:rgba(255,255,255,0.05);border-radius:8px;">
+                <div style="padding:9px 11px;background:rgba(255,255,255,0.05);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
                     <div style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;margin-bottom:3px;">Карма</div>
                     <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Обучена на нумерологии, кабале и теории циклов. Видит закономерности в числах, датах и повторяющихся паттернах — помогает понять, где ты находишься в своём цикле.</div>
                 </div>
-                <div style="padding:9px 11px;background:rgba(255,255,255,0.05);border-radius:8px;">
+                <div style="padding:9px 11px;background:rgba(255,255,255,0.05);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
                     <div style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;margin-bottom:3px;">Литера</div>
                     <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Обучена на юнгианской психологии, нарративной терапии и классической литературе. Слушает, задаёт вопросы и помогает разобраться в себе через слово и историю.</div>
                 </div>
-                <div style="padding:9px 11px;background:rgba(210,190,165,0.08);border-radius:8px;border:1px solid rgba(210,190,165,0.15);">
+                <div style="padding:9px 11px;background:rgba(210,190,165,0.08);border-radius:8px;border:1px solid rgba(210,190,165,0.15);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
                     <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Авто</span><svg width="11" height="11" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="rgba(210,190,165,0.55)"/></svg></div>
                     <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Анализирует запрос и выбирает наиболее подходящую модель. Идеально, если не знаешь с чего начать.</div>
                 </div>
-                <div style="padding:9px 11px;background:rgba(210,190,165,0.08);border-radius:8px;border:1px solid rgba(210,190,165,0.15);">
+                <div style="padding:9px 11px;background:rgba(210,190,165,0.08);border-radius:8px;border:1px solid rgba(210,190,165,0.15);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
                     <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Консилиум</span><svg width="11" height="11" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="rgba(210,190,165,0.55)"/></svg></div>
                     <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Все четыре модели отвечают одновременно. Четыре разных взгляда на один вопрос — выбираешь, что резонирует.</div>
                 </div>
@@ -303,33 +318,30 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
         <div style="position:absolute;bottom:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
         <div style="position:absolute;bottom:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
         <div style="position:absolute;bottom:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
-        <div class="c-slide-content">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2px;">
-                <div class="s1-title" style="font-size:28px;text-align:left;">Тарифы</div>
+        <div style="position:absolute;bottom:0;left:0;right:0;padding:24px;display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Тарифы</div>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:4px;opacity:0.5;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="rgba(210,190,165,0.8)" stroke-width="1.5" stroke-linejoin="round"/></svg>
             </div>
-            <div style="display:flex;flex-direction:column;gap:6px;">
-                <div style="padding:12px 14px;background:rgba(255,255,255,0.06);border-radius:10px;">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                        <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;">Бесплатно</div>
-                        <div style="color:rgba(210,190,165,0.9);font-size:18px;font-weight:700;">0 ₽</div>
-                    </div>
-                    <div style="display:flex;flex-direction:column;gap:3px;">
-                        <div style="color:rgba(210,190,165,0.6);font-size:11px;">· Неограниченные сессии</div>
-                        <div style="color:rgba(210,190,165,0.6);font-size:11px;">· Тара, Аура, Карма и Литера</div>
-                        <div style="color:rgba(210,190,165,0.6);font-size:11px;">· История сессий на 24 часа</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                <div style="padding:14px;background:rgba(255,255,255,0.06);border-radius:10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+                    <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;margin-bottom:8px;">Бесплатно</div>
+                    <div style="display:flex;flex-direction:column;gap:5px;">
+                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;">· Неограниченное количество сессий — без лимитов и таймеров</div>
+                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;">· Четыре модели: Тара, Аура, Карма и Литера — каждая со своим подходом</div>
+                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;">· История сессий сохраняется на 24 часа — можно вернуться и продолжить</div>
+                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;">· Полный доступ без регистрации — достаточно войти как гость</div>
                     </div>
                 </div>
-                <div style="padding:12px 14px;background:rgba(210,190,165,0.1);border-radius:10px;border:1px solid rgba(210,190,165,0.25);">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                        <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;">Premium</div>
-                        <div style="color:rgba(210,190,165,1);font-size:18px;font-weight:700;">299 ₽<span style="font-size:11px;font-weight:400;opacity:0.6;">/мес</span></div>
-                    </div>
-                    <div style="display:flex;flex-direction:column;gap:3px;">
-                        <div style="color:rgba(210,190,165,0.75);font-size:11px;">· Всё из бесплатного</div>
-                        <div style="color:rgba(210,190,165,0.75);font-size:11px;">· Режим Авто и Консилиум</div>
-                        <div style="color:rgba(210,190,165,0.75);font-size:11px;">· История сессий без ограничений</div>
-                        <div style="color:rgba(210,190,165,0.75);font-size:11px;">· Приоритетные ответы</div>
+                <div style="padding:14px;background:rgba(210,190,165,0.08);border-radius:10px;border:1px solid rgba(210,190,165,0.2);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+                    <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;margin-bottom:8px;">Premium</div>
+                    <div style="display:flex;flex-direction:column;gap:5px;">
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;">· Всё из бесплатного плюс расширенные возможности</div>
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;">· Режим Авто — нейронка сама выбирает подходящую модель под твой запрос</div>
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;">· Консилиум — все четыре нейронки отвечают одновременно, ты выбираешь резонирующий ответ</div>
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;">· История сессий без ограничений по времени</div>
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;">· Приоритетная обработка запросов</div>
+                        <div style="color:rgba(210,190,165,0.4);font-size:10px;line-height:1.5;margin-top:4px;">Подписка помогает покрывать расходы на работу нейронных сетей — вычислительные мощности, обучение моделей и поддержку серверов.</div>
                     </div>
                 </div>
             </div>
