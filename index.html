@@ -132,8 +132,8 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .ditem-check{font-size:12px;color:rgba(210,190,165,0.9);opacity:0;flex-shrink:0;width:8px;height:8px;border-radius:50%;background:rgba(210,190,165,0.9);display:inline-block;font-size:0;}
 .ditem.active .ditem-check{opacity:1;}
 .ditem-star{width:14px;height:14px;flex-shrink:0;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
-.light .ditem-star{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);opacity:1;}
-.light .ditem.active .ditem-star{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);opacity:1;}
+.light .ditem-star{filter:invert(0%) sepia(20%) saturate(200%) brightness(20%);opacity:0.6;}
+.light .ditem.active .ditem-star{filter:invert(0%) sepia(20%) saturate(200%) brightness(20%);opacity:0.8;}
 
 /* Panacea Plus modal */
 .premium-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:600;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
@@ -423,7 +423,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
                         <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>PDF-саммари каждой сессии с ключевыми инсайтами</div>
                     </div>
                     <button class="premium-btn" style="position:relative;z-index:1;overflow:hidden;" onclick="document.getElementById('premiumOverlay').classList.add('show')">
-                        <div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.25) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;pointer-events:none;"></div>
+                        <div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,0.3) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;pointer-events:none;"></div>
                         Подключить Panacea Plus
                     </button>
                 </div>
@@ -762,26 +762,32 @@ const GROQ_MODEL = 'llama-3.3-70b-versatile';
 const models = {
     tara: {
         name: 'Тара',
+        sig: 'Тара говорит',
         system: `Ты — Тара, мастер традиционной школы тарологии. Ты говоришь образно, через символы и архетипы. Используешь метафоры карт, судьбы, знаков. Твой стиль — мистический, поэтичный, но конкретный. Ты не гадаешь — ты помогаешь человеку увидеть скрытое в его ситуации. Отвечай на русском языке. Ответы — 3-6 предложений.`
     },
     karma: {
         name: 'Карма',
+        sig: 'Карма говорит',
         system: `Ты — Карма, кармолог. Ты видишь повторяющиеся паттерны, незакрытые циклы и кармические уроки. Говоришь о причинно-следственных связях, о том, что человек несёт из прошлого. Твой стиль — глубокий, немного строгий, но сострадательный. Ты помогаешь понять, какой урок несёт текущая ситуация. Отвечай на русском языке. Ответы — 3-6 предложений.`
     },
     astra: {
         name: 'Астра',
+        sig: 'Астра пишет',
         system: `Ты — Астра, астролог. Ты читаешь ситуацию через призму планетарных циклов, натальных позиций и астрологических транзитов. Говоришь о влиянии планет, о времени, о ритмах. Твой стиль — точный, структурированный, с астрологическими терминами, но понятный. Ты помогаешь понять, в какой точке своего пути находится человек. Отвечай на русском языке. Ответы — 3-6 предложений.`
     },
     eva: {
         name: 'Ева',
+        sig: 'Ева говорит',
         system: `Ты — Ева, регрессолог. Ты работаешь с памятью прошлых жизней, с глубинным опытом души. Ты ищешь корни страхов, притяжений и повторяющихся сценариев в том, что предшествует этой жизни. Твой стиль — мягкий, медитативный, интроспективный. Ты задаёшь вопросы, которые помогают заглянуть глубже. Отвечай на русском языке. Ответы — 3-6 предложений.`
     },
     psyche: {
         name: 'Психея',
+        sig: 'Психея отвечает',
         system: `Ты — Психея, психолог юнгианской школы и нарративный терапевт. Ты слушаешь не только слова, но и то, что за ними. Работаешь с архетипами, тенью, внутренними конфликтами. Твой стиль — внимательный, вдумчивый, задающий вопросы. Ты помогаешь человеку переосмыслить свою историю. Отвечай на русском языке. Ответы — 3-6 предложений.`
     },
     gera: {
         name: 'Гера',
+        sig: 'Гера пишет',
         system: `Ты — Гера, нумеролог. Ты видишь скрытый порядок в числах, датах, именах. Расшифровываешь числовой код жизни человека. Твой стиль — аналитический, точный, с числовыми интерпретациями. Ты находишь закономерности там, где другие видят случайность. Отвечай на русском языке. Ответы — 3-6 предложений.`
     }
 };
@@ -946,9 +952,6 @@ body{
     margin:0 auto;
 }
 .header{
-    display:flex;
-    align-items:baseline;
-    justify-content:space-between;
     margin-bottom:36px;
 }
 .doc-title{
@@ -956,11 +959,12 @@ body{
     font-weight:900;
     font-size:26px;
     color:rgb(40,28,20);
+    margin-bottom:6px;
 }
 .doc-date{
-    font-size:14px;
-    font-family:'Inter',sans-serif;
-    font-weight:400;
+    font-size:16px;
+    font-family:'TiemposHeadline',serif;
+    font-weight:300;
     color:rgb(40,28,20);
 }
 .section{
@@ -1020,7 +1024,7 @@ body{
 </div>
 
 <div class="tech">
-    <span>Использовались модели: ${modelsUsed.length ? modelsUsed.join(', ') : 'Тара'}</span>
+    <span>В этой сессии были использованы модели: ${modelsUsed.length ? modelsUsed.join(', ') : 'Тара'}</span>
     <span>${chatHistory.length} сообщений</span>
 </div>
 </body>
@@ -1111,7 +1115,7 @@ function addMsg(text, sender, animate, modelKey) {
         const clean = text.replace(/[\s\n]*[—\-–]\s*\S[^\n]*$/, '').trim();
         b.innerHTML =
             `<span class="bubble-body">${clean.replace(/\n/g,'<br>')}</span>` +
-            `<span class="bubble-sig">Для ответа была использована модель ${m.name}</span>`;
+            `<span class="bubble-sig">${m.sig}</span>`;
     } else {
         b.textContent = text;
     }
