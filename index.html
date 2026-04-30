@@ -9,7 +9,19 @@
     font-family:'TiemposHeadline';
     src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Light.woff') format('woff'),
         url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Light.ttf') format('truetype');
-    font-weight:300;
+    font-weight:900;
+}
+@font-face {
+    font-family:'TiemposHeadline';
+    src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Medium.woff') format('woff'),
+        url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Medium.ttf') format('truetype');
+    font-weight:500;
+}
+@font-face {
+    font-family:'TiemposHeadline';
+    src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Black.woff') format('woff'),
+        url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Black.ttf') format('truetype');
+    font-weight:900;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;}
 input,textarea,select{-webkit-user-select:text;user-select:text;}
@@ -51,16 +63,16 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .tb-prem{background:rgb(48,40,34);border-radius:8px;padding:9px 11px;border:1px solid rgba(210,190,165,0.15);}
 /* Fade mask at bottom of scrollable content */
 .c-slide-scroll{
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 48px, black calc(100% - 48px), transparent 100%);
-    mask-image: linear-gradient(to bottom, transparent 0%, black 48px, black calc(100% - 48px), transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 48px, black calc(100% - 24px), transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 48px, black calc(100% - 24px), transparent 100%);
 }
 .c-slide-scroll.at-bottom{
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 48px, black 100%);
     mask-image: linear-gradient(to bottom, transparent 0%, black 48px, black 100%);
 }
 .c-slide-scroll.at-top{
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 48px), transparent 100%);
-    mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 48px), transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 24px), transparent 100%);
+    mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 24px), transparent 100%);
 }
 .c-slide-scroll.at-top.at-bottom{
     -webkit-mask-image: none;
@@ -69,7 +81,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 @media(max-width:599px){.c-slide.is-far{opacity:0;pointer-events:none;}}
 
 /* S1 */
-.s1-title{color:rgba(210,190,165,1);font-size:36px;font-weight:300;font-family:'TiemposHeadline',serif;text-align:center;}
+.s1-title{color:rgba(210,190,165,1);font-size:36px;font-weight:900;font-family:'TiemposHeadline',serif;text-align:center;}
 .s1-sub{color:rgba(210,190,165,0.6);font-size:12px;text-align:center;line-height:1.6;}
 .auth-btn{width:100%;height:42px;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.15s;font-family:'Inter',sans-serif;}
 .auth-google{background:rgba(255,255,255,0.92);color:#222;}
@@ -81,7 +93,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 
 /* S1b Survey */
 .s1b-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
-.s1b-title{color:rgb(210,190,165);font-size:20px;font-weight:300;font-family:'TiemposHeadline',serif;}
+.s1b-title{color:rgb(210,190,165);font-size:20px;font-weight:900;font-family:'TiemposHeadline',serif;}
 .s1b-icon{width:18px;height:18px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
 .fields{display:flex;flex-direction:column;gap:12px;flex:1;}
 .flabel{color:rgb(180,165,145);font-size:11px;letter-spacing:0.3px;margin-bottom:4px;}
@@ -126,7 +138,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .premium-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:600;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
 .premium-overlay.show{display:flex;}
 .premium-modal{width:80%;max-width:340px;background:rgba(42,36,32,0.97);border-radius:12px;padding:28px 22px 22px;display:flex;flex-direction:column;gap:16px;animation:fadeIn 0.3s ease-out forwards;}
-.premium-title{color:rgba(210,190,165,1);font-size:20px;font-weight:700;font-family:'TiemposHeadline',serif;text-align:center;line-height:1.3;}
+.premium-title{color:rgba(210,190,165,1);font-size:20px;font-weight:900;font-family:'TiemposHeadline',serif;text-align:center;line-height:1.3;}
 .premium-desc{color:rgba(210,190,165,0.65);font-size:12px;line-height:1.7;text-align:center;}
 .premium-features{display:flex;flex-direction:column;gap:8px;}
 .premium-feature{display:flex;align-items:flex-start;gap:10px;color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;}
@@ -225,7 +237,7 @@ body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) br
 .lc-slide.lc-near{z-index:4;opacity:0.7;filter:blur(4px);}
 .lc-slide.lc-far{z-index:3;opacity:0.45;filter:blur(10px);}
 .lc-mask{position:absolute;bottom:0;left:0;right:0;height:65%;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);-webkit-mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);pointer-events:none;}
-.lc-quote{position:relative;z-index:2;color:rgba(210,190,165,0.95);font-size:15px;line-height:1.7;font-family:'TiemposHeadline',serif;font-weight:300;text-align:center;padding:24px;transition:opacity 0.4s ease;}
+.lc-quote{position:relative;z-index:2;color:rgba(210,190,165,0.95);font-size:15px;line-height:1.7;font-family:'TiemposHeadline',serif;font-weight:900;text-align:center;padding:24px;transition:opacity 0.4s ease;}
 @media(max-width:599px){.lc-slide.lc-far{opacity:0;pointer-events:none;}}
 .loader-progress{width:90%;max-width:380px;display:flex;flex-direction:column;gap:12px;padding-bottom:32px;}
 .loader-stage{color:rgba(210,190,165,0.7);font-size:13px;text-align:center;min-height:20px;transition:opacity 0.3s ease;}
@@ -236,7 +248,7 @@ body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) br
 .end-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
 .end-overlay.show{display:flex;}
 .end-modal{width:75%;max-width:320px;background:rgba(42,36,32,0.95);border-radius:10px;padding:24px 20px;display:flex;flex-direction:column;gap:16px;animation:fadeIn 0.3s ease-out forwards;}
-.end-title{color:rgba(210,190,165,0.95);font-size:17px;font-weight:700;font-family:'TiemposHeadline',serif;line-height:1.3;text-align:center;}
+.end-title{color:rgba(210,190,165,0.95);font-size:17px;font-weight:900;font-family:'TiemposHeadline',serif;line-height:1.3;text-align:center;}
 .end-desc{color:rgba(210,190,165,0.55);font-size:12px;line-height:1.6;text-align:center;}
 .end-btns{display:flex;gap:8px;}
 .end-btn{flex:1;height:38px;border:none;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
@@ -266,7 +278,7 @@ body.light .end-summary-btn:hover{border-color:rgba(60,45,35,0.35);color:rgba(40
         <div style="position:absolute;bottom:-2px;left:-2px;right:-2px;height:calc(55% + 2px);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
         <div style="position:absolute;bottom:0;left:0;right:0;padding:24px;display:flex;flex-direction:column;gap:20px;">
             <div style="text-align:center;display:flex;flex-direction:column;gap:8px;">
-                <div class="s1-title">Panacea</div>
+                <div class="s1-title" style="font-weight:300;">Panacea</div>
                 <div class="s1-sub">Познай себя через призму времени</div>
             </div>
             <div style="display:flex;flex-direction:column;gap:8px;">
@@ -280,26 +292,23 @@ body.light .end-summary-btn:hover{border-color:rgba(60,45,35,0.35);color:rgba(40
 
     <!-- Slide 1: О нас -->
     <div class="c-slide" id="slide1">
-        <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;">
+        <div style="position:absolute;top:-2px;left:-2px;right:-2px;height:calc(38% + 2px);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);pointer-events:none;"></div>
+        <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;position:relative;z-index:2;">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;flex-shrink:0;">
-                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">О нас</div>
-                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/700124782cbec6857c5851ac78aa395561e154a2/colosseum.svg" style="width:22px;height:22px;flex-shrink:0;margin-top:4px;opacity:0.55;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt="">
+                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Пара слов о нас</div>
             </div>
             <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;gap:10px;">
                 <div class="tb">
-                    <div style="color:rgba(210,190,165,0.85);font-size:13px;line-height:1.7;">Panacea — пространство для глубокого самопознания через призму времени. Мы объединяем психологию, архетипы и искусственный интеллект, чтобы помочь тебе найти ответы внутри себя.</div>
+                    <div style="color:rgba(210,190,165,0.85);font-size:13px;line-height:1.7;">Panacea — это пространство, где человеческий опыт встречается с коллективным знанием человечества. Миллионы текстов, традиций и историй, собранных в одном месте — чтобы помочь тебе найти ответы внутри себя.</div>
                 </div>
                 <div class="tb">
-                    <div style="color:rgba(210,190,165,0.6);font-size:12px;line-height:1.6;">Каждая сессия — это разговор с моделью, обученной на тысячах текстов о человеческой природе, символах и внутренних конфликтах. Не гадание — осмысление.</div>
+                    <div style="color:rgba(210,190,165,0.6);font-size:12px;line-height:1.6;">Каждая сессия — это не гадание и не совет. Это зеркало. Модели не говорят тебе, что делать — они помогают увидеть то, что ты уже знаешь, но ещё не сформулировал.</div>
                 </div>
                 <div class="tb">
-                    <div style="color:rgba(210,190,165,0.7);font-size:12px;line-height:1.7;">В основе каждой модели — нейронная сеть, дообученная на специализированных корпусах текстов. Тара работает с символическими системами, Карма — с кармическими паттернами, Астра — с астрологическими циклами, Ева — с регрессивным опытом, Психея — с нарративной психологией, Гера — с числовыми закономерностями. Каждая нейронка видит твой запрос через свою призму и отвечает в рамках своей традиции.</div>
+                    <div style="color:rgba(210,190,165,0.7);font-size:12px;line-height:1.7;">Мы — небольшая команда инженеров и энтузиастов. Мы не контролируем то, что говорят модели, и не претендуем на истину в последней инстанции. Наша задача — обеспечить работу системы и продолжать её развивать.</div>
                 </div>
                 <div class="tb">
-                    <div style="color:rgba(210,190,165,0.5);font-size:11px;line-height:1.6;">Мы не претендуем на предсказание будущего. Panacea — инструмент рефлексии, который помогает структурировать внутренний опыт и посмотреть на ситуацию с разных сторон.</div>
-                </div>
-                <div class="tb">
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.7;">Вся система создана на некоммерческой основе — силами инженеров и волонтёров, которые верят в открытый доступ к инструментам самопознания. Донаты и средства с Panacea Plus-подписки идут исключительно на поддержку обучения моделей, развитие нейронной сети и покрытие серверных расходов.</div>
+                    <div style="color:rgba(210,190,165,0.5);font-size:11px;line-height:1.6;">Обучение и поддержка нейронных сетей — это дорого и сложно. Донаты и Panacea Plus — единственный способ, которым ты можешь помочь этому проекту существовать и расти. Каждый рубль идёт на серверы, обучение моделей и развитие сети.</div>
                 </div>
             </div>
         </div>
@@ -307,61 +316,72 @@ body.light .end-summary-btn:hover{border-color:rgba(60,45,35,0.35);color:rgba(40
 
     <!-- Slide 2: Как это работает -->
     <div class="c-slide" id="slide2">
-        <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;">
+        <div style="position:absolute;top:-2px;left:-2px;right:-2px;height:calc(38% + 2px);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);pointer-events:none;"></div>
+        <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;position:relative;z-index:2;">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;flex-shrink:0;">
                 <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Как это работает</div>
-                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/b913539429ab813d9955cc00d1145b3ad7ab18f3/idea_1.svg" style="width:22px;height:22px;flex-shrink:0;margin-top:4px;opacity:0.55;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt="">
             </div>
             <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;gap:8px;">
-                <div class="tb" style="color:rgba(210,190,165,0.65);font-size:12px;line-height:1.6;">Модели обучены на классической литературе, философских трактатах, юнгианской психологии и архетипических текстах — от Данте до Юнга. Они не предсказывают, а отражают.</div>                <div style="display:flex;flex-direction:column;gap:6px;">
-                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">I</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Выбери модель — каждая видит мир по-своему и отвечает в рамках своей традиции</div></div>
-                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">II</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Задай вопрос или просто начни разговор — нейронка подстроится под твой стиль общения</div></div>
-                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">III</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Получи ответ, основанный на твоём контексте — не шаблонный, а сформированный под твой запрос</div></div>
-                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">IV</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Возвращайся — каждая сессия уникальна, модели не хранят историю между сессиями</div></div>
+                <div class="tb" style="color:rgba(210,190,165,0.65);font-size:12px;line-height:1.6;">Модели обучены на всей мировой литературе — философии, психологии, духовных практиках, архетипических текстах всех культур и эпох. И продолжают обучаться на каждой новой сессии.</div>
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">I</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Заполни анкету — мы подберём модель, которая лучше всего подходит под твой запрос</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">II</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Начни разговор — в любой момент ты можешь сменить модель прямо в ходе сессии</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">III</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Получи ответ — не шаблонный, а сформированный под твой конкретный контекст и запрос</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">IV</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">По окончании забери протокол сессии — изучи самостоятельно или передай в начале следующей</div></div>
                 </div>
-                <div class="tb" style="color:rgba(210,190,165,0.5);font-size:11px;line-height:1.6;">Под капотом — языковые модели с контекстным окном до 32 000 токенов. Это значит, что в рамках одной сессии модель удерживает весь разговор и строит ответы с учётом всего сказанного ранее. Чем больше ты рассказываешь — тем точнее отражение.</div>
+                <div class="tb" style="color:rgba(210,190,165,0.5);font-size:11px;line-height:1.6;">У моделей большой запас памяти — в рамках одной сессии они удерживают весь разговор целиком и могут рассматривать твой вопрос одновременно с десятков точек зрения. Чем больше ты рассказываешь — тем точнее и глубже ответ.</div>
             </div>
         </div>
     </div>
 
     <!-- Slide 3: Модели -->
     <div class="c-slide" id="slide3">
-        <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;">
+        <div style="position:absolute;top:-2px;left:-2px;right:-2px;height:calc(38% + 2px);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);pointer-events:none;"></div>
+        <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;position:relative;z-index:2;">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;flex-shrink:0;">
-                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Модели</div>
-                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/700124782cbec6857c5851ac78aa395561e154a2/sculpture.svg" style="width:22px;height:22px;flex-shrink:0;margin-top:4px;opacity:0.55;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt="">
+                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Наши модели</div>
             </div>
             <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;gap:5px;">
                 <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Тара</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">таролог</span></div>
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Тара</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">таролог</span></div>
+                    <div style="height:6px;"></div>
                     <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Мастер традиционной школы тарологии. Каждый расклад — это разговор с символами, которые уже знают ответ. Тара не предсказывает, она помогает увидеть то, что скрыто за поверхностью событий.</div>
                 </div>
                 <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Карма</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">кармолог</span></div>
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Карма</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">кармолог</span></div>
+                    <div style="height:6px;"></div>
                     <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Читает кармические узлы и незакрытые циклы. Там, где другие видят случайность, Карма находит закономерность. Специализируется на повторяющихся ситуациях и скрытых уроках судьбы.</div>
                 </div>
                 <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Астра</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">астролог</span></div>
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Астра</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">астролог</span></div>
+                    <div style="height:6px;"></div>
                     <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Эксперт в области астрологии и натальных карт. Читает планетарные циклы как язык, на котором Вселенная говорит с каждым из нас. Помогает понять, в какой точке своего пути ты находишься прямо сейчас.</div>
                 </div>
                 <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Ева</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">регрессолог</span></div>
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Ева</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">регрессолог</span></div>
+                    <div style="height:6px;"></div>
                     <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Проводник в глубинную память прошлых жизней. Работает с тем, что душа несёт сквозь время. Помогает найти корень страхов, притяжений и повторяющихся сценариев в опыте, который предшествует этой жизни.</div>
                 </div>
                 <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Психея</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">психолог</span></div>
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Психея</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">психолог</span></div>
+                    <div style="height:6px;"></div>
                     <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Юнгианский психолог и нарративный терапевт. Слушает не только слова, но и то, что стоит за ними. Помогает переосмыслить личную историю и найти в ней новый смысл.</div>
                 </div>
                 <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Гера</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">нумеролог</span></div>
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Гера</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">нумеролог</span></div>
+                    <div style="height:6px;"></div>
                     <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Нумеролог, видящий скрытый порядок в числах. Даты, имена, повторяющиеся цифры — всё это части одного послания. Гера помогает расшифровать числовой код твоей жизни.</div>
                 </div>
-                <div class="tb-prem">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Авто</span><img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/89541583b59b817f0454710b421da22d4937160c/3798607.svg" style="width:14px;height:14px;opacity:0.6;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt=""></div>
+                <div class="tb-prem" style="position:relative;">
+                    <div style="position:absolute;inset:0;overflow:hidden;border-radius:8px;pointer-events:none;"><div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.07) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;"></div></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Оракул</span><img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/89541583b59b817f0454710b421da22d4937160c/3798607.svg" style="width:14px;height:14px;opacity:0.6;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt=""></div>
+                    <div style="height:6px;"></div>
                     <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Анализирует запрос и выбирает наиболее подходящую модель. Идеально, если не знаешь с чего начать.</div>
                 </div>
-                <div class="tb-prem">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Консилиум</span><img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/89541583b59b817f0454710b421da22d4937160c/3798607.svg" style="width:14px;height:14px;opacity:0.6;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt=""></div>
+                <div class="tb-prem" style="position:relative;">
+                    <div style="position:absolute;inset:0;overflow:hidden;border-radius:8px;pointer-events:none;"><div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.07) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;"></div></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Консилиум</span><img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/89541583b59b817f0454710b421da22d4937160c/3798607.svg" style="width:14px;height:14px;opacity:0.6;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt=""></div>
+                    <div style="height:6px;"></div>
                     <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Все шесть моделей отвечают одновременно. Шесть разных взглядов на один вопрос — выбираешь, что резонирует.</div>
                 </div>
             </div>
@@ -370,14 +390,14 @@ body.light .end-summary-btn:hover{border-color:rgba(60,45,35,0.35);color:rgba(40
 
     <!-- Slide 4: Тарифы -->
     <div class="c-slide" id="slide4">
-        <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;">
+        <div style="position:absolute;top:-2px;left:-2px;right:-2px;height:calc(38% + 2px);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);pointer-events:none;"></div>
+        <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;position:relative;z-index:2;">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;flex-shrink:0;">
-                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Опции</div>
-                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/702b29dc702466f76b91964fb01606cac2ea63f3/bank.svg" style="width:22px;height:22px;flex-shrink:0;margin-top:4px;opacity:0.55;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt="">
+                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Это бесплатно?</div>
             </div>
             <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;gap:8px;">
                 <div style="padding:14px;background:rgb(52,44,38);border-radius:10px;">
-                    <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;margin-bottom:8px;">Бесплатно</div>
+                    <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;margin-bottom:8px;">Да, бесплатно:</div>
                     <div style="display:flex;flex-direction:column;gap:5px;">
                         <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Неограниченное количество сессий — без лимитов и таймеров</div>
                         <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Шесть моделей: Тара, Карма, Астра, Ева, Психея и Гера — каждая со своим подходом</div>
@@ -385,18 +405,20 @@ body.light .end-summary-btn:hover{border-color:rgba(60,45,35,0.35);color:rgba(40
                         <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Полный доступ без регистрации — достаточно войти как гость</div>
                     </div>
                 </div>
-                <div style="position:relative;overflow:hidden;padding:14px;background:rgb(48,40,34);border-radius:10px;border:1px solid rgba(210,190,165,0.2);">
-                    <div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.09) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;pointer-events:none;"></div>
-                    <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;margin-bottom:8px;">Panacea Plus</div>
+                <div style="padding:14px;background:rgb(48,40,34);border-radius:10px;border:1px solid rgba(210,190,165,0.2);">
+                    <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;margin-bottom:6px;">Panacea Plus</div>
+                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.6;margin-bottom:10px;">Ты можешь поддержать развитие платформы, подключив Panacea Plus. Это помогает нам обучать модели и развивать сеть. Взамен ты получаешь расширенные возможности:</div>
                     <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px;">
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Всё из бесплатного плюс расширенные возможности</div>
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Режим Авто — нейронка сама выбирает подходящую модель под твой запрос</div>
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Режим Оракул — нейронка сама выбирает подходящую модель под твой запрос</div>
                         <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Консилиум — все шесть нейронок отвечают одновременно, ты выбираешь резонирующий ответ</div>
                         <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>История сессий без ограничений по времени</div>
                         <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Приоритетная обработка запросов</div>
-                        <div style="color:rgba(210,190,165,0.4);font-size:10px;line-height:1.5;margin-top:4px;">Подписка помогает покрывать расходы на работу нейронных сетей — вычислительные мощности, обучение моделей и поддержку серверов.</div>
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>PDF-саммари каждой сессии с ключевыми инсайтами</div>
                     </div>
-                    <button class="premium-btn" style="position:relative;z-index:1;" onclick="document.getElementById('premiumOverlay').classList.add('show')">Купить Panacea Plus</button>
+                    <button class="premium-btn" style="position:relative;z-index:1;overflow:hidden;" onclick="document.getElementById('premiumOverlay').classList.add('show')">
+                        <div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.25) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;pointer-events:none;"></div>
+                        Подключить Panacea Plus
+                    </button>
                 </div>
             </div>
         </div>
@@ -488,7 +510,7 @@ body.light .end-summary-btn:hover{border-color:rgba(60,45,35,0.35);color:rgba(40
                     <span class="ditem-check">?</span>
                 </button>
                 <button class="ditem ditem-premium" data-premium="auto">
-                    <div class="ditem-text"><span class="ditem-name">Авто</span><span class="ditem-desc">Выбирает лучшего проводника</span></div>
+                    <div class="ditem-text"><span class="ditem-name">Оракул</span><span class="ditem-desc">Анализирует запрос и выбирает лучшего проводника</span></div>
                     <img class="ditem-star" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/89541583b59b817f0454710b421da22d4937160c/3798607.svg" alt="">
                 </button>
                 <button class="ditem ditem-premium" data-premium="consilium">
@@ -529,7 +551,7 @@ body.light .end-summary-btn:hover{border-color:rgba(60,45,35,0.35);color:rgba(40
         </div>
         <div class="premium-feature">
             <span style="width:5px;height:5px;background:rgba(210,190,165,0.45);border-radius:1px;flex-shrink:0;margin-top:3px;"></span>
-            <span>Авто — система сама выбирает наиболее компетентного проводника</span>
+            <span>Оракул — система сама выбирает наиболее компетентного проводника</span>
         </div>
         <div class="premium-feature">
             <span style="width:5px;height:5px;background:rgba(210,190,165,0.45);border-radius:1px;flex-shrink:0;margin-top:3px;"></span>
