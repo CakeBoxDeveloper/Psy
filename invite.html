@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panacea</title>
+<title>Panacea | Приглашение </title>
 <style>
 @font-face {
     font-family:'TiemposHeadline';
@@ -24,1070 +24,216 @@
     font-weight:900;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;}
-input,textarea,select{-webkit-user-select:text;user-select:text;}
-html,body{width:100%;height:100%;background:#000;display:flex;justify-content:center;align-items:center;overflow:hidden;font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;}
+html,body{
+    width:100%;height:100%;
+    background:rgb(28,23,20);
+    display:flex;justify-content:center;align-items:center;
+    overflow:hidden;
+    font-family:'Inter',-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+}
 
-.bg{position:fixed;top:0;left:0;width:100%;height:100%;background-size:cover;background-repeat:no-repeat;background-position:center;background-color:#000;z-index:0;transition:opacity 0.5s ease;filter:blur(32px) brightness(0.4);transform:scale(1.1);}
-.bg-frame{position:fixed;top:0;left:0;width:100%;height:100%;background-size:contain;background-repeat:no-repeat;background-position:center;z-index:1;pointer-events:none;}
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:999;opacity:0;pointer-events:none;transition:opacity 0.5s ease;}
 .overlay.on{opacity:1;pointer-events:all;}
 
-.screen{position:relative;z-index:10;display:none;justify-content:center;align-items:center;width:100%;height:100%;}
-.screen.active{display:flex;}
+.card{
+    position:relative;
+    z-index:10;
+    width:min(90vw, calc(85vh * 0.52));
+    height:min(85vh, 680px);
+    border-radius:12px;
+    overflow:hidden;
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    display:flex;
+    flex-direction:column;
+    animation:fadeIn 0.7s ease-out forwards;
+}
+@keyframes fadeIn{from{opacity:0;filter:blur(8px);transform:translateY(14px);}to{opacity:1;filter:blur(0);transform:translateY(0);}}
 
-/* Modal — для screen1 и screen1b */
-.modal{width:75%;max-width:380px;background:rgba(20,20,20,0.6);border:none;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.7);display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:28px 24px 24px;gap:20px;animation:fadeIn 0.6s ease-out forwards;}
-@keyframes fadeIn{from{opacity:0;filter:blur(8px);transform:translateY(12px);}to{opacity:1;filter:blur(0);transform:translateY(0);}}
-@keyframes shimmer{0%{left:-120%;}65%,100%{left:180%;}}
+/* Top blur — from top down to desc, fades out smoothly */
+.card-top-blur{
+    position:absolute;
+    top:-2px;left:-2px;right:-2px;
+    height:calc(38% + 2px);
+    backdrop-filter:blur(22px);
+    -webkit-backdrop-filter:blur(22px);
+    -webkit-mask-image:linear-gradient(to bottom, black 0%, black 40%, transparent 100%);
+    mask-image:linear-gradient(to bottom, black 0%, black 40%, transparent 100%);
+    pointer-events:none;
+    z-index:1;
+}
 
-/* Carousel */
-.carousel-wrap{width:100%;height:100%;background:rgb(28,23,20);overflow:hidden;position:relative;}
-.c-slide{
-    position:absolute;top:50%;left:50%;
-    border-radius:12px;overflow:hidden;
-    background:rgb(42,36,32);background-size:cover;background-position:center;background-repeat:no-repeat;
+/* Top: title over image */
+.card-top{
+    position:relative;z-index:2;
+    padding:22px 20px 0;
+    flex-shrink:0;
+    display:flex;flex-direction:column;gap:8px;
+}
+.card-title{
+    color:rgba(210,190,165,1);
+    font-size:28px;
+    font-weight:900;
+    font-family:'TiemposHeadline',serif;
+    text-align:center;
+}
+
+/* Full-height blur mask covering bottom portion */
+.card-mask{
+    position:absolute;
+    bottom:-2px;left:-2px;right:-2px;
+    height:calc(72% + 2px);
+    backdrop-filter:blur(28px);
+    -webkit-backdrop-filter:blur(28px);
+    -webkit-mask-image:linear-gradient(to top, black 0%, black 40%, transparent 100%);
+    mask-image:linear-gradient(to top, black 0%, black 40%, transparent 100%);
+    pointer-events:none;
+}
+
+/* Desc sits on the blur zone */
+.card-desc-wrap{
+    position:relative;z-index:2;
+    padding:0 18px 4px;
+    flex-shrink:0;
+    margin-top:auto;
+}
+.card-desc{
+    position:relative;
+    color:rgba(210,190,165,0.7);
+    font-size:11px;
+    line-height:1.6;
+    text-align:center;
+    padding:10px 12px;
+}
+
+/* Bottom: models + button */
+.card-bottom{
+    position:relative;z-index:2;
+    padding:4px 18px 18px;
+    display:flex;flex-direction:column;gap:10px;
+    flex-shrink:0;
+}
+
+/* Models block */
+.models-block{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+.model-item{
+    background:rgb(42,35,30);
+    border-radius:7px;
+    padding:7px 10px;
+    display:flex;flex-direction:column;gap:2px;
+}
+.model-header{display:flex;align-items:baseline;justify-content:space-between;gap:6px;}
+.model-name{color:rgba(210,190,165,0.95);font-size:12px;font-weight:500;}
+.model-role{color:rgba(210,190,165,0.35);font-size:10px;text-align:right;}
+.model-desc{color:rgba(210,190,165,0.5);font-size:10px;line-height:1.45;}
+
+.accept-btn{
+    width:100%;height:44px;
+    border:none;border-radius:8px;
+    background:rgba(210,190,165,0.95);
+    color:rgb(42,32,24);
+    font-size:13px;font-weight:500;
     cursor:pointer;
-    transform-origin:center center;
-    transition:transform 0.5s cubic-bezier(0.4,0,0.2,1),
-               opacity 0.5s ease,
-               filter 0.5s ease;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Inter',sans-serif;
+    transition:all 0.15s;
+    flex-shrink:0;
+    position:relative;
+    overflow:hidden;
 }
-.c-slide.is-center{z-index:5;opacity:1;filter:none;cursor:default;}
-.c-slide.is-near{z-index:4;opacity:0.7;filter:blur(4px);}
-.c-slide.is-far{z-index:3;opacity:0.45;filter:blur(10px);}
-.c-slide-content{position:absolute;top:0;left:0;right:0;bottom:0;padding:24px;display:flex;flex-direction:column;gap:14px;}
-.c-slide-content *::-webkit-scrollbar{display:none;}
-/* Opaque beige text blocks — replaces backdrop-filter blocks */
-.tb{background:rgb(52,44,38);border-radius:8px;padding:10px 12px;}
-.tb-sm{background:rgb(52,44,38);border-radius:8px;padding:9px 11px;}
-.tb-prem{background:rgb(48,40,34);border-radius:8px;padding:9px 11px;border:1px solid rgba(210,190,165,0.15);}
-/* Fade mask at bottom of scrollable content */
-.c-slide-scroll{
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 48px, black calc(100% - 24px), transparent 100%);
-    mask-image: linear-gradient(to bottom, transparent 0%, black 48px, black calc(100% - 24px), transparent 100%);
+.accept-btn::after{
+    content:'';
+    position:absolute;
+    top:0;left:-120%;
+    width:120%;height:100%;
+    background:linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.35) 50%, transparent 80%);
+    animation:shimmer 5.6s ease-in-out infinite;
+    pointer-events:none;
 }
-.c-slide-scroll.at-bottom{
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 48px, black 100%);
-    mask-image: linear-gradient(to bottom, transparent 0%, black 48px, black 100%);
+@keyframes shimmer{0%{left:-120%;}65%,100%{left:180%;}}
+.accept-btn:hover{background:rgba(210,190,165,1);}
+.accept-btn:active{transform:scale(0.98);}
+
+.card-footer{
+    text-align:center;
+    color:rgba(210,190,165,0.3);
+    font-size:10px;
+    flex-shrink:0;
 }
-.c-slide-scroll.at-top{
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 24px), transparent 100%);
-    mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 24px), transparent 100%);
-}
-.c-slide-scroll.at-top.at-bottom{
-    -webkit-mask-image: none;
-    mask-image: none;
-}
-@media(max-width:599px){.c-slide.is-far{opacity:0;pointer-events:none;}}
-
-/* S1 */
-.s1-title{color:rgba(210,190,165,1);font-size:36px;font-weight:900;font-family:'TiemposHeadline',serif;text-align:center;}
-.s1-sub{color:rgba(210,190,165,0.6);font-size:12px;text-align:center;line-height:1.6;}
-.auth-btn{width:100%;height:42px;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.15s;font-family:'Inter',sans-serif;}
-.auth-google{background:rgba(255,255,255,0.92);color:#222;}
-.auth-google:hover{background:#fff;}
-.auth-apple{background:rgba(255,255,255,0.08);color:rgba(210,190,165,0.85);}
-.auth-apple:hover{background:rgba(255,255,255,0.13);}
-.auth-btn:active{transform:scale(0.98);}
-.s1-footer{text-align:center;color:rgba(210,190,165,0.3);font-size:10px;line-height:1.5;}
-
-/* S1b Survey */
-.s1b-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
-.s1b-title{color:rgb(210,190,165);font-size:20px;font-weight:900;font-family:'TiemposHeadline',serif;}
-.s1b-icon{width:18px;height:18px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
-.fields{display:flex;flex-direction:column;gap:12px;flex:1;}
-.flabel{color:rgb(180,165,145);font-size:11px;letter-spacing:0.3px;margin-bottom:4px;}
-.fselect{width:100%;background:rgb(55,46,40);border:none;color:rgb(210,190,165);padding:10px 32px 10px 12px;border-radius:8px;font-size:12px;outline:none;font-family:'Inter',sans-serif;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(210,190,165,0.6)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:background 0.15s;}
-.fselect:focus{background-color:rgb(65,54,47);}
-.fselect option{background:rgb(42,36,32);color:rgb(210,190,165);}
-.submit-btn{width:100%;height:42px;background:rgb(55,46,40);border:none;color:rgb(210,190,165);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-family:'Inter',sans-serif;transition:all 0.15s;margin-top:auto;}
-.submit-btn:hover{background:rgb(65,54,47);}
-.submit-btn:active{transform:scale(0.98);}
-.submit-btn img{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
-
-/* S2 Chat */
-.s2-wrap{width:100%;height:100vh;background:rgb(18,14,12);display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.s2-inner{width:90%;max-width:420px;height:90vh;display:flex;flex-direction:column;background:rgb(32,26,22);border-radius:12px;overflow:hidden;}
-@media(max-width:599px){
-    .s2-wrap{background:rgb(32,26,22);}
-    .s2-inner{width:100%;max-width:100%;height:100vh;border-radius:0;}
-    .bg{filter:none !important;transform:none !important;}
-    .bg-frame{display:none;}
-    #screen1 .modal,#screen1b .modal{width:100%;max-width:100%;border-radius:0;min-height:100vh;}
-}
-.chat-header{padding:12px 16px;background:transparent;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:space-between;}
-.chat-header-left{display:flex;align-items:center;}
-.model-btn{background:rgba(255,255,255,0.08);border:none;color:rgba(210,190,165,0.85);font-size:13px;font-weight:500;cursor:pointer;padding:8px 16px;border-radius:8px;font-family:'Inter',sans-serif;transition:all 0.15s;}
-.model-btn:hover{background:rgba(255,255,255,0.12);color:rgba(210,190,165,1);}
-.dropdown{position:absolute;top:calc(100% + 4px);left:16px;background:rgba(42,36,32,0.98);border:1px solid rgba(210,190,165,0.12);border-radius:10px;min-width:220px;z-index:100;display:none;flex-direction:column;overflow:hidden;backdrop-filter:none;}
-.dropdown.show{display:flex;}
-.ditem{padding:10px 14px;background:none;border:none;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:all 0.15s;display:flex;align-items:center;gap:8px;}
-.ditem:hover{background:rgba(255,255,255,0.06);}
-.ditem.active{background:rgba(255,255,255,0.08);}
-.ditem-text{display:flex;flex-direction:column;gap:2px;flex:1;}
-.ditem-name{font-size:13px;font-weight:500;color:rgba(210,190,165,0.9);}
-.ditem.active .ditem-name{color:rgba(210,190,165,1);}
-.ditem-desc{font-size:11px;color:rgba(210,190,165,0.4);}
-.ditem.active .ditem-desc{color:rgba(210,190,165,0.55);}
-.ditem-check{font-size:12px;color:rgba(210,190,165,0.9);opacity:0;flex-shrink:0;width:8px;height:8px;border-radius:50%;background:rgba(210,190,165,0.9);display:inline-block;font-size:0;}
-.ditem.active .ditem-check{opacity:1;}
-.ditem-star{width:14px;height:14px;flex-shrink:0;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
-.ditem-divider{display:none;}
-
-/* Panacea Plus modal */
-.premium-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:600;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
-.premium-overlay.show{display:flex;}
-.premium-modal{width:80%;max-width:340px;background:rgba(42,36,32,0.97);border-radius:12px;padding:28px 22px 22px;display:flex;flex-direction:column;gap:16px;animation:fadeIn 0.3s ease-out forwards;}
-.premium-title{color:rgba(210,190,165,1);font-size:20px;font-weight:900;font-family:'TiemposHeadline',serif;text-align:center;line-height:1.3;}
-.premium-desc{color:rgba(210,190,165,0.65);font-size:12px;line-height:1.7;text-align:center;}
-.premium-features{display:flex;flex-direction:column;gap:8px;}
-.premium-feature{display:flex;align-items:flex-start;gap:10px;color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;}
-.premium-feature-icon{width:14px;height:14px;flex-shrink:0;margin-top:1px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
-.premium-btn{width:100%;height:42px;background:rgba(210,190,165,0.2);border:1px solid rgba(210,190,165,0.3);color:rgba(210,190,165,1);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
-.premium-btn:hover{background:rgba(210,190,165,0.3);}
-.premium-close{background:none;border:none;color:rgba(210,190,165,0.4);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;text-align:center;transition:all 0.15s;}
-.premium-close:hover{color:rgba(210,190,165,0.7);}
-.bulb-btn{width:36px;height:36px;background:rgba(255,255,255,0.06);border:none;color:rgba(210,190,165,0.6);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
-.bulb-btn:hover{background:rgba(255,255,255,0.1);color:rgba(210,190,165,1);}
-.bulb-btn svg{width:16px;height:16px;}
-.chat-header-right{display:flex;gap:8px;align-items:center;}
-.chat-area{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 16px;display:flex;flex-direction:column;gap:10px;background:transparent;scrollbar-width:none;}
-.chat-area::-webkit-scrollbar{display:none;}
-.message{display:flex;animation:msgIn 0.4s ease-out forwards;}
-@keyframes msgIn{from{opacity:0;filter:blur(8px);transform:translateY(6px);}to{opacity:1;filter:blur(0);transform:translateY(0);}}
-.message.user{justify-content:flex-end;}
-.bubble{max-width:80%;padding:8px 12px;border-radius:8px;font-size:12px;line-height:1.5;word-wrap:break-word;word-break:break-word;background:rgba(255,255,255,0.06);color:rgba(210,190,165,0.8);}
-.bubble-body{display:block;}
-.bubble-sig{display:block;margin:8px -12px 0;padding:6px 12px 0;border-top:1px solid rgba(210,190,165,0.12);font-size:10px;color:rgba(210,190,165,0.35);text-align:center;font-style:normal;}
-.typing-bubble{display:flex;align-items:center;gap:4px;padding:10px 14px;background:rgba(255,255,255,0.06);border-radius:8px;width:fit-content;}
-.typing-bubble span{width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:50%;animation:typing 1.2s infinite;}
-.typing-bubble span:nth-child(2){animation-delay:0.2s;}
-.typing-bubble span:nth-child(3){animation-delay:0.4s;}
-@keyframes typing{0%,60%,100%{opacity:0.3;transform:scale(1);}30%{opacity:1;transform:scale(1.2);}}
-.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:rgba(210,190,165,0.3);text-align:center;font-size:12px;line-height:1.8;}
-.empty-state img{filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(60%);opacity:0.5;}
-.input-area{padding:12px 16px;background:transparent;display:flex;gap:8px;flex-shrink:0;align-items:center;}
-.input-field{flex:1;background:rgba(255,255,255,0.06);border:none;color:rgba(210,190,165,0.85);padding:0 12px;border-radius:8px;font-size:12px;outline:none;transition:all 0.15s;font-family:'Inter',sans-serif;height:36px;line-height:36px;}
-.input-field::placeholder{color:rgba(210,190,165,0.3);}
-.input-field:focus{background:rgba(255,255,255,0.1);}
-.send-btn{width:36px;height:36px;background:rgba(255,255,255,0.06);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
-.send-btn:hover{background:rgba(255,255,255,0.1);}
-.send-btn:active{transform:scale(0.95);}
-.send-btn img{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(60%);opacity:0.7;}
-
-/* Transitions for theme switch */
-.s2-wrap,.s2-inner,.model-btn,.bubble,.input-field,.send-btn,.bulb-btn,.empty-state,.ditem-name,.ditem-desc,.dropdown,.end-modal,.premium-modal{transition:background 0.4s ease,color 0.4s ease,filter 0.4s ease;}
-
-/* Light theme */
-.light .s2-wrap{background:rgb(220,205,185);}
-.light .s2-inner{background:rgb(235,220,200);}
-.light .model-btn{background:rgba(60,45,35,0.25);color:rgb(40,28,20);font-weight:600;border:none;}
-.light .model-btn:hover{background:rgba(60,45,35,0.35);}
-.light .dropdown{background:rgb(235,220,200);border-color:rgba(60,45,35,0.2);}
-.light .ditem-name{color:rgba(40,28,20,0.4);}
-.light .ditem-desc{color:rgba(40,28,20,0.35);}
-.light .ditem:hover{background:rgba(60,45,35,0.08);}
-.light .ditem.active{background:rgba(60,45,35,0.12);}
-.light .ditem.active .ditem-name{color:rgb(40,28,20);}
-.light .ditem.active .ditem-desc{color:rgba(40,28,20,0.6);}
-.light .ditem-check{color:rgb(40,28,20);}
-.light .ditem-star{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);opacity:0.35;}
-.light .ditem.active .ditem-star{opacity:1;filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);}
-.light .bubble{background:rgba(60,45,35,0.1);color:rgb(40,28,20);}
-.light .typing-bubble{background:rgba(60,45,35,0.1);}
-.light .typing-bubble span{background:rgba(60,45,35,0.4);}
-.light .empty-state{color:rgba(40,28,20,0.4);}
-.light .empty-state img{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);opacity:0.5;}
-.light .input-field{background:rgba(60,45,35,0.1);color:rgb(40,28,20);}
-.light .input-field::placeholder{color:rgba(40,28,20,0.35);}
-.light .input-field:focus{background:rgba(60,45,35,0.15);}
-.light .send-btn{background:rgba(60,45,35,0.1);}
-.light .send-btn img{filter:invert(15%) sepia(15%) saturate(300%) hue-rotate(10deg) brightness(35%);opacity:0.7;}
-.light .bulb-btn{background:rgba(60,45,35,0.1);color:rgba(40,28,20,0.7);}
-.light .bulb-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28,20);}
-.light .bulb-btn svg{stroke:rgba(40,28,20,0.7);}
-/* Модалки в светлой теме */
-body.light .end-modal{background:rgb(235,220,200);}
-body.light .end-title{color:rgb(40,28,20);}
-body.light .end-desc{color:rgba(40,28,20,0.6);}
-body.light .end-btn-menu{background:rgba(60,45,35,0.12);color:rgb(40,28,20);}
-body.light .end-btn-new{background:rgba(60,45,35,0.2);color:rgb(40,28,20);}
-body.light .premium-modal{background:rgb(235,220,200);}
-body.light .premium-title{color:rgb(40,28,20);}
-body.light .premium-desc{color:rgba(40,28,20,0.6);}
-body.light .premium-feature{color:rgba(40,28,20,0.8);}
-body.light .premium-btn{background:rgba(60,45,35,0.2);border-color:rgba(60,45,35,0.3);color:rgb(40,28,20);}
-body.light .premium-close{color:rgba(40,28,20,0.4);}
-body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);}
-/* Убираем bg в светлой теме */
-.light ~ .bg, .light ~ .bg-frame{display:none !important;}
-
-/* Loader screen */
-.loader-wrap{width:100%;height:100vh;background:rgb(28,23,20);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;}
-.loader-carousel-wrap{width:100%;flex:1;position:relative;overflow:hidden;}
-.lc-slide{
-    position:absolute;top:50%;left:50%;
-    border-radius:12px;overflow:hidden;
-    background:rgb(42,36,32);background-size:cover;background-position:center;background-repeat:no-repeat;
-    transform-origin:center center;
-    transition:transform 0.5s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease,filter 0.5s ease;
-    display:flex;align-items:flex-end;
-}
-.lc-slide.lc-center{z-index:5;opacity:1;filter:none;}
-.lc-slide.lc-near{z-index:4;opacity:0.7;filter:blur(4px);}
-.lc-slide.lc-far{z-index:3;opacity:0.45;filter:blur(10px);}
-.lc-mask{position:absolute;bottom:0;left:0;right:0;height:65%;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);-webkit-mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);pointer-events:none;}
-.lc-quote{position:relative;z-index:2;color:rgba(210,190,165,0.95);font-size:15px;line-height:1.7;font-family:'TiemposHeadline',serif;font-weight:900;text-align:center;padding:24px;transition:opacity 0.4s ease;}
-@media(max-width:599px){.lc-slide.lc-far{opacity:0;pointer-events:none;}}
-.loader-progress{width:90%;max-width:380px;display:flex;flex-direction:column;gap:12px;padding-bottom:32px;}
-.loader-stage{color:rgba(210,190,165,0.7);font-size:13px;text-align:center;min-height:20px;transition:opacity 0.3s ease;}
-.loader-bar{width:100%;height:4px;background:rgba(210,190,165,0.15);border-radius:2px;overflow:hidden;}
-.loader-bar-fill{height:100%;background:rgba(210,190,165,0.6);border-radius:2px;transition:width 0.4s ease;}
-
-/* End modal */
-.end-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
-.end-overlay.show{display:flex;}
-.end-modal{width:75%;max-width:320px;background:rgba(42,36,32,0.95);border-radius:10px;padding:24px 20px;display:flex;flex-direction:column;gap:16px;animation:fadeIn 0.3s ease-out forwards;}
-.end-title{color:rgba(210,190,165,0.95);font-size:17px;font-weight:900;font-family:'TiemposHeadline',serif;line-height:1.3;text-align:center;}
-.end-desc{color:rgba(210,190,165,0.55);font-size:12px;line-height:1.6;text-align:center;}
-.end-btns{display:flex;gap:8px;}
-.end-btn{flex:1;height:38px;border:none;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
-.end-btn-menu{background:rgba(255,255,255,0.08);color:rgba(210,190,165,0.8);}
-.end-btn-menu:hover{background:rgba(255,255,255,0.12);}
-.end-btn-new{background:rgba(210,190,165,0.15);color:rgba(210,190,165,1);}
-.end-btn-new:hover{background:rgba(210,190,165,0.22);}
-.end-summary-btn{width:100%;height:36px;background:none;border:1px solid rgba(210,190,165,0.15);color:rgba(210,190,165,0.4);border-radius:8px;font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all 0.15s;}
-.end-summary-btn:hover{border-color:rgba(210,190,165,0.25);color:rgba(210,190,165,0.6);}
-body.light .end-summary-btn{border-color:rgba(60,45,35,0.2);color:rgba(40,28,20,0.35);}
-body.light .end-summary-btn:hover{border-color:rgba(60,45,35,0.35);color:rgba(40,28,20,0.55);}
 </style>
 </head>
 <body>
-<div class="bg" id="bg"></div>
-<div class="bg-frame" id="bgFrame"></div>
+
 <div class="overlay" id="overlay"></div>
 
-<!-- SCREEN 1: Login -->
-<div class="screen active" id="screen1">
-<div class="carousel-wrap" id="carouselWrap">
+<div class="card" id="card">
 
-    <!-- Slide 0: Login -->
-    <div class="c-slide" id="slide0">
-        <div style="position:absolute;bottom:-2px;left:-2px;right:-2px;height:calc(90% + 2px);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:-2px;left:-2px;right:-2px;height:calc(75% + 2px);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:-2px;left:-2px;right:-2px;height:calc(55% + 2px);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:24px;display:flex;flex-direction:column;gap:20px;">
-            <div style="text-align:center;display:flex;flex-direction:column;gap:8px;">
-                <div class="s1-title" style="font-weight:300;">Panacea</div>
-                <div class="s1-sub">Познай себя через призму времени</div>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:8px;">
-                <button class="auth-btn auth-google" id="googleBtn"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Войти через Google</button>
-                <button class="auth-btn auth-apple" id="appleBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>Войти через Apple</button>
-                <button class="auth-btn auth-apple" id="guestBtn">Продолжить как гость</button>
-            </div>
-            <div class="s1-footer">Продолжая, ты соглашаешься с условиями использования</div>
-        </div>
+    <!-- Top blur layer -->
+    <div class="card-top-blur"></div>
+
+    <!-- Top: title only -->
+    <div class="card-top">
+        <div class="card-title">Приглашение</div>
     </div>
 
-    <!-- Slide 1: О нас -->
-    <div class="c-slide" id="slide1">
-        <div style="position:absolute;top:-2px;left:-2px;right:-2px;height:calc(38% + 2px);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);pointer-events:none;"></div>
-        <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;position:relative;z-index:2;">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;flex-shrink:0;">
-                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">О нас</div>
-                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/700124782cbec6857c5851ac78aa395561e154a2/colosseum.svg" style="width:22px;height:22px;flex-shrink:0;margin-top:4px;opacity:0.55;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt="">
+    <!-- Blur mask -->
+    <div class="card-mask"></div>
+
+    <!-- Desc on blur zone -->
+    <div class="card-desc-wrap">
+        <div class="card-desc">Попробуйте обсудить свой вопрос с нашими новейшими моделями. Это бесплатно — регистрироваться тоже не нужно.</div>
+    </div>
+
+    <!-- Bottom: models + button -->
+    <div class="card-bottom">
+        <div class="models-block">
+            <div class="model-item">
+                <div class="model-header"><span class="model-name">Тара</span><span class="model-role">таролог</span></div>
+                <div class="model-desc">Мастер традиционной школы тарологии. Читает ситуацию через архетипы и символы.</div>
             </div>
-            <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;gap:10px;">
-                <div class="tb">
-                    <div style="color:rgba(210,190,165,0.85);font-size:13px;line-height:1.7;">Panacea — пространство для глубокого самопознания через призму времени. Мы объединяем психологию, архетипы и искусственный интеллект, чтобы помочь тебе найти ответы внутри себя.</div>
-                </div>
-                <div class="tb">
-                    <div style="color:rgba(210,190,165,0.6);font-size:12px;line-height:1.6;">Каждая сессия — это разговор с моделью, обученной на тысячах текстов о человеческой природе, символах и внутренних конфликтах. Не гадание — осмысление.</div>
-                </div>
-                <div class="tb">
-                    <div style="color:rgba(210,190,165,0.7);font-size:12px;line-height:1.7;">В основе каждой модели — нейронная сеть, дообученная на специализированных корпусах текстов. Тара работает с символическими системами, Карма — с кармическими паттернами, Астра — с астрологическими циклами, Ева — с регрессивным опытом, Психея — с нарративной психологией, Гера — с числовыми закономерностями. Каждая нейронка видит твой запрос через свою призму и отвечает в рамках своей традиции.</div>
-                </div>
-                <div class="tb">
-                    <div style="color:rgba(210,190,165,0.5);font-size:11px;line-height:1.6;">Мы не претендуем на предсказание будущего. Panacea — инструмент рефлексии, который помогает структурировать внутренний опыт и посмотреть на ситуацию с разных сторон.</div>
-                </div>
-                <div class="tb">
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.7;">Вся система создана на некоммерческой основе — силами инженеров и волонтёров, которые верят в открытый доступ к инструментам самопознания. Донаты и средства с Panacea Plus-подписки идут исключительно на поддержку обучения моделей, развитие нейронной сети и покрытие серверных расходов.</div>
-                </div>
+            <div class="model-item">
+                <div class="model-header"><span class="model-name">Карма</span><span class="model-role">кармолог</span></div>
+                <div class="model-desc">Читает кармические узлы и незакрытые циклы. Находит закономерность там, где видна случайность.</div>
+            </div>
+            <div class="model-item">
+                <div class="model-header"><span class="model-name">Астра</span><span class="model-role">астролог</span></div>
+                <div class="model-desc">Эксперт в астрологии и натальных картах. Читает планетарные циклы как язык судьбы.</div>
+            </div>
+            <div class="model-item">
+                <div class="model-header"><span class="model-name">Ева</span><span class="model-role">регрессолог</span></div>
+                <div class="model-desc">Проводник в глубинную память прошлых жизней. Ищет корни страхов и повторяющихся сценариев.</div>
+            </div>
+            <div class="model-item">
+                <div class="model-header"><span class="model-name">Психея</span><span class="model-role">психолог</span></div>
+                <div class="model-desc">Юнгианский психолог и нарративный терапевт. Слушает не только слова, но и то, что за ними.</div>
+            </div>
+            <div class="model-item">
+                <div class="model-header"><span class="model-name">Гера</span><span class="model-role">нумеролог</span></div>
+                <div class="model-desc">Видит скрытый порядок в числах. Расшифровывает числовой код вашей жизни.</div>
             </div>
         </div>
-    </div>
 
-    <!-- Slide 2: Как это работает -->
-    <div class="c-slide" id="slide2">
-        <div style="position:absolute;top:-2px;left:-2px;right:-2px;height:calc(38% + 2px);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);pointer-events:none;"></div>
-        <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;position:relative;z-index:2;">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;flex-shrink:0;">
-                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Как это работает</div>
-                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/b913539429ab813d9955cc00d1145b3ad7ab18f3/idea_1.svg" style="width:22px;height:22px;flex-shrink:0;margin-top:4px;opacity:0.55;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt="">
-            </div>
-            <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;gap:8px;">
-                <div class="tb" style="color:rgba(210,190,165,0.65);font-size:12px;line-height:1.6;">Модели обучены на классической литературе, философских трактатах, юнгианской психологии и архетипических текстах — от Данте до Юнга. Они не предсказывают, а отражают.</div>                <div style="display:flex;flex-direction:column;gap:6px;">
-                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">I</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Выбери модель — каждая видит мир по-своему и отвечает в рамках своей традиции</div></div>
-                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">II</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Задай вопрос или просто начни разговор — нейронка подстроится под твой стиль общения</div></div>
-                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">III</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Получи ответ, основанный на твоём контексте — не шаблонный, а сформированный под твой запрос</div></div>
-                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">IV</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Возвращайся — каждая сессия уникальна, модели не хранят историю между сессиями</div></div>
-                </div>
-                <div class="tb" style="color:rgba(210,190,165,0.5);font-size:11px;line-height:1.6;">Под капотом — языковые модели с контекстным окном до 32 000 токенов. Это значит, что в рамках одной сессии модель удерживает весь разговор и строит ответы с учётом всего сказанного ранее. Чем больше ты рассказываешь — тем точнее отражение.</div>
-            </div>
-        </div>
+        <button class="accept-btn" id="acceptBtn">Принять приглашение</button>
+        <div class="card-footer">Данные этой сессии будут храниться 24 часа</div>
     </div>
-
-    <!-- Slide 3: Модели -->
-    <div class="c-slide" id="slide3">
-        <div style="position:absolute;top:-2px;left:-2px;right:-2px;height:calc(38% + 2px);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);pointer-events:none;"></div>
-        <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;position:relative;z-index:2;">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;flex-shrink:0;">
-                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Модели</div>
-                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/700124782cbec6857c5851ac78aa395561e154a2/sculpture.svg" style="width:22px;height:22px;flex-shrink:0;margin-top:4px;opacity:0.55;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt="">
-            </div>
-            <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;gap:5px;">
-                <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Тара</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">таролог</span></div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Мастер традиционной школы тарологии. Каждый расклад — это разговор с символами, которые уже знают ответ. Тара не предсказывает, она помогает увидеть то, что скрыто за поверхностью событий.</div>
-                </div>
-                <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Карма</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">кармолог</span></div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Читает кармические узлы и незакрытые циклы. Там, где другие видят случайность, Карма находит закономерность. Специализируется на повторяющихся ситуациях и скрытых уроках судьбы.</div>
-                </div>
-                <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Астра</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">астролог</span></div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Эксперт в области астрологии и натальных карт. Читает планетарные циклы как язык, на котором Вселенная говорит с каждым из нас. Помогает понять, в какой точке своего пути ты находишься прямо сейчас.</div>
-                </div>
-                <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Ева</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">регрессолог</span></div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Проводник в глубинную память прошлых жизней. Работает с тем, что душа несёт сквозь время. Помогает найти корень страхов, притяжений и повторяющихся сценариев в опыте, который предшествует этой жизни.</div>
-                </div>
-                <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Психея</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">психолог</span></div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Юнгианский психолог и нарративный терапевт. Слушает не только слова, но и то, что стоит за ними. Помогает переосмыслить личную историю и найти в ней новый смысл.</div>
-                </div>
-                <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Гера</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">нумеролог</span></div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Нумеролог, видящий скрытый порядок в числах. Даты, имена, повторяющиеся цифры — всё это части одного послания. Гера помогает расшифровать числовой код твоей жизни.</div>
-                </div>
-                <div class="tb-prem">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Оракул</span><img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/89541583b59b817f0454710b421da22d4937160c/3798607.svg" style="width:14px;height:14px;opacity:0.6;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt=""></div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Анализирует запрос и выбирает наиболее подходящую модель. Идеально, если не знаешь с чего начать.</div>
-                </div>
-                <div class="tb-prem">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Консилиум</span><img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/89541583b59b817f0454710b421da22d4937160c/3798607.svg" style="width:14px;height:14px;opacity:0.6;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt=""></div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Все шесть моделей отвечают одновременно. Шесть разных взглядов на один вопрос — выбираешь, что резонирует.</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 4: Тарифы -->
-    <div class="c-slide" id="slide4">
-        <div style="position:absolute;top:-2px;left:-2px;right:-2px;height:calc(38% + 2px);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);pointer-events:none;"></div>
-        <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;position:relative;z-index:2;">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;flex-shrink:0;">
-                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Это бесплатно?</div>
-                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/702b29dc702466f76b91964fb01606cac2ea63f3/bank.svg" style="width:22px;height:22px;flex-shrink:0;margin-top:4px;opacity:0.55;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt="">
-            </div>
-            <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;gap:8px;">
-                <div style="padding:14px;background:rgb(52,44,38);border-radius:10px;">
-                    <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;margin-bottom:8px;">Да, бесплатно:</div>
-                    <div style="display:flex;flex-direction:column;gap:5px;">
-                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Неограниченное количество сессий — без лимитов и таймеров</div>
-                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Шесть моделей: Тара, Карма, Астра, Ева, Психея и Гера — каждая со своим подходом</div>
-                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>История сессий сохраняется на 24 часа — можно вернуться и продолжить</div>
-                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Полный доступ без регистрации — достаточно войти как гость</div>
-                    </div>
-                </div>
-                <div style="padding:14px;background:rgb(48,40,34);border-radius:10px;border:1px solid rgba(210,190,165,0.2);">
-                    <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;margin-bottom:6px;">Panacea Plus</div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.6;margin-bottom:10px;">Ты можешь поддержать развитие платформы, подключив Panacea Plus. Это помогает нам обучать модели и развивать сеть. Взамен ты получаешь расширенные возможности:</div>
-                    <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px;">
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Режим Оракул — нейронка сама выбирает подходящую модель под твой запрос</div>
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Консилиум — все шесть нейронок отвечают одновременно, ты выбираешь резонирующий ответ</div>
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>История сессий без ограничений по времени</div>
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Приоритетная обработка запросов</div>
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>PDF-саммари каждой сессии с ключевыми инсайтами</div>
-                    </div>
-                    <button class="premium-btn" style="position:relative;z-index:1;overflow:hidden;" onclick="document.getElementById('premiumOverlay').classList.add('show')">
-                        <div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.25) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;pointer-events:none;"></div>
-                        Подключить Panacea Plus
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-</div>
-</div>
-
-<!-- SCREEN 1b: Survey -->
-<div class="screen" id="screen1b">
-<div style="width:100%;height:100%;background:rgb(28,23,20);display:flex;align-items:center;justify-content:center;">
-<div style="width:90%;max-width:420px;height:90vh;display:flex;flex-direction:column;background:rgb(42,36,32);border-radius:12px;overflow:hidden;padding:28px 24px 24px;gap:16px;">
-    <div class="s1b-header">
-        <div class="s1b-title">Расскажи о себе</div>
-        <img class="s1b-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/039080ffd25b01f8a0cc35ca478071d4c4b675ab/feather.svg" alt="">
-    </div>
-    <div class="fields" style="overflow-y:auto;scrollbar-width:none;flex:1;">
-        <div><div class="flabel">Что тебя беспокоит?</div>
-        <select class="fselect"><option value="" disabled selected>Выбери тему</option><option>Отношения и любовь</option><option>Карьера и деньги</option><option>Здоровье и энергия</option><option>Смысл и предназначение</option><option>Тревога и страхи</option><option>Семья и близкие</option><option>Одиночество</option><option>Другое</option></select></div>
-        <div><div class="flabel">Как ты себя чувствуешь сейчас?</div>
-        <select class="fselect"><option value="" disabled selected>Выбери состояние</option><option>Потерян и не знаю куда идти</option><option>Тревожно и неспокойно</option><option>Устал и нет сил</option><option>Ищу ответы на вопросы</option><option>Хочу перемен</option><option>В целом хорошо, но есть вопросы</option><option>Чувствую внутренний конфликт</option></select></div>
-        <div><div class="flabel">Твой возраст</div>
-        <select class="fselect"><option value="" disabled selected>Выбери диапазон</option><option>До 20 лет</option><option>20–30 лет</option><option>30–40 лет</option><option>40–50 лет</option><option>Старше 50</option></select></div>
-        <div><div class="flabel">Как часто обращаешься за советом?</div>
-        <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Впервые пробую</option><option>Иногда, в трудные моменты</option><option>Регулярно, это часть жизни</option><option>Скептически, но интересно</option></select></div>
-        <div><div class="flabel">Чего ожидаешь от сессии?</div>
-        <select class="fselect"><option value="" disabled selected>Выбери цель</option><option>Получить ясность и направление</option><option>Выговориться и быть услышанным</option><option>Узнать что-то о своей судьбе</option><option>Найти решение конкретной ситуации</option><option>Просто попробовать</option></select></div>
-        <div><div class="flabel">Есть ли у тебя конкретный вопрос?</div>
-        <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Да, есть чёткий вопрос</option><option>Скорее ощущение, чем вопрос</option><option>Хочу просто поговорить</option><option>Не знаю с чего начать</option></select></div>
-        <div><div class="flabel">Как ты относишься к мистическому?</div>
-        <select class="fselect"><option value="" disabled selected>Выбери позицию</option><option>Верю и практикую</option><option>Открыт, но с сомнениями</option><option>Скептик, но любопытен</option><option>Интересует только психология</option></select></div>
-    </div>
-    <button class="submit-btn" id="submitBtn">
-        <span>Начать сессию</span>
-        <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg" alt="">
-    </button>
-</div>
-</div>
-</div>
-</div>
-
-<!-- SCREEN 1c: Loader -->
-<div class="screen" id="screen1c">
-<div class="loader-wrap">
-    <div class="loader-carousel-wrap" id="loaderCarouselWrap">
-        <div class="lc-slide" id="lc0"></div>
-        <div class="lc-slide" id="lc1"></div>
-        <div class="lc-slide" id="lc2"></div>
-        <div class="lc-slide" id="lc3"></div>
-        <div class="lc-slide" id="lc4"></div>
-    </div>
-    <div class="loader-progress">
-        <div class="loader-stage" id="loaderStage">Определяем проблему...</div>
-        <div class="loader-bar"><div class="loader-bar-fill" id="loaderFill" style="width:0%"></div></div>
-    </div>
-</div>
-</div>
-
-<div class="screen" id="screen2">
-<div class="s2-wrap">
-<div class="s2-inner">
-    <div class="chat-header">
-        <div class="chat-header-left">
-            <button class="model-btn" id="modelBtn">Тара</button>
-            <div class="dropdown" id="dropdown">
-                <button class="ditem active" data-model="tara">
-                    <div class="ditem-text"><span class="ditem-name">Тара</span><span class="ditem-desc">Мастер традиционной школы тарологии</span></div>
-                    <span class="ditem-check">?</span>
-                </button>
-                <button class="ditem" data-model="karma">
-                    <div class="ditem-text"><span class="ditem-name">Карма</span><span class="ditem-desc">Читает кармические узлы и незакрытые циклы</span></div>
-                    <span class="ditem-check">?</span>
-                </button>
-                <button class="ditem" data-model="astra">
-                    <div class="ditem-text"><span class="ditem-name">Астра</span><span class="ditem-desc">Эксперт в области астрологии и натальных карт</span></div>
-                    <span class="ditem-check">?</span>
-                </button>
-                <button class="ditem" data-model="eva">
-                    <div class="ditem-text"><span class="ditem-name">Ева</span><span class="ditem-desc">Проводник в глубинную память прошлых жизней</span></div>
-                    <span class="ditem-check">?</span>
-                </button>
-                <button class="ditem" data-model="psyche">
-                    <div class="ditem-text"><span class="ditem-name">Психея</span><span class="ditem-desc">Юнгианский психолог и нарративный терапевт</span></div>
-                    <span class="ditem-check">?</span>
-                </button>
-                <button class="ditem" data-model="gera">
-                    <div class="ditem-text"><span class="ditem-name">Гера</span><span class="ditem-desc">Нумеролог, видящий скрытый порядок в числах</span></div>
-                    <span class="ditem-check">?</span>
-                </button>
-                <button class="ditem ditem-premium" data-premium="auto">
-                    <div class="ditem-text"><span class="ditem-name">Оракул</span><span class="ditem-desc">Анализирует запрос и выбирает лучшего проводника</span></div>
-                    <img class="ditem-star" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/89541583b59b817f0454710b421da22d4937160c/3798607.svg" alt="">
-                </button>
-                <button class="ditem ditem-premium" data-premium="consilium">
-                    <div class="ditem-text"><span class="ditem-name">Консилиум</span><span class="ditem-desc">Мнения всех проводников сразу</span></div>
-                    <img class="ditem-star" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/89541583b59b817f0454710b421da22d4937160c/3798607.svg" alt="">
-                </button>
-            </div>
-        </div>
-        <div class="chat-header-right">
-            <button class="bulb-btn" id="themeBtn" title="Сменить тему">
-                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/b913539429ab813d9955cc00d1145b3ad7ab18f3/eclipse.svg" style="width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(60%);opacity:0.7;" alt="">
-            </button>
-            <button class="bulb-btn" id="menuBtn" title="Завершить сессию">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-            </button>
-        </div>
-    </div>
-    <div class="chat-area" id="chatArea"></div>
-    <div class="input-area">
-        <input type="text" class="input-field" id="msgInput" placeholder="Задай свой вопрос..." autocomplete="off">
-        <button class="send-btn" id="sendBtn">
-            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg" alt="">
-        </button>
-    </div>
-</div>
-</div>
-</div>
-
-<!-- Panacea Plus modal -->
-<div class="premium-overlay" id="premiumOverlay">
-<div class="premium-modal">
-    <div class="premium-title">Panacea Plus</div>
-    <div class="premium-desc">Откройте полный доступ к возможностям всех проводников и эксклюзивным режимам.</div>
-    <div class="premium-features">
-        <div class="premium-feature">
-            <span style="width:5px;height:5px;background:rgba(210,190,165,0.45);border-radius:1px;flex-shrink:0;margin-top:3px;"></span>
-            <span>Консилиум — ответ содержит мнения всех шести проводников одновременно</span>
-        </div>
-        <div class="premium-feature">
-            <span style="width:5px;height:5px;background:rgba(210,190,165,0.45);border-radius:1px;flex-shrink:0;margin-top:3px;"></span>
-            <span>Оракул — система сама выбирает наиболее компетентного проводника</span>
-        </div>
-        <div class="premium-feature">
-            <span style="width:5px;height:5px;background:rgba(210,190,165,0.45);border-radius:1px;flex-shrink:0;margin-top:3px;"></span>
-            <span>Неограниченная история сессий без удаления через 24 часа</span>
-        </div>
-        <div class="premium-feature">
-            <span style="width:5px;height:5px;background:rgba(210,190,165,0.45);border-radius:1px;flex-shrink:0;margin-top:3px;"></span>
-            <span>PDF-саммари каждой сессии — краткое резюме разговора с ключевыми инсайтами</span>
-        </div>
-    </div>
-    <button class="premium-btn">Подключить Panacea Plus</button>
-    <button class="premium-close" id="premiumClose">Не сейчас</button>
-</div>
-</div>
-
-<!-- End session modal -->
-<div class="end-overlay" id="endOverlay">
-<div class="end-modal">
-    <div class="end-title">Завершить сессию?</div>
-    <div class="end-desc">Вы можете начать новую сессию с чистого листа или вернуться в главное меню.</div>
-    <button class="end-summary-btn" id="endSummaryBtn">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Скачать саммари сессии
-    </button>
-    <div class="end-btns">
-        <button class="end-btn end-btn-menu" id="endMenu">В меню</button>
-        <button class="end-btn end-btn-new" id="endNew">Новая сессия</button>
-    </div>
-</div>
 </div>
 
 <script>
 const BG = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/BG/';
-const DOVE = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg';
-const HOURGLASS = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/hourglass.svg';
-const KEY_USER = 'soma_user';
-const KEY_CHAT = 'soma_chat';
-const KEY_SURVEY = 'soma_survey';
+const imgIdx = Math.ceil(Math.random() * 11);
+document.getElementById('card').style.backgroundImage = `url('${BG}${imgIdx}.jpeg')`;
 
-// Random BG
-const bgEl = document.getElementById('bg');
-const bgFrame = document.getElementById('bgFrame');
-const imgUrl = `${BG}${Math.ceil(Math.random()*11)}.jpeg`;
-bgEl.style.backgroundImage = `url('${imgUrl}')`;
-bgFrame.style.backgroundImage = `url('${imgUrl}')`;
-
-// Carousel — 5 static DOM slides
-const allImgs = Array.from({length:11},(_,i)=>i+1).sort(()=>Math.random()-0.5);
-const N_SLIDES = 5;
-// Assign unique random bg to each slide
-const slideImgs = allImgs.slice(0, N_SLIDES);
-for(let i=0;i<N_SLIDES;i++){
-    document.getElementById('slide'+i).style.backgroundImage=`url('${BG}${slideImgs[i]}.jpeg')`;
-}
-
-let curSlide = 0; // which slide is currently center
-let s1Busy = false;
-
-function getDims(){
-    const vw=window.innerWidth, vh=window.innerHeight;
-    const cH=Math.min(vh*0.9,700), cW=Math.min(cH*0.52,420);
-    const nW=cW*0.75, nH=cH*0.75, fW=cW*0.45, fH=cH*0.45;
-    const gap=12, cx=vw/2;
-    return {cW,cH,nW,nH,fW,fH,gap,cx,vw};
-}
-
-function layoutSlides(animate){
-    const d=getDims();
-    const gap=12;
-    // offsets from center (as fraction of cW)
-    const nearOff = d.cW/2 + gap + d.nW/2;
-    const farOff  = d.cW/2 + gap + d.nW + gap + d.fW/2;
-
-    for(let i=0;i<N_SLIDES;i++){
-        const el=document.getElementById('slide'+i);
-        let rel = i - curSlide;
-        if(rel > N_SLIDES/2)  rel -= N_SLIDES;
-        if(rel < -N_SLIDES/2) rel += N_SLIDES;
-
-        let tx, scale;
-        if     (rel===0)  { tx=0;         scale=1; }
-        else if(rel===-1) { tx=-nearOff;  scale=d.nW/d.cW; }
-        else if(rel===1)  { tx= nearOff;  scale=d.nW/d.cW; }
-        else if(rel===-2) { tx=-farOff;   scale=d.fW/d.cW; }
-        else              { tx= farOff;   scale=d.fW/d.cW; }
-
-        el.style.transition = animate
-            ? 'transform 0.5s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease,filter 0.5s ease'
-            : 'none';
-        el.style.width  = d.cW+'px';
-        el.style.height = d.cH+'px';
-        el.style.transform = `translate(calc(-50% + ${tx}px), -50%) scale(${scale})`;
-
-        const abs=Math.abs(rel);
-        el.className = 'c-slide'+(abs===0?' is-center':abs===1?' is-near':' is-far');
-        el.style.zIndex = abs===0?5:abs===1?4:3;
-    }
-    bgEl.style.backgroundImage    = `url('${BG}${slideImgs[curSlide]}.jpeg')`;
-    bgFrame.style.backgroundImage = `url('${BG}${slideImgs[curSlide]}.jpeg')`;
-}
-
-function carouselShift(dir){
-    if(s1Busy) return;
-    s1Busy=true;
-    curSlide=(curSlide+dir+N_SLIDES)%N_SLIDES;
-    layoutSlides(true);
-    setTimeout(()=>{s1Busy=false;},520);
-}
-
-layoutSlides(false);
-window.addEventListener('resize',()=>layoutSlides(false));
-
-// Scroll fade mask for carousel slides
-document.querySelectorAll('.c-slide-content').forEach(content => {
-    const scroller = content.querySelector('[style*="overflow-y"]');
-    if (!scroller) return;
-    scroller.classList.add('c-slide-scroll');
-    function updateMask() {
-        const atBottom = scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight < 8;
-        const atTop = scroller.scrollTop < 8;
-        scroller.classList.toggle('at-bottom', atBottom);
-        scroller.classList.toggle('at-top', atTop);
-    }
-    updateMask();
-    scroller.addEventListener('scroll', updateMask, {passive: true});
-    // Re-check when slide becomes center
-    new MutationObserver(updateMask).observe(content.closest('.c-slide'), {attributes: true, attributeFilter: ['class']});
+document.getElementById('acceptBtn').addEventListener('click', () => {
+    document.getElementById('overlay').classList.add('on');
+    localStorage.setItem('soma_invite', '1');
+    setTimeout(() => { window.location.href = 'https://cakeboxdeveloper.github.io/Psy/index.html'; }, 500);
 });
-
-document.getElementById('carouselWrap').addEventListener('click', e=>{
-    if(e.target.closest('.is-center')) return;
-    carouselShift(e.clientX < window.innerWidth/2 ? -1 : 1);
-});
-
-let touchStartX=0;
-document.getElementById('screen1').addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;});
-document.getElementById('screen1').addEventListener('touchend',e=>{
-    const dx=e.changedTouches[0].clientX-touchStartX;
-    if(Math.abs(dx)>50) carouselShift(dx<0?1:-1);
-});
-document.getElementById('screen1').addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;});
-document.getElementById('screen1').addEventListener('touchend',e=>{
-    const dx=e.changedTouches[0].clientX-touchStartX;
-    if(Math.abs(dx)>50) carouselShift(dx<0?1:-1);
-});
-
-// Transition
-const overlayEl = document.getElementById('overlay');
-function goTo(id) {
-    overlayEl.classList.add('on');
-    setTimeout(() => { switchScreen(id); }, 500);
-}
-
-function switchScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    // bg показываем только на screen1 (карусель с логином)
-    const showBg = id === 'screen1';
-    bgEl.style.display = showBg ? 'block' : 'none';
-    bgFrame.style.display = showBg ? 'block' : 'none';
-    overlayEl.classList.remove('on');
-    if (id === 'screen2') initChat();
-    if (id === 'screen1c') startLoader();
-}
-
-// Init — check if already logged in — вызывается в конце скрипта
-function init() {
-    if (localStorage.getItem(KEY_USER)) {
-        switchScreen('screen2');
-    } else if (localStorage.getItem('soma_invite')) {
-        localStorage.removeItem('soma_invite');
-        localStorage.setItem(KEY_USER, JSON.stringify({p:'invite',ts:Date.now()}));
-        switchScreen('screen1b');
-    }
-}
-
-// S1b
-document.getElementById('googleBtn').addEventListener('click', () => {
-    localStorage.setItem(KEY_USER, JSON.stringify({p:'google',ts:Date.now()}));
-    goTo('screen1b');
-});
-document.getElementById('appleBtn').addEventListener('click', () => {
-    localStorage.setItem(KEY_USER, JSON.stringify({p:'apple',ts:Date.now()}));
-    goTo('screen1b');
-});
-document.getElementById('guestBtn').addEventListener('click', () => {
-    localStorage.setItem(KEY_USER, JSON.stringify({p:'guest',ts:Date.now()}));
-    goTo('screen1b');
-});
-
-// S1b
-document.getElementById('submitBtn').addEventListener('click', () => {
-    const vals = Array.from(document.querySelectorAll('#screen1b .fselect')).map(s => s.value);
-    localStorage.setItem(KEY_SURVEY, JSON.stringify(vals));
-    goTo('screen1c');
-});
-
-// Chat
-const GROQ_KEY = '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';
-const GROQ_MODEL = 'llama-3.3-70b-versatile';
-
-const models = {
-    tara: {
-        name: 'Тара',
-        system: `Ты — Тара, мастер традиционной школы тарологии. Ты говоришь образно, через символы и архетипы. Используешь метафоры карт, судьбы, знаков. Твой стиль — мистический, поэтичный, но конкретный. Ты не гадаешь — ты помогаешь человеку увидеть скрытое в его ситуации. Отвечай на русском языке. Ответы — 3-6 предложений.`
-    },
-    karma: {
-        name: 'Карма',
-        system: `Ты — Карма, кармолог. Ты видишь повторяющиеся паттерны, незакрытые циклы и кармические уроки. Говоришь о причинно-следственных связях, о том, что человек несёт из прошлого. Твой стиль — глубокий, немного строгий, но сострадательный. Ты помогаешь понять, какой урок несёт текущая ситуация. Отвечай на русском языке. Ответы — 3-6 предложений.`
-    },
-    astra: {
-        name: 'Астра',
-        system: `Ты — Астра, астролог. Ты читаешь ситуацию через призму планетарных циклов, натальных позиций и астрологических транзитов. Говоришь о влиянии планет, о времени, о ритмах. Твой стиль — точный, структурированный, с астрологическими терминами, но понятный. Ты помогаешь понять, в какой точке своего пути находится человек. Отвечай на русском языке. Ответы — 3-6 предложений.`
-    },
-    eva: {
-        name: 'Ева',
-        system: `Ты — Ева, регрессолог. Ты работаешь с памятью прошлых жизней, с глубинным опытом души. Ты ищешь корни страхов, притяжений и повторяющихся сценариев в том, что предшествует этой жизни. Твой стиль — мягкий, медитативный, интроспективный. Ты задаёшь вопросы, которые помогают заглянуть глубже. Отвечай на русском языке. Ответы — 3-6 предложений.`
-    },
-    psyche: {
-        name: 'Психея',
-        system: `Ты — Психея, психолог юнгианской школы и нарративный терапевт. Ты слушаешь не только слова, но и то, что за ними. Работаешь с архетипами, тенью, внутренними конфликтами. Твой стиль — внимательный, вдумчивый, задающий вопросы. Ты помогаешь человеку переосмыслить свою историю. Отвечай на русском языке. Ответы — 3-6 предложений.`
-    },
-    gera: {
-        name: 'Гера',
-        system: `Ты — Гера, нумеролог. Ты видишь скрытый порядок в числах, датах, именах. Расшифровываешь числовой код жизни человека. Твой стиль — аналитический, точный, с числовыми интерпретациями. Ты находишь закономерности там, где другие видят случайность. Отвечай на русском языке. Ответы — 3-6 предложений.`
-    }
-};
-
-// Chat history per session
-let chatHistory = [];
-let curModel = 'tara', isTyping = false;
-
-const modelBtn = document.getElementById('modelBtn');
-const dropdown = document.getElementById('dropdown');
-const ditems   = document.querySelectorAll('.ditem');
-const chatArea = document.getElementById('chatArea');
-const msgInput = document.getElementById('msgInput');
-const sendBtn  = document.getElementById('sendBtn');
-const themeBtn = document.getElementById('themeBtn');
-const menuBtn  = document.getElementById('menuBtn');
-const endOverlay = document.getElementById('endOverlay');
-const premiumOverlay = document.getElementById('premiumOverlay');
-
-let isLight = false;
-themeBtn.addEventListener('click', () => {
-    isLight = !isLight;
-    const s2 = document.getElementById('screen2');
-    s2.classList.toggle('light', isLight);
-    document.body.classList.toggle('light', isLight);
-});
-menuBtn.addEventListener('click', () => endOverlay.classList.toggle('show'));
-
-modelBtn.addEventListener('click', () => dropdown.classList.toggle('show'));
-document.addEventListener('click', e => {
-    if (!e.target.closest('.chat-header-left')) dropdown.classList.remove('show');
-    if (!e.target.closest('.end-modal') && !e.target.closest('#menuBtn')) endOverlay.classList.remove('show');
-    if (!e.target.closest('.premium-modal') && !e.target.closest('.ditem-premium') && !e.target.closest('#endSummaryBtn')) premiumOverlay.classList.remove('show');
-});
-ditems.forEach(d => d.addEventListener('click', () => {
-    if (d.dataset.premium) {
-        dropdown.classList.remove('show');
-        premiumOverlay.classList.add('show');
-        return;
-    }
-    curModel = d.dataset.model;
-    modelBtn.textContent = models[curModel].name;
-    ditems.forEach(i => i.classList.remove('active'));
-    d.classList.add('active');
-    dropdown.classList.remove('show');
-    localStorage.setItem('soma_model', curModel);
-}));
-
-document.getElementById('premiumClose').addEventListener('click', () => premiumOverlay.classList.remove('show'));
-
-document.getElementById('endSummaryBtn').addEventListener('click', () => {
-    endOverlay.classList.remove('show');
-    premiumOverlay.classList.add('show');
-});
-
-document.getElementById('endMenu').addEventListener('click', () => {
-    endOverlay.classList.remove('show');
-    [KEY_USER, KEY_CHAT, KEY_SURVEY].forEach(k => localStorage.removeItem(k));
-    goTo('screen1');
-});
-document.getElementById('endNew').addEventListener('click', () => {
-    endOverlay.classList.remove('show');
-    localStorage.removeItem(KEY_CHAT);
-    chatHistory = [];
-    chatArea.innerHTML = '';
-    showPlaceholder();
-});
-
-function initChat() {
-    chatHistory = [];
-    // Restore saved model
-    const savedModel = localStorage.getItem('soma_model');
-    if (savedModel && models[savedModel]) {
-        curModel = savedModel;
-        modelBtn.textContent = models[curModel].name;
-        ditems.forEach(d => {
-            d.classList.toggle('active', d.dataset.model === curModel);
-        });
-    }
-    const raw = localStorage.getItem(KEY_CHAT);
-    if (raw) {
-        const data = JSON.parse(raw);
-        if (Date.now() - data.ts < 86400000) {
-            data.msgs.forEach(m => {
-                addMsg(m.t, m.s, false, m.m || null);
-                chatHistory.push({role: m.s === 'user' ? 'user' : 'assistant', content: m.t});
-            });
-            return;
-        }
-        localStorage.removeItem(KEY_CHAT);
-    }
-    showPlaceholder();
-}
-
-function showPlaceholder() {
-    chatArea.innerHTML = `<div class="empty-state"><img src="${HOURGLASS}" style="width:36px;height:36px;margin-bottom:14px;"><div>Задавайте любые вопросы.<br>Переключайте модели для ответа на них.<br><span style="font-size:11px;">Все сообщения удаляются через 24 часа.</span></div></div>`;
-}
-
-function saveChat() {
-    const msgs = Array.from(chatArea.querySelectorAll('.message')).map(el => ({
-        s: el.classList.contains('user') ? 'user' : 'ai',
-        t: el.querySelector('.bubble-body') ? el.querySelector('.bubble-body').textContent : el.querySelector('.bubble').textContent,
-        m: el.dataset.modelKey || null
-    }));
-    localStorage.setItem(KEY_CHAT, JSON.stringify({ts: Date.now(), msgs}));
-}
-
-function addMsg(text, sender, animate, modelKey) {
-    const div = document.createElement('div');
-    div.className = `message ${sender}`;
-    if (modelKey) div.dataset.modelKey = modelKey;
-    if (!animate) div.style.animation = 'none';
-    const b = document.createElement('div');
-    b.className = 'bubble';
-
-    if (sender === 'ai' && modelKey && models[modelKey]) {
-        const m = models[modelKey];
-        // Strip any signature the model may have appended (— Name, role)
-        const clean = text.replace(/[\s\n]*[—\-–]\s*\S[^\n]*$/, '').trim();
-        b.innerHTML =
-            `<span class="bubble-body">${clean.replace(/\n/g,'<br>')}</span>` +
-            `<span class="bubble-sig">Для ответа была использована модель ${m.name}</span>`;
-    } else {
-        b.textContent = text;
-    }
-
-    div.appendChild(b);
-    chatArea.appendChild(div);
-    chatArea.scrollTop = chatArea.scrollHeight;
-}
-
-function showTyping() {
-    const div = document.createElement('div');
-    div.className = 'message ai';
-    div.innerHTML = `<div class="typing-bubble"><span></span><span></span><span></span></div>`;
-    chatArea.appendChild(div);
-    chatArea.scrollTop = chatArea.scrollHeight;
-    return div;
-}
-
-function send() {
-    const text = msgInput.value.trim();
-    if (!text || isTyping) return;
-    msgInput.value = '';
-    isTyping = true;
-    const empty = chatArea.querySelector('.empty-state');
-    if (empty) empty.remove();
-
-    addMsg(text, 'user', true);
-    chatHistory.push({role: 'user', content: text});
-
-    const t = showTyping();
-
-    const model = models[curModel];
-    const messages = [
-        {role: 'system', content: model.system},
-        ...chatHistory
-    ];
-
-    fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${GROQ_KEY}`
-        },
-        body: JSON.stringify({
-            model: GROQ_MODEL,
-            messages: messages,
-            max_tokens: 512,
-            temperature: 0.85
-        })
-    })
-    .then(r => r.json())
-    .then(data => {
-        t.remove();
-        isTyping = false;
-        const reply = data.choices?.[0]?.message?.content || 'Что-то пошло не так. Попробуй ещё раз.';
-        chatHistory.push({role: 'assistant', content: reply});
-        addMsg(reply, 'ai', true, curModel);
-        saveChat();
-    })
-    .catch(() => {
-        t.remove();
-        isTyping = false;
-        const fallback = 'Связь прервалась. Попробуй ещё раз.';
-        addMsg(fallback, 'ai', true);
-    });
-}
-
-sendBtn.addEventListener('click', send);
-msgInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); send(); } });
-
-// Loader
-const LOADER_QUOTES = [
-    "Всё, что ты ищешь снаружи,\nуже живёт внутри тебя.",
-    "Тьма — это не отсутствие света.\nЭто приглашение зажечь свой.",
-    "Каждый вопрос — это уже\nполовина ответа.",
-    "Время не лечит.\nОно лишь даёт расстояние,\nчтобы увидеть.",
-    "Ты не сломан.\nТы в процессе.",
-    "Молчание — это тоже язык.\nИ иногда самый честный.",
-    "Страх — это компас.\nОн всегда указывает\nна то, что важно.",
-    "Прошлое не определяет тебя.\nОно объясняет тебя.",
-    "Иногда нужно потеряться,\nчтобы найти правильный путь.",
-    "Твоя боль — это не слабость.\nЭто след от чего-то настоящего.",
-];
-
-const LOADER_STAGES = [
-    {text: "Определяем проблему...", pct: 15},
-    {text: "Учитываем пожелания...", pct: 35},
-    {text: "Анализируем контекст...", pct: 55},
-    {text: "Готовим модель...", pct: 75},
-    {text: "Настраиваем сеанс...", pct: 90},
-    {text: "Запускаем сеанс...", pct: 100},
-];
-
-function startLoader() {
-    const stageEl = document.getElementById('loaderStage');
-    const fillEl  = document.getElementById('loaderFill');
-
-    const LC_N = 5;
-    // Assign random images and quotes to each slide
-    const lcImgs   = Array.from({length:11},(_,i)=>i+1).sort(()=>Math.random()-0.5).slice(0,LC_N);
-    const lcQuotes = [...LOADER_QUOTES].sort(()=>Math.random()-0.5).slice(0,LC_N);
-
-    // Build slide contents
-    for(let i=0;i<LC_N;i++){
-        const el = document.getElementById('lc'+i);
-        el.style.backgroundImage = `url('${BG}${lcImgs[i]}.jpeg')`;
-        el.innerHTML = `<div class="lc-mask"></div><div class="lc-quote">${lcQuotes[i]}</div>`;
-    }
-
-    let lcCur = 0;
-    let lcBusy = false;
-
-    function lcGetDims(){
-        const vw=window.innerWidth, vh=window.innerHeight;
-        const cH=Math.min(vh*0.78,620), cW=Math.min(cH*0.52,360);
-        const nW=cW*0.75, nH=cH*0.75, fW=cW*0.45, fH=cH*0.45;
-        const gap=10;
-        return {cW,cH,nW,nH,fW,fH,gap};
-    }
-
-    function lcLayout(animate){
-        const d=lcGetDims();
-        const nearOff = d.cW/2 + d.gap + d.nW/2;
-        const farOff  = d.cW/2 + d.gap + d.nW + d.gap + d.fW/2;
-        for(let i=0;i<LC_N;i++){
-            const el=document.getElementById('lc'+i);
-            let rel = i - lcCur;
-            if(rel > LC_N/2)  rel -= LC_N;
-            if(rel < -LC_N/2) rel += LC_N;
-            let tx, scale;
-            if     (rel===0)  { tx=0;        scale=1; }
-            else if(rel===-1) { tx=-nearOff; scale=d.nW/d.cW; }
-            else if(rel===1)  { tx= nearOff; scale=d.nW/d.cW; }
-            else if(rel===-2) { tx=-farOff;  scale=d.fW/d.cW; }
-            else              { tx= farOff;  scale=d.fW/d.cW; }
-            el.style.transition = animate
-                ? 'transform 0.5s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease,filter 0.5s ease'
-                : 'none';
-            el.style.width  = d.cW+'px';
-            el.style.height = d.cH+'px';
-            el.style.transform = `translate(calc(-50% + ${tx}px), -50%) scale(${scale})`;
-            const abs=Math.abs(rel);
-            el.className = 'lc-slide'+(abs===0?' lc-center':abs===1?' lc-near':' lc-far');
-            el.style.zIndex = abs===0?5:abs===1?4:3;
-        }
-    }
-
-    function lcShift(){
-        if(lcBusy) return;
-        lcBusy=true;
-        lcCur=(lcCur+1+LC_N)%LC_N;
-        lcLayout(true);
-        setTimeout(()=>{lcBusy=false;},520);
-    }
-
-    lcLayout(false);
-    const lcResizeHandler = ()=>lcLayout(false);
-    window.addEventListener('resize', lcResizeHandler);
-
-    // Auto-advance every 6s
-    let slideTimer = setInterval(lcShift, 6000);
-
-    // Random total duration: 14000–30000 ms
-    const totalDuration = 14000 + Math.random() * 16000;
-    const n = LOADER_STAGES.length;
-    const weights = Array.from({length: n}, () => 0.5 + Math.random());
-    const weightSum = weights.reduce((a, b) => a + b, 0);
-    const stageDurations = weights.map(w => Math.round(w / weightSum * totalDuration));
-
-    fillEl.style.transition = 'none';
-    fillEl.style.width = '0%';
-
-    function runStage(i) {
-        if (i >= LOADER_STAGES.length) {
-            clearInterval(slideTimer);
-            window.removeEventListener('resize', lcResizeHandler);
-            setTimeout(() => goTo('screen2'), 300);
-            return;
-        }
-        const stage = LOADER_STAGES[i];
-        const dur = stageDurations[i];
-        stageEl.style.opacity = '0';
-        setTimeout(() => { stageEl.textContent = stage.text; stageEl.style.opacity = '1'; }, 200);
-        setTimeout(() => {
-            fillEl.style.transition = `width ${dur * 0.85}ms ease`;
-            fillEl.style.width = stage.pct + '%';
-        }, 50);
-        setTimeout(() => runStage(i + 1), dur);
-    }
-
-    runStage(0);
-}
-
-init();
 </script>
 </body>
 </html>
