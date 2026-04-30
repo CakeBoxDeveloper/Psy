@@ -855,12 +855,15 @@ document.getElementById('endSummaryBtn').addEventListener('click', async () => {
         surveyText = vals.map((v, i) => v ? `${surveyLabels[i]}: ${v}` : null).filter(Boolean).join('\n');
     }
 
-    // Gather chat messages
+    // Gather chat messages — include model sig for summary context
     const msgs = Array.from(chatArea.querySelectorAll('.message')).map(el => {
         const isUser = el.classList.contains('user');
         const bodyEl = el.querySelector('.bubble-body');
         const text = bodyEl ? bodyEl.textContent : el.querySelector('.bubble')?.textContent || '';
-        return `${isUser ? 'Пользователь' : 'Модель'}: ${text}`;
+        if (isUser) return `Пользователь: ${text}`;
+        const mk = el.dataset.modelKey;
+        const sig = mk && models[mk] ? models[mk].sig : 'Модель';
+        return `${sig}: ${text}`;
     }).join('\n\n');
 
     // Gather models used
@@ -899,16 +902,6 @@ ${msgs || 'Диалог пуст'}
 [2-3 предложения: ключевые инсайты или итоги сессии]
 
 Отвечай на русском языке. Будь конкретным и лаконичным.`;
-
-    // Open window BEFORE async operations (browsers block window.open after await)
-    const win = window.open('', '_blank');
-    if (!win) {
-        alert('Разрешите всплывающие окна для этого сайта и попробуйте снова.');
-        btn.innerHTML = origHTML;
-        btn.disabled = false;
-        return;
-    }
-    win.document.write('<html><body style="background:rgb(220,205,185);font-family:Inter,sans-serif;padding:40px;color:rgb(40,28,20)">Генерируем протокол...</body></html>');
 
     try {
         const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -1041,16 +1034,136 @@ body{
 </body>
 </html>`;
 
-        win.document.write(printHTML);
-        win.document.close();
-        // Wait for fonts to load then print
-        win.onload = () => {
-            setTimeout(() => {
-                win.focus();
-                win.print();
-            }, 800);
+        // Use pdfmake — has built-in cyrillic support
+        const loadAndRender = () => {
+
+            const makeBox = (text) => ([
+                {
+                    canvas:[{
+                        type:'rect', x:0, y:0, w:495, h:1, // placeholder, real height set below
+                        r:6, color:'#C8B9A5', lineColor:'#C8B9A5'
+                    }],
+                    // We use a table with canvas background trick
+                },
+                {
+                    table:{
+                        widths:['*'],
+                        body:[[{
+                            text: text || '—',
+                            fontSize:11, color:'#281C14', lineHeight:1.65,
+                            fillColor:'#C8B9A5',
+                            margin:[12,10,12,10],
+                            border:[false,false,false,false]
+                        }]]
+                    },
+                    layout:{
+                        defaultBorder: false,
+                        fillColor: () => '#C8B9A5',
+                        hLineWidth: () => 0,
+                        vLineWidth: () => 0,
+                        paddingLeft: () => 0,
+                        paddingRight: () => 0,
+                        paddingTop: () => 0,
+                        paddingBottom: () => 0,
+                    },
+                    marginBottom: 18
+                }
+            ]);
+
+            const techLine = `В этой сессии были использованы модели: ${modelsUsed.length ? modelsUsed.join(', ') : 'Тара'}`;
+
+            const docDef = {
+                pageSize: 'A4',
+                pageMargins: [50, 50, 50, 50],
+                background: (page, pageSize) => ({
+                    canvas:[{
+                        type:'rect', x:0, y:0,
+                        w: pageSize.width, h: pageSize.height,
+                        color:'#DCC9B5'
+                    }]
+                }),
+                content: [
+                    {text:'Протокол сессии', fontSize:22, bold:true, color:'#281C14', marginBottom:4},
+                    {text: sessionDate, fontSize:13, color:'#281C14', marginBottom:28},
+
+                    {text:'ИНТЕРЛЮДИЯ', fontSize:8, bold:true, color:'#281C14', characterSpacing:2, marginBottom:8},
+                    {
+                        table:{widths:['*'], body:[[{
+                            text: secInterlude || surveyText || 'Анкета не заполнена',
+                            fontSize:11, color:'#281C14', lineHeight:1.65,
+                            fillColor:'#C8B9A5', margin:[12,10,12,10], border:[false,false,false,false]
+                        }]]},
+                        layout:{
+                            defaultBorder:false,
+                            hLineWidth:()=>0, vLineWidth:()=>0,
+                            hLineColor:()=>'#C8B9A5', vLineColor:()=>'#C8B9A5',
+                            paddingLeft:()=>0, paddingRight:()=>0,
+                            paddingTop:()=>0, paddingBottom:()=>0,
+                            fillColor:()=>'#C8B9A5'
+                        },
+                        marginBottom:20
+                    },
+
+                    {text:'СОДЕРЖАНИЕ', fontSize:8, bold:true, color:'#281C14', characterSpacing:2, marginBottom:8},
+                    {
+                        table:{widths:['*'], body:[[{
+                            text: secContent || '—',
+                            fontSize:11, color:'#281C14', lineHeight:1.65,
+                            fillColor:'#C8B9A5', margin:[12,10,12,10], border:[false,false,false,false]
+                        }]]},
+                        layout:{
+                            defaultBorder:false,
+                            hLineWidth:()=>0, vLineWidth:()=>0,
+                            paddingLeft:()=>0, paddingRight:()=>0,
+                            paddingTop:()=>0, paddingBottom:()=>0,
+                            fillColor:()=>'#C8B9A5'
+                        },
+                        marginBottom:20
+                    },
+
+                    {text:'ВЫВОД', fontSize:8, bold:true, color:'#281C14', characterSpacing:2, marginBottom:8},
+                    {
+                        table:{widths:['*'], body:[[{
+                            text: secConclusion || '—',
+                            fontSize:11, color:'#281C14', lineHeight:1.65,
+                            fillColor:'#C8B9A5', margin:[12,10,12,10], border:[false,false,false,false]
+                        }]]},
+                        layout:{
+                            defaultBorder:false,
+                            hLineWidth:()=>0, vLineWidth:()=>0,
+                            paddingLeft:()=>0, paddingRight:()=>0,
+                            paddingTop:()=>0, paddingBottom:()=>0,
+                            fillColor:()=>'#C8B9A5'
+                        },
+                        marginBottom:24
+                    },
+
+                    {
+                        columns:[
+                            {text: techLine, fontSize:8, color:'#281C14', opacity:0.6},
+                            {text:`${chatHistory.length} сообщений`, fontSize:8, color:'#281C14', opacity:0.6, alignment:'right'}
+                        ]
+                    }
+                ],
+                defaultStyle:{font:'Roboto'}
+            };
+            pdfMake.createPdf(docDef).download(`panacea-session-${new Date().toISOString().slice(0,10)}.pdf`);
         };
 
+        if (window.pdfMake) {
+            loadAndRender();
+        } else {
+            // Load pdfmake with cyrillic fonts
+            const s1 = document.createElement('script');
+            s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js';
+            s1.onload = () => {
+                const s2 = document.createElement('script');
+                s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js';
+                s2.onload = loadAndRender;
+                document.head.appendChild(s2);
+            };
+            document.head.appendChild(s1);
+        }
     } catch(e) {
         alert('Не удалось создать саммари. Попробуй позже.');
     } finally {
@@ -1125,7 +1238,7 @@ function addMsg(text, sender, animate, modelKey) {
         const clean = text.replace(/[\s\n]*[—\-–]\s*\S[^\n]*$/, '').trim();
         b.innerHTML =
             `<span class="bubble-body">${clean.replace(/\n/g,'<br>')}</span>` +
-            `<span class="bubble-sig">${m.sig}</span>`;
+            `<span class="bubble-sig">Для ответа была использована модель ${m.name}</span>`;
     } else {
         b.textContent = text;
     }
