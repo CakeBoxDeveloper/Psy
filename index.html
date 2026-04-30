@@ -220,7 +220,8 @@ body.light .premium-modal{background:rgb(235,220,200);}
 body.light .premium-title{color:rgb(40,28,20);}
 body.light .premium-desc{color:rgba(40,28,20,0.6);}
 body.light .premium-feature{color:rgba(40,28,20,0.8);}
-body.light .premium-btn{background:rgba(60,45,35,0.2);border-color:rgba(60,45,35,0.3);color:rgb(40,28,20);}
+body.light .premium-modal .premium-btn{background:rgba(60,45,35,0.2);border-color:rgba(60,45,35,0.3);color:rgb(40,28,20);}
+body.light #screen2 .premium-btn{background:rgba(60,45,35,0.2);border-color:rgba(60,45,35,0.3);color:rgb(40,28,20);}
 body.light .premium-close{color:rgba(40,28,20,0.4);}
 body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);}
 /* Убираем bg в светлой теме */
@@ -899,6 +900,16 @@ ${msgs || 'Диалог пуст'}
 
 Отвечай на русском языке. Будь конкретным и лаконичным.`;
 
+    // Open window BEFORE async operations (browsers block window.open after await)
+    const win = window.open('', '_blank');
+    if (!win) {
+        alert('Разрешите всплывающие окна для этого сайта и попробуйте снова.');
+        btn.innerHTML = origHTML;
+        btn.disabled = false;
+        return;
+    }
+    win.document.write('<html><body style="background:rgb(220,205,185);font-family:Inter,sans-serif;padding:40px;color:rgb(40,28,20)">Генерируем протокол...</body></html>');
+
     try {
         const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
@@ -1030,7 +1041,6 @@ body{
 </body>
 </html>`;
 
-        const win = window.open('', '_blank');
         win.document.write(printHTML);
         win.document.close();
         // Wait for fonts to load then print
