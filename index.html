@@ -505,19 +505,19 @@ body.light .end-summary-btn:hover{border-color:rgba(60,45,35,0.35);color:rgba(40
     <div class="premium-desc">Откройте полный доступ к возможностям всех проводников и эксклюзивным режимам.</div>
     <div class="premium-features">
         <div class="premium-feature">
-            <img class="premium-feature-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/2bbc8b9a0d432e5555230a006e52ec297b67b5b2/star.svg" alt="">
+            <span style="width:5px;height:5px;background:rgba(210,190,165,0.45);border-radius:1px;flex-shrink:0;margin-top:3px;"></span>
             <span>Консилиум — ответ содержит мнения всех проводников одновременно</span>
         </div>
         <div class="premium-feature">
-            <img class="premium-feature-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/2bbc8b9a0d432e5555230a006e52ec297b67b5b2/star.svg" alt="">
+            <span style="width:5px;height:5px;background:rgba(210,190,165,0.45);border-radius:1px;flex-shrink:0;margin-top:3px;"></span>
             <span>Авто — система сама выбирает наиболее компетентного проводника</span>
         </div>
         <div class="premium-feature">
-            <img class="premium-feature-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/2bbc8b9a0d432e5555230a006e52ec297b67b5b2/star.svg" alt="">
+            <span style="width:5px;height:5px;background:rgba(210,190,165,0.45);border-radius:1px;flex-shrink:0;margin-top:3px;"></span>
             <span>Неограниченная история сессий без удаления через 24 часа</span>
         </div>
         <div class="premium-feature">
-            <img class="premium-feature-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/2bbc8b9a0d432e5555230a006e52ec297b67b5b2/star.svg" alt="">
+            <span style="width:5px;height:5px;background:rgba(210,190,165,0.45);border-radius:1px;flex-shrink:0;margin-top:3px;"></span>
             <span>PDF-саммари каждой сессии — краткое резюме разговора с ключевыми инсайтами</span>
         </div>
     </div>
@@ -737,7 +737,7 @@ modelBtn.addEventListener('click', () => dropdown.classList.toggle('show'));
 document.addEventListener('click', e => {
     if (!e.target.closest('.chat-header-left')) dropdown.classList.remove('show');
     if (!e.target.closest('.end-modal') && !e.target.closest('#menuBtn')) endOverlay.classList.remove('show');
-    if (!e.target.closest('.premium-modal') && !e.target.closest('.ditem-premium')) premiumOverlay.classList.remove('show');
+    if (!e.target.closest('.premium-modal') && !e.target.closest('.ditem-premium') && !e.target.closest('#endSummaryBtn')) premiumOverlay.classList.remove('show');
 });
 ditems.forEach(d => d.addEventListener('click', () => {
     if (d.dataset.premium) {
