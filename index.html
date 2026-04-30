@@ -726,14 +726,38 @@ document.getElementById('submitBtn').addEventListener('click', () => {
 });
 
 // Chat
+const GROQ_KEY = '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';
+const GROQ_MODEL = 'llama-3.3-70b-versatile';
+
 const models = {
-    tara:   {name:'Тара',   r:['Карты показывают путь, но выбор остаётся за тобой.','Прошлое учит, настоящее действует, будущее ждёт.','Расклад говорит: твой вопрос требует внутреннего размышления.']},
-    karma:  {name:'Карма',  r:['Кармический след виден в повторяющихся ситуациях.','Прошлые действия формируют настоящее.','Твой путь определяется тем, что ты несёшь из прошлого.']},
-    astra:  {name:'Астра',  r:['Звёзды указывают направление, но не диктуют судьбу.','Планетарные циклы отражают внутренние процессы.','Твой натальный код говорит о скрытых ресурсах.']},
-    eva:    {name:'Ева',    r:['Прошлые жизни оставляют след в настоящем.','Регрессия помогает найти корень повторяющихся паттернов.','Твоя душа несёт опыт, который ищет завершения.']},
-    psyche: {name:'Психея', r:['Твой вопрос отражает глубокие внутренние процессы.','Понимание себя — первый шаг к переменам.','Психика ищет ответы, которые уже внутри.']},
-    gera:   {name:'Гера',   r:['Числа вибрируют с твоей сущностью.','Твой числовой код раскрывает скрытые истины.','Нумерология указывает на твой жизненный путь.']}
+    tara: {
+        name: 'Тара',
+        system: `Ты — Тара, мастер традиционной школы тарологии. Ты говоришь образно, через символы и архетипы. Используешь метафоры карт, судьбы, знаков. Твой стиль — мистический, поэтичный, но конкретный. Ты не гадаешь — ты помогаешь человеку увидеть скрытое в его ситуации. Отвечай на русском языке. Ответы — 3-6 предложений. В конце каждого ответа на новой строке добавь: "— Тара, таролог"`
+    },
+    karma: {
+        name: 'Карма',
+        system: `Ты — Карма, кармолог. Ты видишь повторяющиеся паттерны, незакрытые циклы и кармические уроки. Говоришь о причинно-следственных связях, о том, что человек несёт из прошлого. Твой стиль — глубокий, немного строгий, но сострадательный. Ты помогаешь понять, какой урок несёт текущая ситуация. Отвечай на русском языке. Ответы — 3-6 предложений. В конце каждого ответа на новой строке добавь: "— Карма, кармолог"`
+    },
+    astra: {
+        name: 'Астра',
+        system: `Ты — Астра, астролог. Ты читаешь ситуацию через призму планетарных циклов, натальных позиций и астрологических транзитов. Говоришь о влиянии планет, о времени, о ритмах. Твой стиль — точный, структурированный, с астрологическими терминами, но понятный. Ты помогаешь понять, в какой точке своего пути находится человек. Отвечай на русском языке. Ответы — 3-6 предложений. В конце каждого ответа на новой строке добавь: "— Астра, астролог"`
+    },
+    eva: {
+        name: 'Ева',
+        system: `Ты — Ева, регрессолог. Ты работаешь с памятью прошлых жизней, с глубинным опытом души. Ты ищешь корни страхов, притяжений и повторяющихся сценариев в том, что предшествует этой жизни. Твой стиль — мягкий, медитативный, интроспективный. Ты задаёшь вопросы, которые помогают заглянуть глубже. Отвечай на русском языке. Ответы — 3-6 предложений. В конце каждого ответа на новой строке добавь: "— Ева, регрессолог"`
+    },
+    psyche: {
+        name: 'Психея',
+        system: `Ты — Психея, психолог юнгианской школы и нарративный терапевт. Ты слушаешь не только слова, но и то, что за ними. Работаешь с архетипами, тенью, внутренними конфликтами. Твой стиль — внимательный, вдумчивый, задающий вопросы. Ты помогаешь человеку переосмыслить свою историю. Отвечай на русском языке. Ответы — 3-6 предложений. В конце каждого ответа на новой строке добавь: "— Психея, психолог"`
+    },
+    gera: {
+        name: 'Гера',
+        system: `Ты — Гера, нумеролог. Ты видишь скрытый порядок в числах, датах, именах. Расшифровываешь числовой код жизни человека. Твой стиль — аналитический, точный, с числовыми интерпретациями. Ты находишь закономерности там, где другие видят случайность. Отвечай на русском языке. Ответы — 3-6 предложений. В конце каждого ответа на новой строке добавь: "— Гера, нумеролог"`
+    }
 };
+
+// Chat history per session
+let chatHistory = [];
 let curModel = 'tara', isTyping = false;
 
 const modelBtn = document.getElementById('modelBtn');
@@ -790,16 +814,21 @@ document.getElementById('endMenu').addEventListener('click', () => {
 document.getElementById('endNew').addEventListener('click', () => {
     endOverlay.classList.remove('show');
     localStorage.removeItem(KEY_CHAT);
+    chatHistory = [];
     chatArea.innerHTML = '';
     showPlaceholder();
 });
 
 function initChat() {
+    chatHistory = [];
     const raw = localStorage.getItem(KEY_CHAT);
     if (raw) {
         const data = JSON.parse(raw);
         if (Date.now() - data.ts < 86400000) {
-            data.msgs.forEach(m => addMsg(m.t, m.s, false));
+            data.msgs.forEach(m => {
+                addMsg(m.t, m.s, false);
+                chatHistory.push({role: m.s === 'user' ? 'user' : 'assistant', content: m.t});
+            });
             return;
         }
         localStorage.removeItem(KEY_CHAT);
@@ -847,18 +876,46 @@ function send() {
     isTyping = true;
     const empty = chatArea.querySelector('.empty-state');
     if (empty) empty.remove();
-    setTimeout(() => {
-        addMsg(text, 'user', true);
-        const delay = Math.min(Math.max(text.length * 30, 1000), 4000);
-        const t = showTyping();
-        setTimeout(() => {
-            t.remove();
-            isTyping = false;
-            const r = models[curModel].r;
-            addMsg(r[Math.floor(Math.random() * r.length)], 'ai', true);
-            saveChat();
-        }, delay);
-    }, 500);
+
+    addMsg(text, 'user', true);
+    chatHistory.push({role: 'user', content: text});
+
+    const t = showTyping();
+
+    const model = models[curModel];
+    const messages = [
+        {role: 'system', content: model.system},
+        ...chatHistory
+    ];
+
+    fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${GROQ_KEY}`
+        },
+        body: JSON.stringify({
+            model: GROQ_MODEL,
+            messages: messages,
+            max_tokens: 512,
+            temperature: 0.85
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        t.remove();
+        isTyping = false;
+        const reply = data.choices?.[0]?.message?.content || 'Что-то пошло не так. Попробуй ещё раз.';
+        chatHistory.push({role: 'assistant', content: reply});
+        addMsg(reply, 'ai', true);
+        saveChat();
+    })
+    .catch(() => {
+        t.remove();
+        isTyping = false;
+        const fallback = 'Связь прервалась. Попробуй ещё раз.';
+        addMsg(fallback, 'ai', true);
+    });
 }
 
 sendBtn.addEventListener('click', send);
