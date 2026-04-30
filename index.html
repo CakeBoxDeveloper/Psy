@@ -158,7 +158,9 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .message.user{justify-content:flex-end;}
 .bubble{max-width:80%;padding:8px 12px;border-radius:8px;font-size:12px;line-height:1.5;word-wrap:break-word;word-break:break-word;background:rgba(255,255,255,0.06);color:rgba(210,190,165,0.8);}
 .bubble-body{display:block;}
-.bubble-sig{display:block;margin:8px -12px 0;padding:6px 12px 0;border-top:1px solid rgba(210,190,165,0.12);font-size:10px;color:rgba(210,190,165,0.35);text-align:center;font-style:normal;}
+.bubble-sig{display:block;margin:8px -12px 0;padding:6px 12px 0;border-top:1px solid rgba(210,190,165,0.12);font-size:10px;color:rgba(210,190,165,0.5);text-align:center;font-style:normal;}
+.light .bubble-sig{color:rgba(40,28,20,0.45);border-top-color:rgba(40,28,20,0.12);}
+.light .ditem-check{background:rgb(40,28,20) !important;}
 .typing-bubble{display:flex;align-items:center;gap:4px;padding:10px 14px;background:rgba(255,255,255,0.06);border-radius:8px;width:fit-content;}
 .typing-bubble span{width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:50%;animation:typing 1.2s infinite;}
 .typing-bubble span:nth-child(2){animation-delay:0.2s;}
@@ -184,12 +186,12 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .light .model-btn{background:rgba(60,45,35,0.25);color:rgb(40,28,20);font-weight:600;border:none;}
 .light .model-btn:hover{background:rgba(60,45,35,0.35);}
 .light .dropdown{background:rgb(235,220,200);border-color:rgba(60,45,35,0.2);}
-.light .ditem-name{color:rgba(40,28,20,0.4);}
-.light .ditem-desc{color:rgba(40,28,20,0.35);}
+.light .ditem-name{color:rgba(40,28,20,0.85);}
+.light .ditem-desc{color:rgba(40,28,20,0.55);}
 .light .ditem:hover{background:rgba(60,45,35,0.08);}
 .light .ditem.active{background:rgba(60,45,35,0.12);}
 .light .ditem.active .ditem-name{color:rgb(40,28,20);}
-.light .ditem.active .ditem-desc{color:rgba(40,28,20,0.6);}
+.light .ditem.active .ditem-desc{color:rgba(40,28,20,0.7);}
 .light .ditem-check{color:rgb(40,28,20);}
 .light .ditem-star{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);opacity:0.35;}
 .light .ditem.active .ditem-star{opacity:1;filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);}
@@ -237,7 +239,9 @@ body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) br
 .lc-slide.lc-near{z-index:4;opacity:0.7;filter:blur(4px);}
 .lc-slide.lc-far{z-index:3;opacity:0.45;filter:blur(10px);}
 .lc-mask{position:absolute;bottom:0;left:0;right:0;height:65%;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);-webkit-mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);pointer-events:none;}
-.lc-quote{position:relative;z-index:2;color:rgba(210,190,165,0.95);font-size:15px;line-height:1.7;font-family:'TiemposHeadline',serif;font-weight:900;text-align:center;padding:24px;transition:opacity 0.4s ease;}
+.lc-quote{position:relative;z-index:2;color:rgba(210,190,165,0.95);font-size:15px;line-height:1.7;font-family:'TiemposHeadline',serif;font-weight:900;text-align:center;padding:24px;transition:opacity 0.4s ease;display:flex;flex-direction:column;gap:8px;}
+.lc-quote-text{display:block;}
+.lc-quote-author{display:block;font-size:11px;font-weight:300;color:rgba(210,190,165,0.5);font-family:'Inter',sans-serif;}
 @media(max-width:599px){.lc-slide.lc-far{opacity:0;pointer-events:none;}}
 .loader-progress{width:90%;max-width:380px;display:flex;flex-direction:column;gap:12px;padding-bottom:32px;}
 .loader-stage{color:rgba(210,190,165,0.7);font-size:13px;text-align:center;min-height:20px;transition:opacity 0.3s ease;}
@@ -970,16 +974,16 @@ msgInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventD
 
 // Loader
 const LOADER_QUOTES = [
-    "Всё, что ты ищешь снаружи,\nуже живёт внутри тебя.",
-    "Тьма — это не отсутствие света.\nЭто приглашение зажечь свой.",
-    "Каждый вопрос — это уже\nполовина ответа.",
-    "Время не лечит.\nОно лишь даёт расстояние,\nчтобы увидеть.",
-    "Ты не сломан.\nТы в процессе.",
-    "Молчание — это тоже язык.\nИ иногда самый честный.",
-    "Страх — это компас.\nОн всегда указывает\nна то, что важно.",
-    "Прошлое не определяет тебя.\nОно объясняет тебя.",
-    "Иногда нужно потеряться,\nчтобы найти правильный путь.",
-    "Твоя боль — это не слабость.\nЭто след от чего-то настоящего.",
+    {text: "Познай себя — и ты познаешь богов и Вселенную.", author: "Надпись в храме Аполлона в Дельфах"},
+    {text: "Слово «кризис», написанное по-китайски, состоит из двух иероглифов: один означает «опасность», другой — «возможность».", author: "Джон Ф. Кеннеди"},
+    {text: "Всё, что нас раздражает в других, может привести нас к пониманию самих себя.", author: "Карл Густав Юнг"},
+    {text: "Человек не страдает от того, что происходит, а от того, как он это воспринимает.", author: "Марк Аврелий"},
+    {text: "Не то, что с нами случается, определяет нашу жизнь, а то, как мы на это реагируем.", author: "Виктор Франкл"},
+    {text: "Тот, кто смотрит наружу, — спит. Тот, кто смотрит внутрь, — пробуждается.", author: "Карл Густав Юнг"},
+    {text: "Путешествие в тысячу ли начинается с одного шага.", author: "Лао-цзы"},
+    {text: "Мы не можем решить проблему, используя то же мышление, которое её создало.", author: "Альберт Эйнштейн"},
+    {text: "Страдание прекращается, когда мы перестаём сопротивляться тому, что есть.", author: "Буддийская мудрость"},
+    {text: "Звёзды не гаснут — просто иногда облака мешают их видеть.", author: "Персидская пословица"},
 ];
 
 const LOADER_STAGES = [
@@ -1004,7 +1008,8 @@ function startLoader() {
     for(let i=0;i<LC_N;i++){
         const el = document.getElementById('lc'+i);
         el.style.backgroundImage = `url('${BG}${lcImgs[i]}.jpeg')`;
-        el.innerHTML = `<div class="lc-mask"></div><div class="lc-quote">${lcQuotes[i]}</div>`;
+        const q = lcQuotes[i];
+        el.innerHTML = `<div class="lc-mask"></div><div class="lc-quote"><span class="lc-quote-text">${q.text}</span><span class="lc-quote-author">— ${q.author}</span></div>`;
     }
 
     let lcCur = 0;
