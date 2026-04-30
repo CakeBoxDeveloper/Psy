@@ -187,6 +187,21 @@ body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) br
 /* Убираем bg в светлой теме */
 .light ~ .bg, .light ~ .bg-frame{display:none !important;}
 
+/* Loader screen */
+.loader-wrap{width:100%;height:100vh;background:rgb(28,23,20);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;padding:24px;}
+.loader-card-wrap{width:min(90vw, calc(75vh * 0.52));height:min(75vh, 680px);position:relative;overflow:hidden;border-radius:12px;flex-shrink:0;}
+.loader-card{position:absolute;top:0;left:0;width:100%;height:100%;background-size:cover;background-position:center;background-repeat:no-repeat;border-radius:12px;display:flex;align-items:flex-end;padding:28px;will-change:transform;}
+.loader-card.slide-out{animation:loaderSlideOut 0.65s cubic-bezier(0.4,0,0.2,1) forwards;}
+.loader-card.slide-in{animation:loaderSlideIn 0.65s cubic-bezier(0.4,0,0.2,1) forwards;}
+@keyframes loaderSlideOut{from{transform:translateX(0);}to{transform:translateX(-105%);}}
+@keyframes loaderSlideIn{from{transform:translateX(105%);}to{transform:translateX(0);}}
+.loader-card-mask{position:absolute;bottom:0;left:0;right:0;height:70%;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);-webkit-mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);pointer-events:none;border-radius:0 0 12px 12px;}
+.loader-quote{position:relative;z-index:2;color:rgba(210,190,165,0.95);font-size:15px;line-height:1.7;font-family:'TiemposHeadline',serif;font-weight:300;text-align:center;transition:opacity 0.4s ease;}
+.loader-progress{width:min(90vw, calc(75vh * 0.52));max-width:420px;display:flex;flex-direction:column;gap:12px;}
+.loader-stage{color:rgba(210,190,165,0.7);font-size:13px;text-align:center;min-height:20px;transition:opacity 0.3s ease;}
+.loader-bar{width:100%;height:4px;background:rgba(210,190,165,0.15);border-radius:2px;overflow:hidden;}
+.loader-bar-fill{height:100%;background:rgba(210,190,165,0.6);border-radius:2px;transition:width 0.4s ease;}
+
 /* End modal */
 .end-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
 .end-overlay.show{display:flex;}
@@ -199,6 +214,10 @@ body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) br
 .end-btn-menu:hover{background:rgba(255,255,255,0.12);}
 .end-btn-new{background:rgba(210,190,165,0.15);color:rgba(210,190,165,1);}
 .end-btn-new:hover{background:rgba(210,190,165,0.22);}
+.end-summary-btn{width:100%;height:36px;background:none;border:1px solid rgba(210,190,165,0.15);color:rgba(210,190,165,0.4);border-radius:8px;font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all 0.15s;}
+.end-summary-btn:hover{border-color:rgba(210,190,165,0.25);color:rgba(210,190,165,0.6);}
+body.light .end-summary-btn{border-color:rgba(60,45,35,0.2);color:rgba(40,28,20,0.35);}
+body.light .end-summary-btn:hover{border-color:rgba(60,45,35,0.35);color:rgba(40,28,20,0.55);}
 </style>
 </head>
 <body>
@@ -378,6 +397,24 @@ body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) br
 </div>
 </div>
 </div>
+
+<!-- SCREEN 1c: Loader -->
+<div class="screen" id="screen1c">
+<div class="loader-wrap">
+    <div class="loader-carousel-wrap" id="loaderCarouselWrap">
+        <div class="lc-slide" id="lc0"></div>
+        <div class="lc-slide" id="lc1"></div>
+        <div class="lc-slide" id="lc2"></div>
+        <div class="lc-slide" id="lc3"></div>
+        <div class="lc-slide" id="lc4"></div>
+    </div>
+    <div class="loader-progress">
+        <div class="loader-stage" id="loaderStage">Определяем проблему...</div>
+        <div class="loader-bar"><div class="loader-bar-fill" id="loaderFill" style="width:0%"></div></div>
+    </div>
+</div>
+</div>
+
 <div class="screen" id="screen2">
 <div class="s2-wrap">
 <div class="s2-inner">
@@ -462,8 +499,12 @@ body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) br
 <!-- End session modal -->
 <div class="end-overlay" id="endOverlay">
 <div class="end-modal">
-    <div class="end-title">Вопрос решён?</div>
+    <div class="end-title">Завершить сессию?</div>
     <div class="end-desc">Вы можете начать новую сессию с чистого листа или вернуться в главное меню.</div>
+    <button class="end-summary-btn" id="endSummaryBtn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Скачать саммари сессии
+    </button>
     <div class="end-btns">
         <button class="end-btn end-btn-menu" id="endMenu">В меню</button>
         <button class="end-btn end-btn-new" id="endNew">Новая сессия</button>
@@ -585,6 +626,7 @@ function switchScreen(id) {
     bgFrame.style.display = showBg ? 'block' : 'none';
     overlayEl.classList.remove('on');
     if (id === 'screen2') initChat();
+    if (id === 'screen1c') startLoader();
 }
 
 // Init — check if already logged in — вызывается в конце скрипта
@@ -612,7 +654,7 @@ document.getElementById('guestBtn').addEventListener('click', () => {
 document.getElementById('submitBtn').addEventListener('click', () => {
     const vals = Array.from(document.querySelectorAll('#screen1b .fselect')).map(s => s.value);
     localStorage.setItem(KEY_SURVEY, JSON.stringify(vals));
-    goTo('screen2');
+    goTo('screen1c');
 });
 
 // Chat
@@ -664,6 +706,11 @@ ditems.forEach(d => d.addEventListener('click', () => {
 }));
 
 document.getElementById('premiumClose').addEventListener('click', () => premiumOverlay.classList.remove('show'));
+
+document.getElementById('endSummaryBtn').addEventListener('click', () => {
+    endOverlay.classList.remove('show');
+    premiumOverlay.classList.add('show');
+});
 
 document.getElementById('endMenu').addEventListener('click', () => {
     endOverlay.classList.remove('show');
@@ -746,6 +793,131 @@ function send() {
 
 sendBtn.addEventListener('click', send);
 msgInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); send(); } });
+
+// Loader
+const LOADER_QUOTES = [
+    "Всё, что ты ищешь снаружи,\nуже живёт внутри тебя.",
+    "Тьма — это не отсутствие света.\nЭто приглашение зажечь свой.",
+    "Каждый вопрос — это уже\nполовина ответа.",
+    "Время не лечит.\nОно лишь даёт расстояние,\nчтобы увидеть.",
+    "Ты не сломан.\nТы в процессе.",
+    "Молчание — это тоже язык.\nИ иногда самый честный.",
+    "Страх — это компас.\nОн всегда указывает\nна то, что важно.",
+    "Прошлое не определяет тебя.\nОно объясняет тебя.",
+    "Иногда нужно потеряться,\nчтобы найти правильный путь.",
+    "Твоя боль — это не слабость.\nЭто след от чего-то настоящего.",
+];
+
+const LOADER_STAGES = [
+    {text: "Определяем проблему...", pct: 15},
+    {text: "Учитываем пожелания...", pct: 35},
+    {text: "Анализируем контекст...", pct: 55},
+    {text: "Готовим модель...", pct: 75},
+    {text: "Настраиваем сеанс...", pct: 90},
+    {text: "Запускаем сеанс...", pct: 100},
+];
+
+function startLoader() {
+    const wrap    = document.getElementById('loaderCardWrap');
+    const stageEl = document.getElementById('loaderStage');
+    const fillEl  = document.getElementById('loaderFill');
+
+    // Image pool — no repeats in a row
+    const usedImgs = [];
+    function getImg() {
+        let idx;
+        do { idx = Math.ceil(Math.random() * 11); }
+        while (usedImgs.includes(idx) && usedImgs.length < 11);
+        usedImgs.push(idx);
+        if (usedImgs.length > 6) usedImgs.shift();
+        return `url('${BG}${idx}.jpeg')`;
+    }
+
+    // Quote pool — no repeats in a row
+    const usedQuotes = [];
+    function getQuote() {
+        if (usedQuotes.length >= LOADER_QUOTES.length) usedQuotes.length = 0;
+        let q;
+        do { q = LOADER_QUOTES[Math.floor(Math.random() * LOADER_QUOTES.length)]; }
+        while (usedQuotes.includes(q));
+        usedQuotes.push(q);
+        return q;
+    }
+
+    // Create a card element
+    function makeCard(imgUrl, quoteText) {
+        const card = document.createElement('div');
+        card.className = 'loader-card';
+        card.style.backgroundImage = imgUrl;
+        const mask = document.createElement('div');
+        mask.className = 'loader-card-mask';
+        const quote = document.createElement('div');
+        quote.className = 'loader-quote';
+        quote.textContent = quoteText;
+        card.appendChild(mask);
+        card.appendChild(quote);
+        return card;
+    }
+
+    // Init first card
+    wrap.innerHTML = '';
+    let currentCard = makeCard(getImg(), getQuote());
+    wrap.appendChild(currentCard);
+
+    // Slide to next card
+    function slideNext() {
+        const nextCard = makeCard(getImg(), getQuote());
+        nextCard.classList.add('slide-in');
+        wrap.appendChild(nextCard);
+        currentCard.classList.add('slide-out');
+        setTimeout(() => {
+            if (currentCard.parentNode) currentCard.parentNode.removeChild(currentCard);
+            nextCard.classList.remove('slide-in');
+            currentCard = nextCard;
+        }, 680);
+    }
+
+    // Schedule slides every 6s
+    let slideTimer = setInterval(slideNext, 6000);
+
+    // Random total duration: 14000–30000 ms
+    const totalDuration = 14000 + Math.random() * 16000;
+
+    // Distribute time across stages
+    const n = LOADER_STAGES.length;
+    const weights = Array.from({length: n}, () => 0.5 + Math.random());
+    const weightSum = weights.reduce((a, b) => a + b, 0);
+    const stageDurations = weights.map(w => Math.round(w / weightSum * totalDuration));
+
+    // Reset bar
+    fillEl.style.transition = 'none';
+    fillEl.style.width = '0%';
+
+    function runStage(i) {
+        if (i >= LOADER_STAGES.length) {
+            clearInterval(slideTimer);
+            setTimeout(() => goTo('screen2'), 300);
+            return;
+        }
+        const stage = LOADER_STAGES[i];
+        const dur = stageDurations[i];
+
+        stageEl.style.opacity = '0';
+        setTimeout(() => {
+            stageEl.textContent = stage.text;
+            stageEl.style.opacity = '1';
+        }, 200);
+
+        setTimeout(() => {
+            fillEl.style.transition = `width ${dur * 0.85}ms ease`;
+            fillEl.style.width = stage.pct + '%';
+        }, 50);
+
+        setTimeout(() => runStage(i + 1), dur);
+    }
+
+    runStage(0);
+}
 
 init();
 </script>
