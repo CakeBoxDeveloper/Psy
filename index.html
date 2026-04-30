@@ -73,10 +73,10 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .submit-btn img{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
 
 /* S2 Chat */
-.s2-wrap{width:100%;height:100vh;background:rgba(28,23,20,0.98);display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.s2-inner{width:90%;max-width:420px;height:90vh;display:flex;flex-direction:column;background:rgba(42,36,32,0.95);border-radius:12px;overflow:hidden;}
+.s2-wrap{width:100%;height:100vh;background:rgb(18,14,12);display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.s2-inner{width:90%;max-width:420px;height:90vh;display:flex;flex-direction:column;background:rgb(32,26,22);border-radius:12px;overflow:hidden;}
 @media(max-width:599px){
-    .s2-wrap{background:rgba(42,36,32,0.95);}
+    .s2-wrap{background:rgb(32,26,22);}
     .s2-inner{width:100%;max-width:100%;height:100vh;border-radius:0;}
     .bg{filter:none !important;transform:none !important;}
     .bg-frame{display:none;}
@@ -146,7 +146,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 /* Light theme */
 .light .s2-wrap{background:rgb(220,205,185);}
 .light .s2-inner{background:rgb(235,220,200);}
-.light .model-btn{background:rgba(60,45,35,0.25);color:rgb(40,28,20);font-weight:600;border:1px solid rgba(60,45,35,0.3);}
+.light .model-btn{background:rgba(60,45,35,0.25);color:rgb(40,28,20);font-weight:600;border:none;}
 .light .model-btn:hover{background:rgba(60,45,35,0.35);}
 .light .dropdown{background:rgb(235,220,200);border-color:rgba(60,45,35,0.2);}
 .light .ditem-name{color:rgba(40,28,20,0.4);}
@@ -172,17 +172,18 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .light .bulb-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28,20);}
 .light .bulb-btn svg{stroke:rgba(40,28,20,0.7);}
 /* Модалки в светлой теме */
-.light .end-modal{background:rgb(235,220,200);}
-.light .end-title{color:rgb(40,28,20);}
-.light .end-desc{color:rgba(40,28,20,0.6);}
-.light .end-btn-menu{background:rgba(60,45,35,0.12);color:rgb(40,28,20);}
-.light .end-btn-new{background:rgba(60,45,35,0.2);color:rgb(40,28,20);}
-.light .premium-modal{background:rgb(235,220,200);}
-.light .premium-title{color:rgb(40,28,20);}
-.light .premium-desc{color:rgba(40,28,20,0.6);}
-.light .premium-feature{color:rgba(40,28,20,0.8);}
-.light .premium-btn{background:rgba(60,45,35,0.2);border-color:rgba(60,45,35,0.3);color:rgb(40,28,20);}
-.light .premium-close{color:rgba(40,28,20,0.4);}
+body.light .end-modal{background:rgb(235,220,200);}
+body.light .end-title{color:rgb(40,28,20);}
+body.light .end-desc{color:rgba(40,28,20,0.6);}
+body.light .end-btn-menu{background:rgba(60,45,35,0.12);color:rgb(40,28,20);}
+body.light .end-btn-new{background:rgba(60,45,35,0.2);color:rgb(40,28,20);}
+body.light .premium-modal{background:rgb(235,220,200);}
+body.light .premium-title{color:rgb(40,28,20);}
+body.light .premium-desc{color:rgba(40,28,20,0.6);}
+body.light .premium-feature{color:rgba(40,28,20,0.8);}
+body.light .premium-btn{background:rgba(60,45,35,0.2);border-color:rgba(60,45,35,0.3);color:rgb(40,28,20);}
+body.light .premium-close{color:rgba(40,28,20,0.4);}
+body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);}
 /* Убираем bg в светлой теме */
 .light ~ .bg, .light ~ .bg-frame{display:none !important;}
 
@@ -248,7 +249,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
                 <div style="padding:10px 12px;background:rgba(255,255,255,0.06);border-radius:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
                     <div style="color:rgba(210,190,165,0.5);font-size:11px;line-height:1.6;">Мы не претендуем на предсказание будущего. Soma AI — инструмент рефлексии, который помогает структурировать внутренний опыт и посмотреть на ситуацию с разных сторон.</div>
                 </div>
-                <div style="color:rgba(210,190,165,0.3);font-size:11px;padding:0 2px;">Основан в 2024 · Более 10 000 сессий</div>
+
             </div>
         </div>
     </div>
@@ -311,11 +312,8 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 
     <!-- Slide 4: Тарифы -->
     <div class="c-slide" id="slide4">
-        <div style="position:absolute;bottom:0;left:0;right:0;height:90%;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);-webkit-mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 25%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;height:75%;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;height:55%;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);-webkit-mask-image:linear-gradient(to top,black 0%,transparent 100%);mask-image:linear-gradient(to top,black 0%,transparent 100%);pointer-events:none;"></div>
         <div style="position:absolute;top:0;left:0;right:0;padding:24px 24px 0;display:flex;align-items:flex-start;justify-content:space-between;z-index:2;">
-            <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Тарифы</div>
+            <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Опции</div>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:4px;opacity:0.5;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="rgba(210,190,165,0.8)" stroke-width="1.5" stroke-linejoin="round"/></svg>
         </div>
         <div style="position:absolute;bottom:0;left:0;right:0;padding:0 24px 24px;display:flex;flex-direction:column;gap:8px;">
@@ -581,10 +579,10 @@ function goTo(id) {
 function switchScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    // screen1 и screen1b имеют свой фон — скрываем bg
-    const needBg = id === 'screen2';
-    bgEl.style.display = needBg ? 'block' : 'none';
-    bgFrame.style.display = needBg ? 'block' : 'none';
+    // bg показываем только на screen1 (карусель с логином)
+    const showBg = id === 'screen1';
+    bgEl.style.display = showBg ? 'block' : 'none';
+    bgFrame.style.display = showBg ? 'block' : 'none';
     overlayEl.classList.remove('on');
     if (id === 'screen2') initChat();
 }
@@ -642,8 +640,7 @@ themeBtn.addEventListener('click', () => {
     isLight = !isLight;
     const s2 = document.getElementById('screen2');
     s2.classList.toggle('light', isLight);
-    bgEl.style.display = isLight ? 'none' : 'block';
-    bgFrame.style.display = isLight ? 'none' : 'block';
+    document.body.classList.toggle('light', isLight);
 });
 menuBtn.addEventListener('click', () => endOverlay.classList.toggle('show'));
 
