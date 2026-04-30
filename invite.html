@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Приглашение — Soma AI</title>
+<style>
+@font-face {
+    font-family:'TiemposHeadline';
+    src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Light.woff') format('woff'),
+        url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Light.ttf') format('truetype');
+    font-weight:300;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;}
+html,body{
+    width:100%;height:100%;
+    background:rgb(28,23,20);
+    display:flex;justify-content:center;align-items:center;
+    overflow:hidden;
+    font-family:'Inter',-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+}
+
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:999;opacity:0;pointer-events:none;transition:opacity 0.5s ease;}
+.overlay.on{opacity:1;pointer-events:all;}
+
+/* Card */
+.card{
+    position:relative;
+    z-index:10;
+    width:min(90vw, calc(85vh * 0.52));
+    height:min(85vh, 680px);
+    border-radius:12px;
+    overflow:hidden;
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    animation:fadeIn 0.7s ease-out forwards;
+}
+@keyframes fadeIn{from{opacity:0;filter:blur(8px);transform:translateY(14px);}to{opacity:1;filter:blur(0);transform:translateY(0);}}
+
+/* Bottom blur + content */
+.card-bottom-mask{
+    position:absolute;bottom:-2px;left:-2px;right:-2px;height:calc(72% + 2px);
+    backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
+    -webkit-mask-image:linear-gradient(to top,black 0%,black 30%,transparent 100%);
+    mask-image:linear-gradient(to top,black 0%,black 30%,transparent 100%);
+    pointer-events:none;
+}
+.card-bottom-mask-2{
+    position:absolute;bottom:-2px;left:-2px;right:-2px;height:calc(55% + 2px);
+    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    -webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);
+    mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);
+    pointer-events:none;
+}
+
+.card-content{
+    position:relative;z-index:2;
+    padding:22px 22px 22px;
+    display:flex;flex-direction:column;gap:18px;
+    height:100%;
+    justify-content:space-between;
+}
+
+.card-title{
+    color:rgba(210,190,165,1);
+    font-size:26px;
+    font-weight:300;
+    font-family:'TiemposHeadline',serif;
+    line-height:1.25;
+    white-space:nowrap;
+}
+.card-desc{
+    color:rgba(210,190,165,0.6);
+    font-size:12px;
+    line-height:1.7;
+}
+
+.accept-btn{
+    width:100%;height:44px;
+    border:none;border-radius:8px;
+    background:rgba(210,190,165,0.95);
+    color:rgb(42,32,24);
+    font-size:13px;font-weight:500;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 14px;
+    font-family:'Inter',sans-serif;
+    transition:all 0.15s;
+}
+.accept-btn:hover{background:rgba(210,190,165,1);}
+.accept-btn:active{transform:scale(0.98);}
+.accept-btn img{width:16px;height:16px;filter:invert(15%) sepia(15%) saturate(200%) brightness(35%);opacity:0.8;}
+
+.card-footer{
+    text-align:center;
+    color:rgba(210,190,165,0.3);
+    font-size:10px;
+    line-height:1.5;
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="card" id="card">
+    <div class="card-bottom-mask"></div>
+    <div class="card-bottom-mask-2"></div>
+
+    <div class="card-content">
+        <div class="card-title">Приглашение на сессию</div>
+        <div style="display:flex;flex-direction:column;gap:18px;">
+            <div class="card-desc">Попробуйте обсудить свой вопрос с нашими новейшими моделями. Это бесплатно — регистрироваться тоже не нужно.</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                <button class="accept-btn" id="acceptBtn">
+                    <span>Принять приглашение</span>
+                    <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg" alt="">
+                </button>
+                <div class="card-footer">Данные этой сессии будут храниться 24 часа</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const BG = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/BG/';
+const imgIdx = Math.ceil(Math.random() * 11);
+document.getElementById('card').style.backgroundImage = `url('${BG}${imgIdx}.jpeg')`;
+
+document.getElementById('acceptBtn').addEventListener('click', () => {
+    const overlay = document.getElementById('overlay');
+    overlay.style.transition = 'opacity 0.5s ease';
+    overlay.classList.add('on');
+    localStorage.setItem('soma_invite', '1');
+    setTimeout(() => { window.location.href = 'https://cakeboxdeveloper.github.io/Psy/index.html'; }, 500);
+});
+</script>
+</body>
+</html>
