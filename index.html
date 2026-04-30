@@ -830,9 +830,112 @@ ditems.forEach(d => d.addEventListener('click', () => {
 
 document.getElementById('premiumClose').addEventListener('click', () => premiumOverlay.classList.remove('show'));
 
-document.getElementById('endSummaryBtn').addEventListener('click', () => {
+document.getElementById('endSummaryBtn').addEventListener('click', async () => {
     endOverlay.classList.remove('show');
-    premiumOverlay.classList.add('show');
+
+    // Gather survey data
+    const surveyRaw = localStorage.getItem(KEY_SURVEY);
+    const surveyLabels = [
+        'Что беспокоит', 'Состояние', 'Возраст',
+        'Частота обращений', 'Ожидания от сессии',
+        'Наличие конкретного вопроса', 'Отношение к мистическому'
+    ];
+    let surveyText = '';
+    if (surveyRaw) {
+        const vals = JSON.parse(surveyRaw);
+        surveyText = vals.map((v, i) => v ? `${surveyLabels[i]}: ${v}` : null).filter(Boolean).join('\n');
+    }
+
+    // Gather chat messages
+    const msgs = Array.from(chatArea.querySelectorAll('.message')).map(el => {
+        const isUser = el.classList.contains('user');
+        const bodyEl = el.querySelector('.bubble-body');
+        const text = bodyEl ? bodyEl.textContent : el.querySelector('.bubble')?.textContent || '';
+        return `${isUser ? 'Пользователь' : 'Модель'}: ${text}`;
+    }).join('\n\n');
+
+    // Gather models used
+    const modelsUsed = [...new Set(
+        Array.from(chatArea.querySelectorAll('.message'))
+            .map(el => el.dataset.modelKey)
+            .filter(Boolean)
+            .map(k => models[k]?.name || k)
+    )];
+
+    const sessionDate = new Date().toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'});
+
+    // Show loading state
+    const btn = document.getElementById('endSummaryBtn');
+    const origHTML = btn.innerHTML;
+    btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Генерируем...';
+    btn.disabled = true;
+
+    const prompt = `Ты — ассистент, который составляет краткое саммари психологической/эзотерической сессии.
+
+Входящие данные пользователя (анкета):
+${surveyText || 'Не заполнена'}
+
+Диалог сессии:
+${msgs || 'Диалог пуст'}
+
+Составь саммари строго в следующем формате (без лишних слов, только содержание):
+
+ПЕРЕСКАЗ
+[2-4 предложения: о чём говорили, какие темы затрагивались]
+
+ВЫВОДЫ
+[2-3 ключевых вывода или инсайта из сессии]
+
+Отвечай на русском языке. Будь конкретным и лаконичным.`;
+
+    try {
+        const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json','Authorization':`Bearer ${GROQ_KEY}`},
+            body: JSON.stringify({
+                model: GROQ_MODEL,
+                messages: [{role:'user', content: prompt}],
+                max_tokens: 600,
+                temperature: 0.5
+            })
+        });
+        const data = await resp.json();
+        const summary = data.choices?.[0]?.message?.content || 'Не удалось сгенерировать саммари.';
+
+        // Build text file
+        const lines = [
+            `СЕССИЯ — ${sessionDate}`,
+            '═'.repeat(40),
+            '',
+            'ВХОДЯЩИЕ ДАННЫЕ',
+            '─'.repeat(40),
+            surveyText || 'Анкета не заполнена',
+            '',
+            summary,
+            '',
+            '─'.repeat(40),
+            'ТЕХНИЧЕСКИЙ БЛОК',
+            `Дата: ${sessionDate}`,
+            `Модели: ${modelsUsed.length ? modelsUsed.join(', ') : 'Тара (по умолчанию)'}`,
+            `Сообщений: ${chatHistory.length}`,
+            'Платформа: Panacea',
+        ].join('\n');
+
+        // Download
+        const blob = new Blob([lines], {type: 'text/plain;charset=utf-8'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `panacea-session-${new Date().toISOString().slice(0,10)}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+
+    } catch(e) {
+        alert('Не удалось создать саммари. Попробуй позже.');
+    } finally {
+        btn.innerHTML = origHTML;
+        btn.disabled = false;
+    }
 });
 
 document.getElementById('endMenu').addEventListener('click', () => {
