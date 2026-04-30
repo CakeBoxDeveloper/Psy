@@ -132,14 +132,16 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .ditem-check{font-size:12px;color:rgba(210,190,165,0.9);opacity:0;flex-shrink:0;width:8px;height:8px;border-radius:50%;background:rgba(210,190,165,0.9);display:inline-block;font-size:0;}
 .ditem.active .ditem-check{opacity:1;}
 .ditem-star{width:14px;height:14px;flex-shrink:0;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
-.ditem-divider{display:none;}
+.light .ditem-star{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);opacity:1;}
+.light .ditem.active .ditem-star{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);opacity:1;}
 
 /* Panacea Plus modal */
 .premium-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:600;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
 .premium-overlay.show{display:flex;}
 .premium-modal{width:80%;max-width:340px;background:rgba(42,36,32,0.97);border-radius:12px;padding:28px 22px 22px;display:flex;flex-direction:column;gap:16px;animation:fadeIn 0.3s ease-out forwards;}
 .premium-title{color:rgba(210,190,165,1);font-size:20px;font-weight:900;font-family:'TiemposHeadline',serif;text-align:center;line-height:1.3;}
-.premium-desc{color:rgba(210,190,165,0.65);font-size:12px;line-height:1.7;text-align:center;}
+.premium-desc{color:rgba(210,190,165,0.65);font-size:12px;line-height:1.7;text-align:center;background:rgba(255,255,255,0.06);border-radius:8px;padding:10px 12px;}
+body.light .premium-desc{background:rgba(60,45,35,0.08);color:rgba(40,28,20,0.7);}
 .premium-features{display:flex;flex-direction:column;gap:8px;}
 .premium-feature{display:flex;align-items:flex-start;gap:10px;color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;}
 .premium-feature-icon{width:14px;height:14px;flex-shrink:0;margin-top:1px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
@@ -260,10 +262,11 @@ body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) br
 .end-btn-menu:hover{background:rgba(255,255,255,0.12);}
 .end-btn-new{background:rgba(210,190,165,0.15);color:rgba(210,190,165,1);}
 .end-btn-new:hover{background:rgba(210,190,165,0.22);}
-.end-summary-btn{width:100%;height:36px;background:none;border:1px solid rgba(210,190,165,0.15);color:rgba(210,190,165,0.4);border-radius:8px;font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all 0.15s;}
-.end-summary-btn:hover{border-color:rgba(210,190,165,0.25);color:rgba(210,190,165,0.6);}
-body.light .end-summary-btn{border-color:rgba(60,45,35,0.2);color:rgba(40,28,20,0.35);}
-body.light .end-summary-btn:hover{border-color:rgba(60,45,35,0.35);color:rgba(40,28,20,0.55);}
+/* End summary button — more prominent */
+.end-summary-btn{width:100%;height:42px;background:rgba(210,190,165,0.18);border:1px solid rgba(210,190,165,0.35);color:rgba(210,190,165,0.9);border-radius:8px;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all 0.15s;}
+.end-summary-btn:hover{background:rgba(210,190,165,0.28);color:rgba(210,190,165,1);}
+body.light .end-summary-btn{background:rgba(60,45,35,0.1);border-color:rgba(60,45,35,0.3);color:rgba(40,28,20,0.8);}
+body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28,20);}
 </style>
 </head>
 <body>
@@ -577,8 +580,7 @@ body.light .end-summary-btn:hover{border-color:rgba(60,45,35,0.35);color:rgba(40
     <div class="end-title">Завершить сессию?</div>
     <div class="end-desc">Вы можете начать новую сессию с чистого листа или вернуться в главное меню.</div>
     <button class="end-summary-btn" id="endSummaryBtn">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Скачать саммари сессии
+        Завершить и сохранить протокол
     </button>
     <div class="end-btns">
         <button class="end-btn end-btn-menu" id="endMenu">В меню</button>
@@ -880,11 +882,14 @@ ${msgs || 'Диалог пуст'}
 
 Составь саммари строго в следующем формате (без лишних слов, только содержание):
 
-ПЕРЕСКАЗ
-[2-4 предложения: о чём говорили, какие темы затрагивались]
+ИНТЕРЛЮДИЯ
+[1-2 предложения: с каким запросом и состоянием пришёл пользователь, исходя из анкеты и начала диалога]
 
-ВЫВОДЫ
-[2-3 ключевых вывода или инсайта из сессии]
+СОДЕРЖАНИЕ
+[3-5 предложений: о чём говорили, какие темы затрагивались, как развивался диалог]
+
+ВЫВОД
+[2-3 предложения: ключевые инсайты или итоги сессии]
 
 Отвечай на русском языке. Будь конкретным и лаконичным.`;
 
@@ -902,33 +907,135 @@ ${msgs || 'Диалог пуст'}
         const data = await resp.json();
         const summary = data.choices?.[0]?.message?.content || 'Не удалось сгенерировать саммари.';
 
-        // Build text file
-        const lines = [
-            `СЕССИЯ — ${sessionDate}`,
-            '═'.repeat(40),
-            '',
-            'ВХОДЯЩИЕ ДАННЫЕ',
-            '─'.repeat(40),
-            surveyText || 'Анкета не заполнена',
-            '',
-            summary,
-            '',
-            '─'.repeat(40),
-            'ТЕХНИЧЕСКИЙ БЛОК',
-            `Дата: ${sessionDate}`,
-            `Модели: ${modelsUsed.length ? modelsUsed.join(', ') : 'Тара (по умолчанию)'}`,
-            `Сообщений: ${chatHistory.length}`,
-            'Платформа: Panacea',
-        ].join('\n');
+        // Parse summary sections
+        const getSection = (label) => {
+            const re = new RegExp(label + '\\s*\\n([\\s\\S]*?)(?=\\n[А-ЯЁ]{3,}\\s*\\n|$)', 'i');
+            const m = summary.match(re);
+            return m ? m[1].trim() : '';
+        };
+        const secInterlude = getSection('ИНТЕРЛЮДИЯ');
+        const secContent   = getSection('СОДЕРЖАНИЕ');
+        const secConclusion= getSection('ВЫВОД');
 
-        // Download
-        const blob = new Blob([lines], {type: 'text/plain;charset=utf-8'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `panacea-session-${new Date().toISOString().slice(0,10)}.txt`;
-        a.click();
-        URL.revokeObjectURL(url);
+        // Build HTML for PDF
+        const printHTML = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Panacea — Протокол сессии</title>
+<style>
+@font-face {
+    font-family:'TiemposHeadline';
+    src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Light.woff') format('woff');
+    font-weight:300;
+}
+@font-face {
+    font-family:'TiemposHeadline';
+    src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Black.woff') format('woff');
+    font-weight:900;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    background:rgb(220,205,185);
+    color:rgb(40,28,20);
+    font-family:'Inter',-apple-system,sans-serif;
+    font-size:13px;
+    line-height:1.7;
+    padding:48px 52px;
+    max-width:680px;
+    margin:0 auto;
+}
+.header{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:36px;
+}
+.doc-title{
+    font-family:'TiemposHeadline',serif;
+    font-weight:900;
+    font-size:26px;
+    color:rgb(40,28,20);
+}
+.doc-date{
+    font-size:14px;
+    font-family:'Inter',sans-serif;
+    font-weight:400;
+    color:rgb(40,28,20);
+}
+.section{
+    margin-bottom:24px;
+}
+.section-title{
+    font-family:'TiemposHeadline',serif;
+    font-weight:900;
+    font-size:13px;
+    color:rgb(40,28,20);
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    margin-bottom:8px;
+}
+.section-body{
+    background:rgba(40,28,20,0.07);
+    border-radius:8px;
+    padding:14px 16px;
+    color:rgba(40,28,20,0.85);
+    font-size:13px;
+    line-height:1.75;
+    white-space:pre-wrap;
+}
+.tech{
+    margin-top:36px;
+    font-size:11px;
+    color:rgb(40,28,20);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+@media print{
+    body{padding:32px 40px;}
+    @page{margin:0;size:A4;}
+}
+</style>
+</head>
+<body>
+<div class="header">
+    <div class="doc-title">Протокол сессии</div>
+    <div class="doc-date">${sessionDate}</div>
+</div>
+
+<div class="section">
+    <div class="section-title">Интерлюдия</div>
+    <div class="section-body">${secInterlude || (surveyText ? surveyText.replace(/\n/g,'<br>') : 'Анкета не заполнена')}</div>
+</div>
+
+<div class="section">
+    <div class="section-title">Содержание</div>
+    <div class="section-body">${secContent || '—'}</div>
+</div>
+
+<div class="section">
+    <div class="section-title">Вывод</div>
+    <div class="section-body">${secConclusion || '—'}</div>
+</div>
+
+<div class="tech">
+    <span>Использовались модели: ${modelsUsed.length ? modelsUsed.join(', ') : 'Тара'}</span>
+    <span>${chatHistory.length} сообщений</span>
+</div>
+</body>
+</html>`;
+
+        const win = window.open('', '_blank');
+        win.document.write(printHTML);
+        win.document.close();
+        // Wait for fonts to load then print
+        win.onload = () => {
+            setTimeout(() => {
+                win.focus();
+                win.print();
+            }, 800);
+        };
 
     } catch(e) {
         alert('Не удалось создать саммари. Попробуй позже.');
