@@ -117,7 +117,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .ditem.active .ditem-name{color:rgba(210,190,165,1);}
 .ditem-desc{font-size:11px;color:rgba(210,190,165,0.4);}
 .ditem.active .ditem-desc{color:rgba(210,190,165,0.55);}
-.ditem-check{font-size:12px;color:rgba(210,190,165,0.9);opacity:0;flex-shrink:0;}
+.ditem-check{font-size:12px;color:rgba(210,190,165,0.9);opacity:0;flex-shrink:0;width:8px;height:8px;border-radius:50%;background:rgba(210,190,165,0.9);display:inline-block;font-size:0;}
 .ditem.active .ditem-check{opacity:1;}
 .ditem-star{width:14px;height:14px;flex-shrink:0;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
 .ditem-divider{display:none;}
@@ -145,6 +145,8 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 @keyframes msgIn{from{opacity:0;filter:blur(8px);transform:translateY(6px);}to{opacity:1;filter:blur(0);transform:translateY(0);}}
 .message.user{justify-content:flex-end;}
 .bubble{max-width:80%;padding:8px 12px;border-radius:8px;font-size:12px;line-height:1.5;word-wrap:break-word;word-break:break-word;background:rgba(255,255,255,0.06);color:rgba(210,190,165,0.8);}
+.bubble-body{display:block;}
+.bubble-sig{display:block;margin:8px -12px 0;padding:6px 12px 0;border-top:1px solid rgba(210,190,165,0.12);font-size:10px;color:rgba(210,190,165,0.35);text-align:center;font-style:normal;}
 .typing-bubble{display:flex;align-items:center;gap:4px;padding:10px 14px;background:rgba(255,255,255,0.06);border-radius:8px;width:fit-content;}
 .typing-bubble span{width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:50%;animation:typing 1.2s infinite;}
 .typing-bubble span:nth-child(2){animation-delay:0.2s;}
@@ -732,27 +734,27 @@ const GROQ_MODEL = 'llama-3.3-70b-versatile';
 const models = {
     tara: {
         name: 'Тара',
-        system: `Ты — Тара, мастер традиционной школы тарологии. Ты говоришь образно, через символы и архетипы. Используешь метафоры карт, судьбы, знаков. Твой стиль — мистический, поэтичный, но конкретный. Ты не гадаешь — ты помогаешь человеку увидеть скрытое в его ситуации. Отвечай на русском языке. Ответы — 3-6 предложений. В конце каждого ответа на новой строке добавь: "— Тара, таролог"`
+        system: `Ты — Тара, мастер традиционной школы тарологии. Ты говоришь образно, через символы и архетипы. Используешь метафоры карт, судьбы, знаков. Твой стиль — мистический, поэтичный, но конкретный. Ты не гадаешь — ты помогаешь человеку увидеть скрытое в его ситуации. Отвечай на русском языке. Ответы — 3-6 предложений.`
     },
     karma: {
         name: 'Карма',
-        system: `Ты — Карма, кармолог. Ты видишь повторяющиеся паттерны, незакрытые циклы и кармические уроки. Говоришь о причинно-следственных связях, о том, что человек несёт из прошлого. Твой стиль — глубокий, немного строгий, но сострадательный. Ты помогаешь понять, какой урок несёт текущая ситуация. Отвечай на русском языке. Ответы — 3-6 предложений. В конце каждого ответа на новой строке добавь: "— Карма, кармолог"`
+        system: `Ты — Карма, кармолог. Ты видишь повторяющиеся паттерны, незакрытые циклы и кармические уроки. Говоришь о причинно-следственных связях, о том, что человек несёт из прошлого. Твой стиль — глубокий, немного строгий, но сострадательный. Ты помогаешь понять, какой урок несёт текущая ситуация. Отвечай на русском языке. Ответы — 3-6 предложений.`
     },
     astra: {
         name: 'Астра',
-        system: `Ты — Астра, астролог. Ты читаешь ситуацию через призму планетарных циклов, натальных позиций и астрологических транзитов. Говоришь о влиянии планет, о времени, о ритмах. Твой стиль — точный, структурированный, с астрологическими терминами, но понятный. Ты помогаешь понять, в какой точке своего пути находится человек. Отвечай на русском языке. Ответы — 3-6 предложений. В конце каждого ответа на новой строке добавь: "— Астра, астролог"`
+        system: `Ты — Астра, астролог. Ты читаешь ситуацию через призму планетарных циклов, натальных позиций и астрологических транзитов. Говоришь о влиянии планет, о времени, о ритмах. Твой стиль — точный, структурированный, с астрологическими терминами, но понятный. Ты помогаешь понять, в какой точке своего пути находится человек. Отвечай на русском языке. Ответы — 3-6 предложений.`
     },
     eva: {
         name: 'Ева',
-        system: `Ты — Ева, регрессолог. Ты работаешь с памятью прошлых жизней, с глубинным опытом души. Ты ищешь корни страхов, притяжений и повторяющихся сценариев в том, что предшествует этой жизни. Твой стиль — мягкий, медитативный, интроспективный. Ты задаёшь вопросы, которые помогают заглянуть глубже. Отвечай на русском языке. Ответы — 3-6 предложений. В конце каждого ответа на новой строке добавь: "— Ева, регрессолог"`
+        system: `Ты — Ева, регрессолог. Ты работаешь с памятью прошлых жизней, с глубинным опытом души. Ты ищешь корни страхов, притяжений и повторяющихся сценариев в том, что предшествует этой жизни. Твой стиль — мягкий, медитативный, интроспективный. Ты задаёшь вопросы, которые помогают заглянуть глубже. Отвечай на русском языке. Ответы — 3-6 предложений.`
     },
     psyche: {
         name: 'Психея',
-        system: `Ты — Психея, психолог юнгианской школы и нарративный терапевт. Ты слушаешь не только слова, но и то, что за ними. Работаешь с архетипами, тенью, внутренними конфликтами. Твой стиль — внимательный, вдумчивый, задающий вопросы. Ты помогаешь человеку переосмыслить свою историю. Отвечай на русском языке. Ответы — 3-6 предложений. В конце каждого ответа на новой строке добавь: "— Психея, психолог"`
+        system: `Ты — Психея, психолог юнгианской школы и нарративный терапевт. Ты слушаешь не только слова, но и то, что за ними. Работаешь с архетипами, тенью, внутренними конфликтами. Твой стиль — внимательный, вдумчивый, задающий вопросы. Ты помогаешь человеку переосмыслить свою историю. Отвечай на русском языке. Ответы — 3-6 предложений.`
     },
     gera: {
         name: 'Гера',
-        system: `Ты — Гера, нумеролог. Ты видишь скрытый порядок в числах, датах, именах. Расшифровываешь числовой код жизни человека. Твой стиль — аналитический, точный, с числовыми интерпретациями. Ты находишь закономерности там, где другие видят случайность. Отвечай на русском языке. Ответы — 3-6 предложений. В конце каждого ответа на новой строке добавь: "— Гера, нумеролог"`
+        system: `Ты — Гера, нумеролог. Ты видишь скрытый порядок в числах, датах, именах. Расшифровываешь числовой код жизни человека. Твой стиль — аналитический, точный, с числовыми интерпретациями. Ты находишь закономерности там, где другие видят случайность. Отвечай на русском языке. Ответы — 3-6 предложений.`
     }
 };
 
@@ -797,6 +799,7 @@ ditems.forEach(d => d.addEventListener('click', () => {
     ditems.forEach(i => i.classList.remove('active'));
     d.classList.add('active');
     dropdown.classList.remove('show');
+    localStorage.setItem('soma_model', curModel);
 }));
 
 document.getElementById('premiumClose').addEventListener('click', () => premiumOverlay.classList.remove('show'));
@@ -821,12 +824,21 @@ document.getElementById('endNew').addEventListener('click', () => {
 
 function initChat() {
     chatHistory = [];
+    // Restore saved model
+    const savedModel = localStorage.getItem('soma_model');
+    if (savedModel && models[savedModel]) {
+        curModel = savedModel;
+        modelBtn.textContent = models[curModel].name;
+        ditems.forEach(d => {
+            d.classList.toggle('active', d.dataset.model === curModel);
+        });
+    }
     const raw = localStorage.getItem(KEY_CHAT);
     if (raw) {
         const data = JSON.parse(raw);
         if (Date.now() - data.ts < 86400000) {
             data.msgs.forEach(m => {
-                addMsg(m.t, m.s, false);
+                addMsg(m.t, m.s, false, m.m || null);
                 chatHistory.push({role: m.s === 'user' ? 'user' : 'assistant', content: m.t});
             });
             return;
@@ -843,18 +855,31 @@ function showPlaceholder() {
 function saveChat() {
     const msgs = Array.from(chatArea.querySelectorAll('.message')).map(el => ({
         s: el.classList.contains('user') ? 'user' : 'ai',
-        t: el.querySelector('.bubble').textContent
+        t: el.querySelector('.bubble-body') ? el.querySelector('.bubble-body').textContent : el.querySelector('.bubble').textContent,
+        m: el.dataset.modelKey || null
     }));
     localStorage.setItem(KEY_CHAT, JSON.stringify({ts: Date.now(), msgs}));
 }
 
-function addMsg(text, sender, animate) {
+function addMsg(text, sender, animate, modelKey) {
     const div = document.createElement('div');
     div.className = `message ${sender}`;
+    if (modelKey) div.dataset.modelKey = modelKey;
     if (!animate) div.style.animation = 'none';
     const b = document.createElement('div');
     b.className = 'bubble';
-    b.textContent = text;
+
+    if (sender === 'ai' && modelKey && models[modelKey]) {
+        const m = models[modelKey];
+        // Strip any signature the model may have appended (— Name, role)
+        const clean = text.replace(/[\s\n]*[—\-–]\s*\S[^\n]*$/, '').trim();
+        b.innerHTML =
+            `<span class="bubble-body">${clean.replace(/\n/g,'<br>')}</span>` +
+            `<span class="bubble-sig">Для ответа была использована модель ${m.name}</span>`;
+    } else {
+        b.textContent = text;
+    }
+
     div.appendChild(b);
     chatArea.appendChild(div);
     chatArea.scrollTop = chatArea.scrollHeight;
@@ -907,7 +932,7 @@ function send() {
         isTyping = false;
         const reply = data.choices?.[0]?.message?.content || 'Что-то пошло не так. Попробуй ещё раз.';
         chatHistory.push({role: 'assistant', content: reply});
-        addMsg(reply, 'ai', true);
+        addMsg(reply, 'ai', true, curModel);
         saveChat();
     })
     .catch(() => {
