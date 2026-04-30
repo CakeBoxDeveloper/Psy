@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Приглашение — Soma AI</title>
+<title>Panacea Приглашение</title>
 <style>
 @font-face {
     font-family:'TiemposHeadline';
@@ -24,7 +24,6 @@ html,body{
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:999;opacity:0;pointer-events:none;transition:opacity 0.5s ease;}
 .overlay.on{opacity:1;pointer-events:all;}
 
-/* Card */
 .card{
     position:relative;
     z-index:10;
@@ -37,48 +36,88 @@ html,body{
     background-repeat:no-repeat;
     display:flex;
     flex-direction:column;
-    justify-content:space-between;
     animation:fadeIn 0.7s ease-out forwards;
 }
 @keyframes fadeIn{from{opacity:0;filter:blur(8px);transform:translateY(14px);}to{opacity:1;filter:blur(0);transform:translateY(0);}}
 
-/* Bottom blur + content */
-.card-bottom-mask{
-    position:absolute;bottom:-2px;left:-2px;right:-2px;height:calc(72% + 2px);
-    backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
-    -webkit-mask-image:linear-gradient(to top,black 0%,black 30%,transparent 100%);
-    mask-image:linear-gradient(to top,black 0%,black 30%,transparent 100%);
-    pointer-events:none;
-}
-.card-bottom-mask-2{
-    position:absolute;bottom:-2px;left:-2px;right:-2px;height:calc(55% + 2px);
-    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-    -webkit-mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);
-    mask-image:linear-gradient(to top,black 0%,black 15%,transparent 100%);
-    pointer-events:none;
-}
-
-.card-content{
+/* Top: title over image */
+.card-top{
     position:relative;z-index:2;
-    padding:22px 22px 22px;
-    display:flex;flex-direction:column;gap:18px;
-    height:100%;
-    justify-content:space-between;
+    padding:22px 20px 0;
+    flex-shrink:0;
+    display:flex;flex-direction:column;gap:8px;
 }
-
 .card-title{
     color:rgba(210,190,165,1);
-    font-size:26px;
+    font-size:28px;
     font-weight:300;
     font-family:'TiemposHeadline',serif;
-    line-height:1.25;
-    white-space:nowrap;
+    text-align:center;
+}
+
+/* Full-height blur mask covering bottom portion */
+.card-mask{
+    position:absolute;
+    bottom:-2px;left:-2px;right:-2px;
+    height:calc(72% + 2px);
+    backdrop-filter:blur(28px);
+    -webkit-backdrop-filter:blur(28px);
+    -webkit-mask-image:linear-gradient(to top, black 0%, black 40%, transparent 100%);
+    mask-image:linear-gradient(to top, black 0%, black 40%, transparent 100%);
+    pointer-events:none;
+}
+
+/* Desc sits on the blur zone */
+.card-desc-wrap{
+    position:relative;z-index:2;
+    padding:0 18px 10px;
+    flex-shrink:0;
+    margin-top:auto;
 }
 .card-desc{
-    color:rgba(210,190,165,0.6);
-    font-size:12px;
-    line-height:1.7;
+    position:relative;
+    color:rgba(210,190,165,0.7);
+    font-size:11px;
+    line-height:1.6;
+    text-align:center;
+    padding:10px 12px;
+    border-radius:7px;
+    overflow:hidden;
 }
+.card-desc::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border-radius:7px;
+    z-index:-1;
+}
+
+/* Bottom: models + button */
+.card-bottom{
+    position:relative;z-index:2;
+    padding:10px 18px 18px;
+    display:flex;flex-direction:column;gap:10px;
+    flex-shrink:0;
+}
+
+/* Models block */
+.models-block{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+.model-item{
+    background:rgb(42,35,30);
+    border-radius:7px;
+    padding:7px 10px;
+    display:flex;flex-direction:column;gap:2px;
+}
+.model-header{display:flex;align-items:baseline;justify-content:space-between;gap:6px;}
+.model-name{color:rgba(210,190,165,0.95);font-size:12px;font-weight:500;}
+.model-role{color:rgba(210,190,165,0.35);font-size:10px;text-align:right;}
+.model-desc{color:rgba(210,190,165,0.5);font-size:10px;line-height:1.45;}
 
 .accept-btn{
     width:100%;height:44px;
@@ -87,20 +126,19 @@ html,body{
     color:rgb(42,32,24);
     font-size:13px;font-weight:500;
     cursor:pointer;
-    display:flex;align-items:center;justify-content:space-between;
-    padding:0 14px;
+    display:flex;align-items:center;justify-content:center;
     font-family:'Inter',sans-serif;
     transition:all 0.15s;
+    flex-shrink:0;
 }
 .accept-btn:hover{background:rgba(210,190,165,1);}
 .accept-btn:active{transform:scale(0.98);}
-.accept-btn img{width:16px;height:16px;filter:invert(15%) sepia(15%) saturate(200%) brightness(35%);opacity:0.8;}
 
 .card-footer{
     text-align:center;
     color:rgba(210,190,165,0.3);
     font-size:10px;
-    line-height:1.5;
+    flex-shrink:0;
 }
 </style>
 </head>
@@ -109,21 +147,51 @@ html,body{
 <div class="overlay" id="overlay"></div>
 
 <div class="card" id="card">
-    <div class="card-bottom-mask"></div>
-    <div class="card-bottom-mask-2"></div>
 
-    <div class="card-content">
-        <div class="card-title">Приглашение на сессию</div>
-        <div style="display:flex;flex-direction:column;gap:18px;">
-            <div class="card-desc">Попробуйте обсудить свой вопрос с нашими новейшими моделями. Это бесплатно — регистрироваться тоже не нужно.</div>
-            <div style="display:flex;flex-direction:column;gap:8px;">
-                <button class="accept-btn" id="acceptBtn">
-                    <span>Принять приглашение</span>
-                    <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg" alt="">
-                </button>
-                <div class="card-footer">Данные этой сессии будут храниться 24 часа</div>
+    <!-- Top: title only -->
+    <div class="card-top">
+        <div class="card-title">Приглашение</div>
+    </div>
+
+    <!-- Blur mask -->
+    <div class="card-mask"></div>
+
+    <!-- Desc on blur zone -->
+    <div class="card-desc-wrap">
+        <div class="card-desc">Попробуйте обсудить свой вопрос с нашими новейшими моделями. Это бесплатно — регистрироваться тоже не нужно.</div>
+    </div>
+
+    <!-- Bottom: models + button -->
+    <div class="card-bottom">
+        <div class="models-block">
+            <div class="model-item">
+                <div class="model-header"><span class="model-name">Тара</span><span class="model-role">таролог</span></div>
+                <div class="model-desc">Мастер традиционной школы тарологии. Читает ситуацию через архетипы и символы.</div>
+            </div>
+            <div class="model-item">
+                <div class="model-header"><span class="model-name">Карма</span><span class="model-role">кармолог</span></div>
+                <div class="model-desc">Читает кармические узлы и незакрытые циклы. Находит закономерность там, где видна случайность.</div>
+            </div>
+            <div class="model-item">
+                <div class="model-header"><span class="model-name">Астра</span><span class="model-role">астролог</span></div>
+                <div class="model-desc">Эксперт в астрологии и натальных картах. Читает планетарные циклы как язык судьбы.</div>
+            </div>
+            <div class="model-item">
+                <div class="model-header"><span class="model-name">Ева</span><span class="model-role">регрессолог</span></div>
+                <div class="model-desc">Проводник в глубинную память прошлых жизней. Ищет корни страхов и повторяющихся сценариев.</div>
+            </div>
+            <div class="model-item">
+                <div class="model-header"><span class="model-name">Психея</span><span class="model-role">психолог</span></div>
+                <div class="model-desc">Юнгианский психолог и нарративный терапевт. Слушает не только слова, но и то, что за ними.</div>
+            </div>
+            <div class="model-item">
+                <div class="model-header"><span class="model-name">Гера</span><span class="model-role">нумеролог</span></div>
+                <div class="model-desc">Видит скрытый порядок в числах. Расшифровывает числовой код вашей жизни.</div>
             </div>
         </div>
+
+        <button class="accept-btn" id="acceptBtn">Принять приглашение</button>
+        <div class="card-footer">Данные этой сессии будут храниться 24 часа</div>
     </div>
 </div>
 
@@ -133,9 +201,7 @@ const imgIdx = Math.ceil(Math.random() * 11);
 document.getElementById('card').style.backgroundImage = `url('${BG}${imgIdx}.jpeg')`;
 
 document.getElementById('acceptBtn').addEventListener('click', () => {
-    const overlay = document.getElementById('overlay');
-    overlay.style.transition = 'opacity 0.5s ease';
-    overlay.classList.add('on');
+    document.getElementById('overlay').classList.add('on');
     localStorage.setItem('soma_invite', '1');
     setTimeout(() => { window.location.href = 'https://cakeboxdeveloper.github.io/Psy/index.html'; }, 500);
 });
