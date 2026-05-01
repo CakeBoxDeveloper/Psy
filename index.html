@@ -913,8 +913,7 @@ document.getElementById('submitBtn').addEventListener('click', () => {
 });
 
 // Chat
-const GROQ_KEY = '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';
-const GROQ_MODEL = 'llama-3.3-70b-versatile';
+const GROQ_MODEL = 'llama-3.3-70b-versatile'; // kept for reference only
 
 const models = {
     tara: {
@@ -1060,11 +1059,10 @@ ${msgs || 'Диалог пуст'}
 Отвечай на русском языке. Будь конкретным и лаконичным.`;
 
     try {
-        const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        const resp = await fetch('/api/chat', {
             method: 'POST',
-            headers: {'Content-Type':'application/json','Authorization':`Bearer ${GROQ_KEY}`},
+            headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
-                model: GROQ_MODEL,
                 messages: [{role:'user', content: prompt}],
                 max_tokens: 600,
                 temperature: 0.5
@@ -1083,131 +1081,32 @@ ${msgs || 'Диалог пуст'}
         const secContent   = getSection('СОДЕРЖАНИЕ');
         const secConclusion= getSection('ВЫВОД');
 
-        // Build HTML for PDF — kept for reference but not used
-        // Native jsPDF vector rendering with Cyrillic (PTSans TTF)
-        const loadAndRender = async () => {
-            const loadLibs = () => new Promise(resolve => {
-                if (window.jspdf) { resolve(); return; }
-                const s = document.createElement('script');
-                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-                s.onload = resolve;
-                document.head.appendChild(s);
-            });
-            await loadLibs();
+        // Generate PDF via server
+        const pdfResp = await fetch('/api/pdf', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                sessionDate,
+                secInterlude: secInterlude || surveyText || 'Анкета не заполнена',
+                secContent:   secContent   || '—',
+                secConclusion:secConclusion|| '—',
+                modelsUsed:   modelsUsed.length ? modelsUsed.join(', ') : 'Тара',
+                msgCount:     chatHistory.length
+            })
+        });
 
-            const fontToB64 = async (url) => {
-                const buf = await fetch(url).then(r => r.arrayBuffer());
-                let bin = '';
-                new Uint8Array(buf).forEach(b => bin += String.fromCharCode(b));
-                return btoa(bin);
-            };
+        if (!pdfResp.ok) throw new Error('PDF error');
 
-            // PTSans — full Cyrillic, free, Google Fonts CDN
-            const [ptNormal, ptBold, tiemposBlack, tiemposLight] = await Promise.all([
-                fontToB64('https://fonts.gstatic.com/s/ptsans/v17/jizaRExUiTo99u79D0KEwA.ttf'),
-                fontToB64('https://fonts.gstatic.com/s/ptsans/v17/jizaBExUiTo99u79B_mh0O6tKA.ttf'),
-                fontToB64('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Black.woff'),
-                fontToB64('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Light.woff'),
-            ]);
+        const blob = await pdfResp.blob();
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href     = url;
+        a.download = `panacea-${new Date().toISOString().slice(0,10)}.pdf`;
+        a.click();
+        URL.revokeObjectURL(url);
 
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-
-            pdf.addFileToVFS('PTSans.ttf',      ptNormal);
-            pdf.addFont('PTSans.ttf',      'PTSans', 'normal');
-            pdf.addFileToVFS('PTSansBold.ttf',  ptBold);
-            pdf.addFont('PTSansBold.ttf',  'PTSans', 'bold');
-            pdf.addFileToVFS('TiemposBlack.woff', tiemposBlack);
-            pdf.addFont('TiemposBlack.woff', 'Tiempos', 'bold');
-            pdf.addFileToVFS('TiemposLight.woff', tiemposLight);
-            pdf.addFont('TiemposLight.woff', 'Tiempos', 'normal');
-
-            const PW = 210, PH = 297;
-            const ML = 18, MR = 18, MT = 20;
-            const CW = PW - ML - MR;
-            const BG  = [220, 201, 181];
-            const BOX = [200, 185, 165];
-            const INK = [40,  28,  20];
-
-            let y = MT;
-
-            const bgPage = () => { pdf.setFillColor(...BG); pdf.rect(0, 0, PW, PH, 'F'); };
-
-            const newPage = () => { pdf.addPage(); bgPage(); y = MT; };
-
-            const checkY = (needed) => { if (y + needed > PH - 20) newPage(); };
-
-            const drawBox = (text, fontSize = 10.5) => {
-                const padX = 5, padY = 5;
-                pdf.setFont('PTSans', 'normal');
-                pdf.setFontSize(fontSize);
-                const lines = pdf.splitTextToSize(text || '—', CW - padX * 2);
-                const lineH = fontSize * 0.43;
-                const boxH  = lines.length * lineH + padY * 2;
-                checkY(boxH + 2);
-                pdf.setFillColor(...BOX);
-                pdf.roundedRect(ML, y, CW, boxH, 3, 3, 'F');
-                pdf.setTextColor(...INK);
-                lines.forEach((line, i) => {
-                    pdf.text(line, ML + padX, y + padY + lineH * 0.82 + i * lineH);
-                });
-                y += boxH;
-            };
-
-            // ── Background ──
-            bgPage();
-
-            // ── Header ──
-            pdf.setFont('Tiempos', 'bold');
-            pdf.setFontSize(24);
-            pdf.setTextColor(...INK);
-            pdf.text('Протокол сессии', ML, y + 8);
-            y += 13;
-
-            pdf.setFont('PTSans', 'normal');
-            pdf.setFontSize(11);
-            pdf.setTextColor(INK[0], INK[1], INK[2], 0.5);
-            pdf.text(sessionDate, ML, y + 4);
-            y += 12;
-
-            pdf.setDrawColor(...BOX);
-            pdf.setLineWidth(0.3);
-            pdf.line(ML, y, ML + CW, y);
-            y += 8;
-
-            // ── Sections ──
-            const sections = [
-                { label: 'ИНТЕРЛЮДИЯ', text: secInterlude || surveyText || 'Анкета не заполнена' },
-                { label: 'СОДЕРЖАНИЕ', text: secContent   || '—' },
-                { label: 'ВЫВОД',      text: secConclusion|| '—' },
-            ];
-
-            sections.forEach(({ label, text }) => {
-                checkY(22);
-                pdf.setFont('PTSans', 'bold');
-                pdf.setFontSize(7);
-                pdf.setTextColor(...INK);
-                pdf.setCharSpace(1.2);
-                pdf.text(label, ML, y + 3);
-                pdf.setCharSpace(0);
-                y += 7;
-                drawBox(text, 10.5);
-                y += 7;
-            });
-
-            // ── Footer ──
-            pdf.setFont('PTSans', 'normal');
-            pdf.setFontSize(8);
-            pdf.setTextColor(INK[0], INK[1], INK[2], 0.4);
-            pdf.text(`Модели: ${modelsUsed.length ? modelsUsed.join(', ') : 'Тара'}`, ML, PH - 12);
-            pdf.text(`${chatHistory.length} сообщений`, PW - MR, PH - 12, { align: 'right' });
-
-            pdf.save(`panacea-${new Date().toISOString().slice(0,10)}.pdf`);
-        };
-
-        await loadAndRender();
     } catch(e) {
-        alert('Не удалось создать саммари. Попробуй позже.');
+        alert('Не удалось создать протокол. Попробуй позже.');
     } finally {
         btn.innerHTML = origHTML;
         btn.disabled = false;
@@ -1323,18 +1222,10 @@ function send() {
     ];
 
     setTimeout(() => {
-    fetch('https://api.groq.com/openai/v1/chat/completions', {
+    fetch('/api/chat', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${GROQ_KEY}`
-        },
-        body: JSON.stringify({
-            model: GROQ_MODEL,
-            messages: messages,
-            max_tokens: 800,
-            temperature: 0.85
-        })
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ messages })
     })
     .then(r => r.json())
     .then(data => {
