@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Panacea</title>
 <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg">
+<style>/* favicon color override via JS */</style>
 <style>
 @font-face {
     font-family:'TiemposHeadline';
@@ -161,8 +162,8 @@ body.light .premium-desc{background:rgba(60,45,35,0.08);color:rgba(40,28,20,0.7)
 .message.user{justify-content:flex-end;}
 .bubble{max-width:80%;padding:8px 12px;border-radius:8px;font-size:12px;line-height:1.5;word-wrap:break-word;word-break:break-word;background:rgba(255,255,255,0.06);color:rgba(210,190,165,0.8);}
 .bubble-body{display:block;}
-.bubble-sig{display:block;margin:8px -12px 0;padding:6px 12px 0;border-top:1px solid rgba(210,190,165,0.12);font-size:10px;color:rgba(210,190,165,0.5);text-align:center;font-style:normal;}
-.light .bubble-sig{color:rgba(40,28,20,0.45);border-top-color:rgba(40,28,20,0.12);}
+.bubble-sig{display:block;margin:8px -12px 0;padding:6px 12px 0;border-top:1px solid rgba(210,190,165,0.3);font-size:12px;color:rgba(210,190,165,0.8);text-align:center;font-style:normal;}
+.light .bubble-sig{color:rgba(40,28,20,0.65);border-top-color:rgba(40,28,20,0.2);}
 .light .ditem-check{background:rgb(40,28,20) !important;}
 .typing-bubble{display:flex;align-items:center;gap:4px;padding:10px 14px;background:rgba(255,255,255,0.06);border-radius:8px;width:fit-content;}
 .typing-bubble span{width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:50%;animation:typing 1.2s infinite;}
@@ -219,13 +220,17 @@ body.light .end-btn-menu{background:rgba(60,45,35,0.12);color:rgb(40,28,20);}
 body.light .end-btn-new{background:rgba(60,45,35,0.2);color:rgb(40,28,20);}
 body.light .premium-modal{background:rgb(235,220,200);}
 body.light .premium-title{color:rgb(40,28,20);}
-body.light .premium-desc{color:rgba(40,28,20,0.6);}
-body.light .premium-feature{color:rgba(40,28,20,0.8);}
+body.light .premium-desc{background:rgba(60,45,35,0.08);color:rgb(40,28,20);}
+body.light .premium-feature{color:rgb(40,28,20);}
 body.light .premium-modal .premium-btn{background:rgba(60,45,35,0.2);border-color:rgba(60,45,35,0.3);color:rgb(40,28,20);}
 body.light #screen2 .premium-btn{background:rgba(60,45,35,0.2);border-color:rgba(60,45,35,0.3);color:rgb(40,28,20);}
-body.light .premium-close{color:rgba(40,28,20,0.4);}
+body.light .premium-close{color:rgba(40,28,20,0.5);}
 body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);}
-/* Убираем bg в светлой теме */
+/* New icon & markers in light theme */
+body.light .premium-modal img[src*="e_AzA"]{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:1;}
+body.light .ditem-star{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%) !important;opacity:1 !important;}
+body.light .end-summary-btn img{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:1;}
+body.light .bulb-btn img{filter:invert(15%) sepia(15%) saturate(200%) brightness(30%);opacity:0.8;}
 .light ~ .bg, .light ~ .bg-frame{display:none !important;}
 
 /* Loader screen */
@@ -243,9 +248,9 @@ body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) br
 .lc-slide.lc-near{z-index:4;opacity:0.7;filter:blur(4px);}
 .lc-slide.lc-far{z-index:3;opacity:0.45;filter:blur(10px);}
 .lc-mask{position:absolute;bottom:0;left:0;right:0;height:65%;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);-webkit-mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);pointer-events:none;}
-.lc-quote{position:relative;z-index:2;color:rgba(210,190,165,0.95);font-size:14px;line-height:1.7;font-family:'Inter',-apple-system,sans-serif;font-weight:400;text-align:center;padding:20px 20px 24px;transition:opacity 0.4s ease;display:flex;flex-direction:column;gap:6px;width:100%;}
+.lc-quote{position:relative;z-index:2;color:rgba(210,190,165,0.95);font-size:14px;line-height:1.7;font-family:'Inter',-apple-system,sans-serif;font-weight:400;text-align:left;padding:20px 12px 24px;transition:opacity 0.4s ease;display:flex;flex-direction:column;gap:6px;width:100%;}
 .lc-quote-text{display:block;}
-.lc-quote-author{display:block;font-size:13px;font-weight:300;color:rgba(210,190,165,0.6);font-family:'TiemposHeadline',serif;}
+.lc-quote-author{display:block;font-size:15px;font-weight:300;color:rgba(210,190,165,0.7);font-family:'TiemposHeadline',serif;text-align:right;}
 @media(max-width:599px){.lc-slide.lc-far{opacity:0;pointer-events:none;}}
 .loader-progress{width:90%;max-width:380px;display:flex;flex-direction:column;gap:12px;padding-bottom:32px;}
 .loader-stage{color:rgba(210,190,165,0.7);font-size:13px;text-align:center;min-height:20px;transition:opacity 0.3s ease;}
@@ -551,10 +556,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 <!-- Panacea Plus modal -->
 <div class="premium-overlay" id="premiumOverlay">
 <div class="premium-modal">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-        <div class="premium-title" style="text-align:left;">Panacea Plus</div>
-        <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" style="width:20px;height:20px;opacity:0.6;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);flex-shrink:0;" alt="">
-    </div>
+    <div class="premium-title">Panacea Plus</div>
     <div class="premium-desc">Откройте полный доступ к возможностям всех проводников и эксклюзивным режимам.</div>
     <div class="premium-features">
         <div class="premium-feature">
@@ -574,7 +576,10 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
             <span>PDF-саммари каждой сессии — краткое резюме разговора с ключевыми инсайтами</span>
         </div>
     </div>
-    <button class="premium-btn">Подключить Panacea Plus</button>
+    <button class="premium-btn" style="display:flex;align-items:center;justify-content:space-between;padding:0 14px;">
+        <span>Подключить Panacea Plus</span>
+        <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" style="width:16px;height:16px;opacity:0.7;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);flex-shrink:0;" alt="">
+    </button>
     <button class="premium-close" id="premiumClose">Не сейчас, возможно позже</button>
 </div>
 </div>
@@ -601,6 +606,17 @@ const DOVE = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4
 const HOURGLASS = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/hourglass.svg';
 const KEY_USER = 'soma_user';
 const KEY_CHAT = 'soma_chat';
+
+// Beige favicon via fetched SVG with color override
+fetch('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg')
+    .then(r => r.text()).then(svg => {
+        const colored = svg.replace(/fill="[^"]*"/g, 'fill="#D2BEA5"').replace(/stroke="[^"]*"/g, 'stroke="#D2BEA5"');
+        const blob = new Blob([colored], {type:'image/svg+xml'});
+        const url = URL.createObjectURL(blob);
+        const link = document.querySelector('link[rel="icon"]') || document.createElement('link');
+        link.rel = 'icon'; link.type = 'image/svg+xml'; link.href = url;
+        document.head.appendChild(link);
+    }).catch(()=>{});
 const KEY_SURVEY = 'soma_survey';
 
 // Random BG
