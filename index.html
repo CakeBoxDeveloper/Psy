@@ -127,10 +127,20 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
     z-index:1;
     transform:translateX(-44%) scale(0.8);
     box-shadow:none;
-    opacity:0.7;
+    opacity:1;
     cursor:pointer;
     pointer-events:all;
 }
+/* Sessions card always light */
+#s1bSessions{
+    background:rgb(220,205,185);
+    color:rgb(40,28,20);
+}
+#s1bSessions .s1b-title{color:rgb(40,28,20);}
+#s1bSessions .s1b-header img{width:18px;height:18px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.6;}
+#s1bSessions #sessionsContent img{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.35;}
+#s1bSessions #sessionsContent div{color:rgba(40,28,20,0.45);}
+#s1bSessions #sessionsContent span{color:rgba(40,28,20,0.35);}
 @media(max-width:599px){
     #s1bStack{width:100%;max-width:100%;height:100vh;}
     .s1b-card{border-radius:0;}
@@ -203,7 +213,7 @@ body.light .pf-marker{filter:invert(15%) sepia(15%) saturate(200%) brightness(20
 .message.user{justify-content:flex-end;}
 .bubble{max-width:80%;padding:8px 12px;border-radius:8px;font-size:12px;line-height:1.5;word-wrap:break-word;word-break:break-word;background:rgba(255,255,255,0.06);color:rgba(210,190,165,0.8);}
 .bubble-body{display:block;}
-.bubble-sig{display:block;margin:8px -12px 0;padding:6px 12px 0;border-top:1px solid rgba(210,190,165,0.3);font-size:12px;color:rgba(210,190,165,0.8);text-align:center;font-style:normal;}
+.bubble-sig{display:block;margin:8px -12px 0;padding:6px 12px 0;border-top:1px solid rgba(210,190,165,0.15);font-size:11px;color:rgba(210,190,165,0.35);text-align:center;font-style:normal;}
 .light .bubble-sig{color:rgba(40,28,20,0.65);border-top-color:rgba(40,28,20,0.2);}
 .light .ditem-check{background:rgb(40,28,20) !important;}
 .typing-bubble{display:flex;align-items:center;gap:4px;padding:10px 14px;background:rgba(255,255,255,0.06);border-radius:8px;width:fit-content;}
@@ -292,11 +302,12 @@ body.light .bulb-btn img{filter:invert(15%) sepia(15%) saturate(200%) brightness
     transform-origin:center center;
     transition:transform 0.5s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease,filter 0.5s ease;
     display:flex;align-items:flex-end;
+    isolation:isolate;
 }
 .lc-slide.lc-center{z-index:5;opacity:1;filter:none;}
 .lc-slide.lc-near{z-index:4;opacity:0.7;filter:blur(4px);}
 .lc-slide.lc-far{z-index:3;opacity:0.45;filter:blur(10px);}
-.lc-mask{position:absolute;bottom:0;left:-2px;right:-2px;height:calc(65% + 2px);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);-webkit-mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);pointer-events:none;}
+.lc-mask{position:absolute;bottom:-1px;left:-2px;right:-2px;height:calc(65% + 2px);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);-webkit-mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);pointer-events:none;}
 .lc-quote{position:relative;z-index:2;color:rgba(210,190,165,0.95);font-size:14px;line-height:1.7;font-family:'Inter',-apple-system,sans-serif;font-weight:400;text-align:left;padding:20px 12px 24px;transition:opacity 0.4s ease;display:flex;flex-direction:column;gap:6px;width:100%;}
 .lc-quote-text{display:block;}
 .lc-quote-author{display:block;font-size:15px;font-weight:300;color:rgba(210,190,165,0.7);font-family:'TiemposHeadline',serif;text-align:right;}
@@ -502,7 +513,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
         <div class="s1b-click-shield"></div>
         <div class="s1b-header">
             <div class="s1b-title">Мои сессии</div>
-            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/11c4ba1a8f6ad668227bb0e60fdc43ba73de1c16/amphora.svg" style="width:18px;height:18px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);opacity:0.7;" alt="">
+            <img id="sessionsHeaderIcon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/11c4ba1a8f6ad668227bb0e60fdc43ba73de1c16/amphora.svg" style="width:18px;height:18px;" alt="">
         </div>
         <div id="sessionsContent" style="flex:1;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;"></div>
     </div>
@@ -867,12 +878,12 @@ function renderSessions() {
     const user = userRaw ? JSON.parse(userRaw) : null;
     if (!user || user.p === 'guest') {
         cont.innerHTML = `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:40px 0;">
-            <img src="${HOURGLASS}" style="width:32px;height:32px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(60%);opacity:0.4;" alt="">
-            <div style="color:rgba(210,190,165,0.4);font-size:12px;line-height:1.7;">История сессий недоступна<br>в гостевом режиме.<br><span style="font-size:11px;opacity:0.7;">Войдите через Google или Apple,<br>чтобы сохранять сессии.</span></div>
+            <img src="${HOURGLASS}" style="width:32px;height:32px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.3;" alt="">
+            <div style="color:rgba(40,28,20,0.45);font-size:12px;line-height:1.7;">История сессий недоступна<br>в гостевом режиме.<br><span style="font-size:11px;color:rgba(40,28,20,0.3);">Войдите через Google или Apple,<br>чтобы сохранять сессии.</span></div>
         </div>`;
         return;
     }
-    cont.innerHTML = `<div style="color:rgba(210,190,165,0.35);font-size:12px;text-align:center;padding:40px 0;">Сессий пока нет</div>`;
+    cont.innerHTML = `<div style="color:rgba(40,28,20,0.35);font-size:12px;text-align:center;padding:40px 0;">Сессий пока нет</div>`;
 }
 
 // Click on back card shield → swap
