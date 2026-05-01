@@ -24,64 +24,22 @@ body {
     padding: 52px 56px;
     width: 794px;
 }
-.title {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 6px;
-    letter-spacing: -0.3px;
-}
-.date {
-    font-size: 13px;
-    color: rgba(40,28,20,0.5);
-    margin-bottom: 28px;
-}
-hr {
-    border: none;
-    border-top: 1px solid rgba(40,28,20,0.15);
-    margin-bottom: 24px;
-}
-.section { margin-bottom: 22px; }
-.label {
-    font-size: 8px;
-    font-weight: 700;
-    letter-spacing: 1.4px;
-    text-transform: uppercase;
-    color: rgba(40,28,20,0.45);
-    margin-bottom: 8px;
-}
-.box {
-    background: rgba(40,28,20,0.09);
-    border-radius: 10px;
-    padding: 16px 18px;
-    font-size: 13px;
-    line-height: 1.75;
-    white-space: pre-wrap;
-}
-.footer {
-    margin-top: 32px;
-    display: flex;
-    justify-content: space-between;
-    font-size: 9px;
-    color: rgba(40,28,20,0.35);
-}
+.title { font-size:28px; font-weight:700; margin-bottom:6px; }
+.date { font-size:13px; color:rgba(40,28,20,0.5); margin-bottom:28px; }
+hr { border:none; border-top:1px solid rgba(40,28,20,0.15); margin-bottom:24px; }
+.section { margin-bottom:22px; }
+.label { font-size:8px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase; color:rgba(40,28,20,0.45); margin-bottom:8px; }
+.box { background:rgba(40,28,20,0.09); border-radius:10px; padding:16px 18px; font-size:13px; line-height:1.75; white-space:pre-wrap; }
+.footer { margin-top:32px; display:flex; justify-content:space-between; font-size:9px; color:rgba(40,28,20,0.35); }
 </style>
 </head>
 <body>
 <div class="title">Протокол сессии</div>
 <div class="date">${sessionDate || ''}</div>
 <hr>
-<div class="section">
-    <div class="label">Интерлюдия</div>
-    <div class="box">${secInterlude || '—'}</div>
-</div>
-<div class="section">
-    <div class="label">Содержание</div>
-    <div class="box">${secContent || '—'}</div>
-</div>
-<div class="section">
-    <div class="label">Вывод</div>
-    <div class="box">${secConclusion || '—'}</div>
-</div>
+<div class="section"><div class="label">Интерлюдия</div><div class="box">${secInterlude || '—'}</div></div>
+<div class="section"><div class="label">Содержание</div><div class="box">${secContent || '—'}</div></div>
+<div class="section"><div class="label">Вывод</div><div class="box">${secConclusion || '—'}</div></div>
 <div class="footer">
     <span>Модели: ${modelsUsed || 'Тара'}</span>
     <span>${msgCount || 0} сообщений</span>
@@ -91,11 +49,23 @@ hr {
 
     let browser = null;
     try {
+        const executablePath = await chromium.executablePath();
+
         browser = await puppeteer.launch({
-            args: chromium.args,
+            args: [
+                ...chromium.args,
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--no-first-run',
+                '--no-zygote',
+                '--single-process',
+            ],
             defaultViewport: chromium.defaultViewport,
-            executablePath: await chromium.executablePath(),
-            headless: chromium.headless,
+            executablePath,
+            headless: 'new',
+            ignoreHTTPSErrors: true,
         });
 
         const page = await browser.newPage();
@@ -112,7 +82,7 @@ hr {
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'PDF generation failed', details: err.message });
+        res.status(500).json({ error: err.message });
     } finally {
         if (browser) await browser.close();
     }
