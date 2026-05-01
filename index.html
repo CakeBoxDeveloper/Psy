@@ -129,8 +129,8 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .ditem-text{display:flex;flex-direction:column;gap:2px;flex:1;}
 .ditem-name{font-size:13px;font-weight:500;color:rgba(210,190,165,0.9);}
 .ditem.active .ditem-name{color:rgba(210,190,165,1);}
-.ditem-desc{font-size:11px;color:rgba(210,190,165,0.4);}
-.ditem.active .ditem-desc{color:rgba(210,190,165,0.55);}
+.ditem-desc{font-size:11px;color:rgba(210,190,165,0.35);}
+.ditem.active .ditem-desc{color:rgba(210,190,165,0.45);}
 .ditem-check{font-size:12px;color:rgba(210,190,165,0.9);opacity:0;flex-shrink:0;width:8px;height:8px;border-radius:50%;background:rgba(210,190,165,0.9);display:inline-block;font-size:0;}
 .ditem.active .ditem-check{opacity:1;}
 .ditem-star{width:14px;height:14px;flex-shrink:0;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
@@ -229,7 +229,7 @@ body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) br
 /* New icon & markers in light theme */
 body.light .premium-modal img[src*="e_AzA"]{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:1;}
 body.light .ditem-star{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%) !important;opacity:1 !important;}
-body.light .end-summary-btn img{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:1;}
+body.light .end-summary-btn img{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%) !important;opacity:1 !important;}
 body.light .bulb-btn img{filter:invert(15%) sepia(15%) saturate(200%) brightness(30%);opacity:0.8;}
 .light ~ .bg, .light ~ .bg-frame{display:none !important;}
 
@@ -247,7 +247,7 @@ body.light .bulb-btn img{filter:invert(15%) sepia(15%) saturate(200%) brightness
 .lc-slide.lc-center{z-index:5;opacity:1;filter:none;}
 .lc-slide.lc-near{z-index:4;opacity:0.7;filter:blur(4px);}
 .lc-slide.lc-far{z-index:3;opacity:0.45;filter:blur(10px);}
-.lc-mask{position:absolute;bottom:0;left:0;right:0;height:65%;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);-webkit-mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);pointer-events:none;}
+.lc-mask{position:absolute;bottom:0;left:-1px;right:-1px;height:calc(65% + 1px);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);-webkit-mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);pointer-events:none;}
 .lc-quote{position:relative;z-index:2;color:rgba(210,190,165,0.95);font-size:14px;line-height:1.7;font-family:'Inter',-apple-system,sans-serif;font-weight:400;text-align:left;padding:20px 12px 24px;transition:opacity 0.4s ease;display:flex;flex-direction:column;gap:6px;width:100%;}
 .lc-quote-text{display:block;}
 .lc-quote-author{display:block;font-size:15px;font-weight:300;color:rgba(210,190,165,0.7);font-family:'TiemposHeadline',serif;text-align:right;}
@@ -576,9 +576,8 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
             <span>PDF-саммари каждой сессии — краткое резюме разговора с ключевыми инсайтами</span>
         </div>
     </div>
-    <button class="premium-btn" style="display:flex;align-items:center;justify-content:space-between;padding:0 14px;">
-        <span>Подключить Panacea Plus</span>
-        <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" style="width:16px;height:16px;opacity:0.7;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);flex-shrink:0;" alt="">
+    <button class="premium-btn">
+        Подключить Panacea Plus
     </button>
     <button class="premium-close" id="premiumClose">Не сейчас, возможно позже</button>
 </div>
