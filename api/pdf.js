@@ -1,5 +1,7 @@
-import chromium from '@sparticuz/chromium';
+import chromium from '@sparticuz/chromium-min';
 import puppeteer from 'puppeteer-core';
+
+const CHROMIUM_URL = 'https://github.com/Sparticuz/chromium/releases/download/v119.0.2/chromium-v119.0.2-pack.tar';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -17,13 +19,7 @@ export default async function handler(req, res) {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap');
 * { margin:0; padding:0; box-sizing:border-box; }
-body {
-    background: #DCC9B5;
-    font-family: 'PT Sans', sans-serif;
-    color: #281C14;
-    padding: 52px 56px;
-    width: 794px;
-}
+body { background:#DCC9B5; font-family:'PT Sans',sans-serif; color:#281C14; padding:52px 56px; width:794px; }
 .title { font-size:28px; font-weight:700; margin-bottom:6px; }
 .date { font-size:13px; color:rgba(40,28,20,0.5); margin-bottom:28px; }
 hr { border:none; border-top:1px solid rgba(40,28,20,0.15); margin-bottom:24px; }
@@ -49,10 +45,12 @@ hr { border:none; border-top:1px solid rgba(40,28,20,0.15); margin-bottom:24px; 
 
     let browser = null;
     try {
+        const executablePath = await chromium.executablePath(CHROMIUM_URL);
+
         browser = await puppeteer.launch({
             args: chromium.args,
             defaultViewport: chromium.defaultViewport,
-            executablePath: await chromium.executablePath(),
+            executablePath,
             headless: chromium.headless,
         });
 
