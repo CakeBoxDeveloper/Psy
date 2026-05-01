@@ -97,6 +97,45 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .s1b-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
 .s1b-title{color:rgb(210,190,165);font-size:20px;font-weight:900;font-family:'TiemposHeadline',serif;}
 .s1b-icon{width:18px;height:18px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
+/* Stacked cards */
+#s1bStack{position:relative;width:90%;max-width:420px;height:90vh;}
+.s1b-card{
+    position:absolute;top:0;
+    width:100%;height:100%;
+    background:rgb(42,36,32);border-radius:12px;
+    display:flex;flex-direction:column;
+    padding:28px 24px 24px;gap:16px;box-sizing:border-box;
+    transition:transform 0.45s cubic-bezier(0.4,0,0.2,1),
+               box-shadow 0.45s ease,
+               opacity 0.45s ease;
+    will-change:transform;
+}
+/* Click shield — covers back card to intercept all clicks */
+.s1b-click-shield{display:none;position:absolute;inset:0;z-index:10;cursor:pointer;border-radius:12px;}
+.s1b-card.s1b-back .s1b-click-shield{display:block;}
+/* Front card */
+.s1b-card.s1b-front{
+    z-index:2;
+    transform:translateX(0) scale(1);
+    box-shadow:0 8px 32px rgba(0,0,0,0.3);
+    opacity:1;
+    cursor:default;
+    pointer-events:all;
+}
+/* Back card — peeking from left, 80% size */
+.s1b-card.s1b-back{
+    z-index:1;
+    transform:translateX(-44%) scale(0.8);
+    box-shadow:none;
+    opacity:0.7;
+    cursor:pointer;
+    pointer-events:all;
+}
+@media(max-width:599px){
+    #s1bStack{width:100%;max-width:100%;height:100vh;}
+    .s1b-card{border-radius:0;}
+    .s1b-card.s1b-back{transform:translateX(-41%) scale(0.8);}
+}
 .fields{display:flex;flex-direction:column;gap:12px;flex:1;}
 .flabel{color:rgb(180,165,145);font-size:11px;letter-spacing:0.3px;margin-bottom:4px;}
 .fselect{width:100%;background:rgb(55,46,40);border:none;color:rgb(210,190,165);padding:10px 32px 10px 12px;border-radius:8px;font-size:12px;outline:none;font-family:'Inter',sans-serif;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(210,190,165,0.6)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:background 0.15s;}
@@ -147,6 +186,8 @@ body.light .premium-desc{background:rgba(60,45,35,0.08);color:rgba(40,28,20,0.7)
 .premium-features{display:flex;flex-direction:column;gap:8px;}
 .premium-feature{display:flex;align-items:flex-start;gap:10px;color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;}
 .premium-feature-icon{width:14px;height:14px;flex-shrink:0;margin-top:1px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
+.pf-marker{width:12px;height:12px;flex-shrink:0;margin-top:2px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);opacity:0.7;}
+body.light .pf-marker{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:1;}
 .premium-btn{width:100%;height:42px;background:rgba(210,190,165,0.2);border:1px solid rgba(210,190,165,0.3);color:rgba(210,190,165,1);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
 .premium-btn:hover{background:rgba(210,190,165,0.3);}
 .premium-close{background:none;border:none;color:rgba(210,190,165,0.4);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;text-align:center;transition:all 0.15s;}
@@ -180,6 +221,13 @@ body.light .premium-desc{background:rgba(60,45,35,0.08);color:rgba(40,28,20,0.7)
 .send-btn:hover{background:rgba(255,255,255,0.1);}
 .send-btn:active{transform:scale(0.95);}
 .send-btn img{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(60%);opacity:0.7;}
+
+/* Icon color token — dove beige, same for theme/menu/send */
+.icon-dove{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(60%);opacity:0.7;}
+.light .icon-dove{filter:invert(15%) sepia(15%) saturate(200%) brightness(30%);opacity:0.75;}
+/* menuBtn SVG same color as icon-dove */
+#menuBtn{color:rgba(210,190,165,0.6);}
+.light #menuBtn{color:rgba(40,28,20,0.55);}
 
 /* Transitions for theme switch */
 .s2-wrap,.s2-inner,.model-btn,.bubble,.input-field,.send-btn,.bulb-btn,.empty-state,.ditem-name,.ditem-desc,.dropdown,.end-modal,.premium-modal{transition:background 0.4s ease,color 0.4s ease,filter 0.4s ease;}
@@ -224,6 +272,7 @@ body.light .premium-desc{background:rgba(60,45,35,0.08);color:rgb(40,28,20);}
 body.light .premium-feature{color:rgb(40,28,20);}
 body.light .premium-modal .premium-btn{background:rgba(60,45,35,0.2);border-color:rgba(60,45,35,0.3);color:rgb(40,28,20);}
 body.light #screen2 .premium-btn{background:rgba(60,45,35,0.2);border-color:rgba(60,45,35,0.3);color:rgb(40,28,20);}
+body.light .premium-btn .shimmer-layer{background:linear-gradient(105deg,transparent 20%,rgba(60,45,35,0.12) 50%,transparent 80%);}
 body.light .premium-close{color:rgba(40,28,20,0.5);}
 body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);}
 /* New icon & markers in light theme */
@@ -442,35 +491,51 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 </div>
 </div>
 
-<!-- SCREEN 1b: Survey -->
+<!-- SCREEN 1b: Survey + Sessions (stacked cards) -->
 <div class="screen" id="screen1b">
 <div style="width:100%;height:100%;background:rgb(28,23,20);display:flex;align-items:center;justify-content:center;">
-<div style="width:90%;max-width:420px;height:90vh;display:flex;flex-direction:column;background:rgb(42,36,32);border-radius:12px;overflow:hidden;padding:28px 24px 24px;gap:16px;">
-    <div class="s1b-header">
-        <div class="s1b-title">Расскажи о себе</div>
-        <img class="s1b-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/039080ffd25b01f8a0cc35ca478071d4c4b675ab/feather.svg" alt="">
+
+<div id="s1bStack" style="width:90%;max-width:420px;height:90vh;position:relative;">
+
+    <!-- Card 1: Мои сессии (behind) -->
+    <div id="s1bSessions" class="s1b-card s1b-back">
+        <div class="s1b-click-shield"></div>
+        <div class="s1b-header">
+            <div class="s1b-title">Мои сессии</div>
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/11c4ba1a8f6ad668227bb0e60fdc43ba73de1c16/amphora.svg" style="width:18px;height:18px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);opacity:0.7;" alt="">
+        </div>
+        <div id="sessionsContent" style="flex:1;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;"></div>
     </div>
-    <div class="fields" style="overflow-y:auto;scrollbar-width:none;flex:1;">
-        <div><div class="flabel">Что тебя беспокоит?</div>
-        <select class="fselect"><option value="" disabled selected>Выбери тему</option><option>Отношения и любовь</option><option>Карьера и деньги</option><option>Здоровье и энергия</option><option>Смысл и предназначение</option><option>Тревога и страхи</option><option>Семья и близкие</option><option>Одиночество</option><option>Другое</option></select></div>
-        <div><div class="flabel">Как ты себя чувствуешь сейчас?</div>
-        <select class="fselect"><option value="" disabled selected>Выбери состояние</option><option>Потерян и не знаю куда идти</option><option>Тревожно и неспокойно</option><option>Устал и нет сил</option><option>Ищу ответы на вопросы</option><option>Хочу перемен</option><option>В целом хорошо, но есть вопросы</option><option>Чувствую внутренний конфликт</option></select></div>
-        <div><div class="flabel">Твой возраст</div>
-        <select class="fselect"><option value="" disabled selected>Выбери диапазон</option><option>До 20 лет</option><option>20–30 лет</option><option>30–40 лет</option><option>40–50 лет</option><option>Старше 50</option></select></div>
-        <div><div class="flabel">Как часто обращаешься за советом?</div>
-        <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Впервые пробую</option><option>Иногда, в трудные моменты</option><option>Регулярно, это часть жизни</option><option>Скептически, но интересно</option></select></div>
-        <div><div class="flabel">Чего ожидаешь от сессии?</div>
-        <select class="fselect"><option value="" disabled selected>Выбери цель</option><option>Получить ясность и направление</option><option>Выговориться и быть услышанным</option><option>Узнать что-то о своей судьбе</option><option>Найти решение конкретной ситуации</option><option>Просто попробовать</option></select></div>
-        <div><div class="flabel">Есть ли у тебя конкретный вопрос?</div>
-        <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Да, есть чёткий вопрос</option><option>Скорее ощущение, чем вопрос</option><option>Хочу просто поговорить</option><option>Не знаю с чего начать</option></select></div>
-        <div><div class="flabel">Как ты относишься к мистическому?</div>
-        <select class="fselect"><option value="" disabled selected>Выбери позицию</option><option>Верю и практикую</option><option>Открыт, но с сомнениями</option><option>Скептик, но любопытен</option><option>Интересует только психология</option></select></div>
+
+    <!-- Card 0: Анкета (front) -->
+    <div id="s1bSurvey" class="s1b-card s1b-front">
+        <div class="s1b-click-shield"></div>
+        <div class="s1b-header">
+            <div class="s1b-title">Расскажи о себе</div>
+            <img class="s1b-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/039080ffd25b01f8a0cc35ca478071d4c4b675ab/feather.svg" alt="">
+        </div>
+        <div class="fields" style="overflow-y:auto;scrollbar-width:none;flex:1;">
+            <div><div class="flabel">Что тебя беспокоит?</div>
+            <select class="fselect"><option value="" disabled selected>Выбери тему</option><option>Отношения и любовь</option><option>Карьера и деньги</option><option>Здоровье и энергия</option><option>Смысл и предназначение</option><option>Тревога и страхи</option><option>Семья и близкие</option><option>Одиночество</option><option>Другое</option></select></div>
+            <div><div class="flabel">Как ты себя чувствуешь сейчас?</div>
+            <select class="fselect"><option value="" disabled selected>Выбери состояние</option><option>Потерян и не знаю куда идти</option><option>Тревожно и неспокойно</option><option>Устал и нет сил</option><option>Ищу ответы на вопросы</option><option>Хочу перемен</option><option>В целом хорошо, но есть вопросы</option><option>Чувствую внутренний конфликт</option></select></div>
+            <div><div class="flabel">Твой возраст</div>
+            <select class="fselect"><option value="" disabled selected>Выбери диапазон</option><option>До 20 лет</option><option>20–30 лет</option><option>30–40 лет</option><option>40–50 лет</option><option>Старше 50</option></select></div>
+            <div><div class="flabel">Как часто обращаешься за советом?</div>
+            <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Впервые пробую</option><option>Иногда, в трудные моменты</option><option>Регулярно, это часть жизни</option><option>Скептически, но интересно</option></select></div>
+            <div><div class="flabel">Чего ожидаешь от сессии?</div>
+            <select class="fselect"><option value="" disabled selected>Выбери цель</option><option>Получить ясность и направление</option><option>Выговориться и быть услышанным</option><option>Узнать что-то о своей судьбе</option><option>Найти решение конкретной ситуации</option><option>Просто попробовать</option></select></div>
+            <div><div class="flabel">Есть ли у тебя конкретный вопрос?</div>
+            <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Да, есть чёткий вопрос</option><option>Скорее ощущение, чем вопрос</option><option>Хочу просто поговорить</option><option>Не знаю с чего начать</option></select></div>
+            <div><div class="flabel">Как ты относишься к мистическому?</div>
+            <select class="fselect"><option value="" disabled selected>Выбери позицию</option><option>Верю и практикую</option><option>Открыт, но с сомнениями</option><option>Скептик, но любопытен</option><option>Интересует только психология</option></select></div>
+        </div>
+        <button class="submit-btn" id="submitBtn">
+            <span>Начать сессию</span>
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg" alt="">
+        </button>
     </div>
-    <button class="submit-btn" id="submitBtn">
-        <span>Начать сессию</span>
-        <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg" alt="">
-    </button>
-</div>
+
 </div>
 </div>
 </div>
@@ -535,7 +600,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
         </div>
         <div class="chat-header-right">
             <button class="bulb-btn" id="themeBtn" title="Сменить тему">
-                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/11c4ba1a8f6ad668227bb0e60fdc43ba73de1c16/sun_1.svg" style="width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(60%);opacity:0.7;" alt="">
+                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/11c4ba1a8f6ad668227bb0e60fdc43ba73de1c16/sun_1.svg" class="icon-dove" alt="">
             </button>
             <button class="bulb-btn" id="menuBtn" title="Завершить сессию">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -546,7 +611,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
     <div class="input-area">
         <input type="text" class="input-field" id="msgInput" placeholder="Задай свой вопрос..." autocomplete="off">
         <button class="send-btn" id="sendBtn">
-            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg" alt="">
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg" class="icon-dove" alt="">
         </button>
     </div>
 </div>
@@ -557,26 +622,39 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 <div class="premium-overlay" id="premiumOverlay">
 <div class="premium-modal">
     <div class="premium-title">Panacea Plus</div>
-    <div class="premium-desc">Откройте полный доступ к возможностям всех проводников и эксклюзивным режимам.</div>
+    <div class="premium-desc">Откройте полный доступ к возможностям всех моделей и эксклюзивным режимам.</div>
     <div class="premium-features">
         <div class="premium-feature">
-            <span style="width:5px;height:5px;background:rgba(210,190,165,0.45);border-radius:1px;flex-shrink:0;margin-top:3px;"></span>
-            <span>Консилиум — ответ содержит мнения всех шести проводников одновременно</span>
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" class="pf-marker" alt="">
+            <span>Нет ограничений на количество сессий</span>
         </div>
         <div class="premium-feature">
-            <span style="width:5px;height:5px;background:rgba(210,190,165,0.45);border-radius:1px;flex-shrink:0;margin-top:3px;"></span>
-            <span>Оракул — система сама выбирает наиболее компетентного проводника</span>
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" class="pf-marker" alt="">
+            <span>Можно отключить очистку истории через 24 часа</span>
         </div>
         <div class="premium-feature">
-            <span style="width:5px;height:5px;background:rgba(210,190,165,0.45);border-radius:1px;flex-shrink:0;margin-top:3px;"></span>
-            <span>Неограниченная история сессий без удаления через 24 часа</span>
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" class="pf-marker" alt="">
+            <span>Скачать протокол каждой сессии</span>
         </div>
         <div class="premium-feature">
-            <span style="width:5px;height:5px;background:rgba(210,190,165,0.45);border-radius:1px;flex-shrink:0;margin-top:3px;"></span>
-            <span>PDF-саммари каждой сессии — краткое резюме разговора с ключевыми инсайтами</span>
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" class="pf-marker" alt="">
+            <span>Оракул — система сама выбирает наиболее подходящую модель</span>
+        </div>
+        <div class="premium-feature">
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" class="pf-marker" alt="">
+            <span>Консилиум — ответ содержит мнения всех шести моделей одновременно</span>
+        </div>
+        <div class="premium-feature">
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" class="pf-marker" alt="">
+            <span>Тесты — в ходе общения используются интерактивные тесты</span>
+        </div>
+        <div class="premium-feature">
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" class="pf-marker" alt="">
+            <span>Голосовой режим — можно общаться с моделями голосом и слышать их голосовые ответы</span>
         </div>
     </div>
-    <button class="premium-btn">
+    <button class="premium-btn" style="position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.18) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;pointer-events:none;"></div>
         Подключить Panacea Plus
     </button>
     <button class="premium-close" id="premiumClose">Не сейчас, возможно позже</button>
@@ -742,6 +820,7 @@ function switchScreen(id) {
     overlayEl.classList.remove('on');
     if (id === 'screen2') initChat();
     if (id === 'screen1c') startLoader();
+    if (id === 'screen1b') s1bReset();
 }
 
 // Init — check if already logged in — вызывается в конце скрипта
@@ -755,7 +834,64 @@ function init() {
     }
 }
 
-// S1b
+// S1b stacked cards swap
+let s1bFront = 'survey'; // 'survey' | 'sessions'
+const s1bSurveyEl   = document.getElementById('s1bSurvey');
+const s1bSessionsEl = document.getElementById('s1bSessions');
+
+function s1bSwap() {
+    if (s1bFront === 'survey') {
+        s1bSurveyEl.classList.replace('s1b-front', 's1b-back');
+        s1bSessionsEl.classList.replace('s1b-back', 's1b-front');
+        s1bFront = 'sessions';
+        renderSessions();
+    } else {
+        s1bSessionsEl.classList.replace('s1b-front', 's1b-back');
+        s1bSurveyEl.classList.replace('s1b-back', 's1b-front');
+        s1bFront = 'survey';
+    }
+}
+
+function s1bReset() {
+    s1bSurveyEl.classList.add('s1b-front');
+    s1bSurveyEl.classList.remove('s1b-back');
+    s1bSessionsEl.classList.add('s1b-back');
+    s1bSessionsEl.classList.remove('s1b-front');
+    s1bFront = 'survey';
+}
+
+function renderSessions() {
+    const cont = document.getElementById('sessionsContent');
+    const userRaw = localStorage.getItem(KEY_USER);
+    const user = userRaw ? JSON.parse(userRaw) : null;
+    if (!user || user.p === 'guest') {
+        cont.innerHTML = `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:40px 0;">
+            <img src="${HOURGLASS}" style="width:32px;height:32px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(60%);opacity:0.4;" alt="">
+            <div style="color:rgba(210,190,165,0.4);font-size:12px;line-height:1.7;">История сессий недоступна<br>в гостевом режиме.<br><span style="font-size:11px;opacity:0.7;">Войдите через Google или Apple,<br>чтобы сохранять сессии.</span></div>
+        </div>`;
+        return;
+    }
+    cont.innerHTML = `<div style="color:rgba(210,190,165,0.35);font-size:12px;text-align:center;padding:40px 0;">Сессий пока нет</div>`;
+}
+
+// Click on back card shield → swap
+document.querySelectorAll('.s1b-click-shield').forEach(shield => {
+    shield.addEventListener('click', () => s1bSwap());
+});
+
+// Swipe on mobile
+let s1bTouchX = 0;
+document.getElementById('s1bStack').addEventListener('touchstart', e => { s1bTouchX = e.touches[0].clientX; }, {passive:true});
+document.getElementById('s1bStack').addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - s1bTouchX;
+    if (Math.abs(dx) > 50) {
+        // swipe right → bring survey to front; swipe left → bring sessions to front
+        if (dx > 0 && s1bFront === 'sessions') s1bSwap();
+        if (dx < 0 && s1bFront === 'survey')   s1bSwap();
+    }
+}, {passive:true});
+
+// S1b auth buttons
 document.getElementById('googleBtn').addEventListener('click', () => {
     localStorage.setItem(KEY_USER, JSON.stringify({p:'google',ts:Date.now()}));
     goTo('screen1b');
@@ -947,203 +1083,128 @@ ${msgs || 'Диалог пуст'}
         const secContent   = getSection('СОДЕРЖАНИЕ');
         const secConclusion= getSection('ВЫВОД');
 
-        // Build HTML for PDF
-        const printHTML = `<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<title>Panacea — Протокол сессии</title>
-<style>
-@font-face {
-    font-family:'TiemposHeadline';
-    src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Light.woff') format('woff');
-    font-weight:300;
-}
-@font-face {
-    font-family:'TiemposHeadline';
-    src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Black.woff') format('woff');
-    font-weight:900;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
-    background:rgb(220,205,185);
-    color:rgb(40,28,20);
-    font-family:'Inter',-apple-system,sans-serif;
-    font-size:13px;
-    line-height:1.7;
-    padding:48px 52px;
-    max-width:680px;
-    margin:0 auto;
-}
-.header{
-    margin-bottom:36px;
-}
-.doc-title{
-    font-family:'TiemposHeadline',serif;
-    font-weight:900;
-    font-size:26px;
-    color:rgb(40,28,20);
-    margin-bottom:6px;
-}
-.doc-date{
-    font-size:16px;
-    font-family:'TiemposHeadline',serif;
-    font-weight:300;
-    color:rgb(40,28,20);
-}
-.section{
-    margin-bottom:24px;
-}
-.section-title{
-    font-family:'TiemposHeadline',serif;
-    font-weight:900;
-    font-size:13px;
-    color:rgb(40,28,20);
-    text-transform:uppercase;
-    letter-spacing:0.1em;
-    margin-bottom:8px;
-}
-.section-body{
-    background:rgba(40,28,20,0.07);
-    border-radius:8px;
-    padding:14px 16px;
-    color:rgba(40,28,20,0.85);
-    font-size:13px;
-    line-height:1.75;
-    white-space:pre-wrap;
-}
-.tech{
-    margin-top:36px;
-    font-size:11px;
-    color:rgb(40,28,20);
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-@media print{
-    body{padding:32px 40px;}
-    @page{margin:0;size:A4;}
-}
-</style>
-</head>
-<body>
-<div class="header">
-    <div class="doc-title">Протокол сессии</div>
-    <div class="doc-date">${sessionDate}</div>
-</div>
-
-<div class="section">
-    <div class="section-title">Интерлюдия</div>
-    <div class="section-body">${secInterlude || (surveyText ? surveyText.replace(/\n/g,'<br>') : 'Анкета не заполнена')}</div>
-</div>
-
-<div class="section">
-    <div class="section-title">Содержание</div>
-    <div class="section-body">${secContent || '—'}</div>
-</div>
-
-<div class="section">
-    <div class="section-title">Вывод</div>
-    <div class="section-body">${secConclusion || '—'}</div>
-</div>
-
-<div class="tech">
-    <span>В этой сессии были использованы модели: ${modelsUsed.length ? modelsUsed.join(', ') : 'Тара'}</span>
-    <span>${chatHistory.length} сообщений</span>
-</div>
-</body>
-</html>`;
-
-        // html2canvas + jsPDF
+        // Build HTML for PDF — kept for reference but not used
+        // Native jsPDF vector rendering with Cyrillic (PTSans TTF)
         const loadAndRender = async () => {
-            // Build hidden render node
-            const node = document.createElement('div');
-            node.style.cssText = [
-                'position:fixed', 'left:-9999px', 'top:0',
-                'width:794px',   // A4 at 96dpi
-                'background:#DCC9B5',
-                'font-family:Inter,-apple-system,sans-serif',
-                'color:#281C14',
-                'padding:60px 56px 60px',
-                'box-sizing:border-box',
-                'line-height:1.7',
-            ].join(';');
-
-            const section = (label, text) => `
-                <div style="margin-bottom:24px;">
-                    <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;
-                                color:rgba(40,28,20,0.5);margin-bottom:8px;">${label}</div>
-                    <div style="background:rgba(40,28,20,0.09);border-radius:10px;
-                                padding:16px 18px;font-size:13px;color:#281C14;
-                                line-height:1.75;white-space:pre-wrap;">${text || '—'}</div>
-                </div>`;
-
-            node.innerHTML = `
-                <div style="margin-bottom:36px;">
-                    <div style="font-family:'TiemposHeadline',serif;font-weight:900;
-                                font-size:28px;color:#281C14;margin-bottom:6px;">Протокол сессии</div>
-                    <div style="font-family:'TiemposHeadline',serif;font-weight:300;
-                                font-size:15px;color:rgba(40,28,20,0.6);">${sessionDate}</div>
-                </div>
-                ${section('Интерлюдия', secInterlude || surveyText || 'Анкета не заполнена')}
-                ${section('Содержание', secContent)}
-                ${section('Вывод', secConclusion)}
-                <div style="margin-top:32px;display:flex;justify-content:space-between;
-                            font-size:10px;color:rgba(40,28,20,0.4);">
-                    <span>Модели: ${modelsUsed.length ? modelsUsed.join(', ') : 'Тара'}</span>
-                    <span>${chatHistory.length} сообщений</span>
-                </div>`;
-
-            document.body.appendChild(node);
-
-            // Wait for fonts
-            await document.fonts.ready;
-
-            const canvas = await html2canvas(node, {
-                scale: 2,
-                useCORS: true,
-                backgroundColor: '#DCC9B5',
-                logging: false,
+            const loadLibs = () => new Promise(resolve => {
+                if (window.jspdf) { resolve(); return; }
+                const s = document.createElement('script');
+                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                s.onload = resolve;
+                document.head.appendChild(s);
             });
+            await loadLibs();
 
-            document.body.removeChild(node);
+            const fontToB64 = async (url) => {
+                const buf = await fetch(url).then(r => r.arrayBuffer());
+                let bin = '';
+                new Uint8Array(buf).forEach(b => bin += String.fromCharCode(b));
+                return btoa(bin);
+            };
 
-            const A4_W = 210, A4_H = 297; // mm
-            const imgW = A4_W;
-            const imgH = canvas.height * A4_W / canvas.width;
+            // PTSans — full Cyrillic, free, Google Fonts CDN
+            const [ptNormal, ptBold, tiemposBlack, tiemposLight] = await Promise.all([
+                fontToB64('https://fonts.gstatic.com/s/ptsans/v17/jizaRExUiTo99u79D0KEwA.ttf'),
+                fontToB64('https://fonts.gstatic.com/s/ptsans/v17/jizaBExUiTo99u79B_mh0O6tKA.ttf'),
+                fontToB64('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Black.woff'),
+                fontToB64('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Light.woff'),
+            ]);
 
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
 
-            let y = 0;
-            while (y < imgH) {
-                if (y > 0) pdf.addPage();
-                pdf.addImage(
-                    canvas.toDataURL('image/jpeg', 0.93),
-                    'JPEG',
-                    0, -y,
-                    imgW, imgH
-                );
-                y += A4_H;
-            }
+            pdf.addFileToVFS('PTSans.ttf',      ptNormal);
+            pdf.addFont('PTSans.ttf',      'PTSans', 'normal');
+            pdf.addFileToVFS('PTSansBold.ttf',  ptBold);
+            pdf.addFont('PTSansBold.ttf',  'PTSans', 'bold');
+            pdf.addFileToVFS('TiemposBlack.woff', tiemposBlack);
+            pdf.addFont('TiemposBlack.woff', 'Tiempos', 'bold');
+            pdf.addFileToVFS('TiemposLight.woff', tiemposLight);
+            pdf.addFont('TiemposLight.woff', 'Tiempos', 'normal');
+
+            const PW = 210, PH = 297;
+            const ML = 18, MR = 18, MT = 20;
+            const CW = PW - ML - MR;
+            const BG  = [220, 201, 181];
+            const BOX = [200, 185, 165];
+            const INK = [40,  28,  20];
+
+            let y = MT;
+
+            const bgPage = () => { pdf.setFillColor(...BG); pdf.rect(0, 0, PW, PH, 'F'); };
+
+            const newPage = () => { pdf.addPage(); bgPage(); y = MT; };
+
+            const checkY = (needed) => { if (y + needed > PH - 20) newPage(); };
+
+            const drawBox = (text, fontSize = 10.5) => {
+                const padX = 5, padY = 5;
+                pdf.setFont('PTSans', 'normal');
+                pdf.setFontSize(fontSize);
+                const lines = pdf.splitTextToSize(text || '—', CW - padX * 2);
+                const lineH = fontSize * 0.43;
+                const boxH  = lines.length * lineH + padY * 2;
+                checkY(boxH + 2);
+                pdf.setFillColor(...BOX);
+                pdf.roundedRect(ML, y, CW, boxH, 3, 3, 'F');
+                pdf.setTextColor(...INK);
+                lines.forEach((line, i) => {
+                    pdf.text(line, ML + padX, y + padY + lineH * 0.82 + i * lineH);
+                });
+                y += boxH;
+            };
+
+            // ── Background ──
+            bgPage();
+
+            // ── Header ──
+            pdf.setFont('Tiempos', 'bold');
+            pdf.setFontSize(24);
+            pdf.setTextColor(...INK);
+            pdf.text('Протокол сессии', ML, y + 8);
+            y += 13;
+
+            pdf.setFont('PTSans', 'normal');
+            pdf.setFontSize(11);
+            pdf.setTextColor(INK[0], INK[1], INK[2], 0.5);
+            pdf.text(sessionDate, ML, y + 4);
+            y += 12;
+
+            pdf.setDrawColor(...BOX);
+            pdf.setLineWidth(0.3);
+            pdf.line(ML, y, ML + CW, y);
+            y += 8;
+
+            // ── Sections ──
+            const sections = [
+                { label: 'ИНТЕРЛЮДИЯ', text: secInterlude || surveyText || 'Анкета не заполнена' },
+                { label: 'СОДЕРЖАНИЕ', text: secContent   || '—' },
+                { label: 'ВЫВОД',      text: secConclusion|| '—' },
+            ];
+
+            sections.forEach(({ label, text }) => {
+                checkY(22);
+                pdf.setFont('PTSans', 'bold');
+                pdf.setFontSize(7);
+                pdf.setTextColor(...INK);
+                pdf.setCharSpace(1.2);
+                pdf.text(label, ML, y + 3);
+                pdf.setCharSpace(0);
+                y += 7;
+                drawBox(text, 10.5);
+                y += 7;
+            });
+
+            // ── Footer ──
+            pdf.setFont('PTSans', 'normal');
+            pdf.setFontSize(8);
+            pdf.setTextColor(INK[0], INK[1], INK[2], 0.4);
+            pdf.text(`Модели: ${modelsUsed.length ? modelsUsed.join(', ') : 'Тара'}`, ML, PH - 12);
+            pdf.text(`${chatHistory.length} сообщений`, PW - MR, PH - 12, { align: 'right' });
 
             pdf.save(`panacea-${new Date().toISOString().slice(0,10)}.pdf`);
         };
 
-        const loadLibs = () => new Promise(resolve => {
-            if (window.html2canvas && window.jspdf) { resolve(); return; }
-            const s1 = document.createElement('script');
-            s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-            s1.onload = () => {
-                const s2 = document.createElement('script');
-                s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-                s2.onload = resolve;
-                document.head.appendChild(s2);
-            };
-            document.head.appendChild(s1);
-        });
-
-        await loadLibs();
         await loadAndRender();
     } catch(e) {
         alert('Не удалось создать саммари. Попробуй позже.');
@@ -1338,7 +1399,7 @@ function startLoader() {
         const el = document.getElementById('lc'+i);
         el.style.backgroundImage = `url('${BG}${lcImgs[i]}.jpeg')`;
         const q = lcQuotes[i];
-        el.innerHTML = `<div class="lc-mask"></div><div class="lc-quote"><span class="lc-quote-text">«${q.text}»</span><span class="lc-quote-author">${q.author}</span></div>`;
+        el.innerHTML = `<div class="lc-mask"></div><div class="lc-quote"><span class="lc-quote-text"><span style="font-family:'TiemposHeadline',serif;font-weight:300;">\u201c</span>${q.text}<span style="font-family:'TiemposHeadline',serif;font-weight:300;">\u201d</span></span><span class="lc-quote-author">${q.author}</span></div>`;
     }
 
     let lcCur = 0;
