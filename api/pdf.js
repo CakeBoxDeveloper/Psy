@@ -49,32 +49,16 @@ hr { border:none; border-top:1px solid rgba(40,28,20,0.15); margin-bottom:24px; 
 
     let browser = null;
     try {
-        const executablePath = await chromium.executablePath();
-
         browser = await puppeteer.launch({
-            args: [
-                ...chromium.args,
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--disable-gpu',
-                '--no-first-run',
-                '--no-zygote',
-                '--single-process',
-            ],
+            args: chromium.args,
             defaultViewport: chromium.defaultViewport,
-            executablePath,
-            headless: 'new',
-            ignoreHTTPSErrors: true,
+            executablePath: await chromium.executablePath(),
+            headless: chromium.headless,
         });
 
         const page = await browser.newPage();
         await page.setContent(html, { waitUntil: 'networkidle0' });
-
-        const pdf = await page.pdf({
-            format: 'A4',
-            printBackground: true,
-        });
+        const pdf = await page.pdf({ format: 'A4', printBackground: true });
 
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename="panacea-${new Date().toISOString().slice(0,10)}.pdf"`);
