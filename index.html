@@ -1154,8 +1154,11 @@ function addMsg(text, sender, animate, modelKey) {
 
     if (sender === 'ai' && modelKey && models[modelKey]) {
         const m = models[modelKey];
-        // Strip any signature the model may have appended (— Name, role)
-        const clean = text.replace(/[\s\n]*[—\-–]\s*\S[^\n]*$/, '').trim();
+        // Strip signature only if model appended "— Name" at the very end (last line)
+        const lines = text.trimEnd().split('\n');
+        const lastLine = lines[lines.length - 1];
+        const sigMatch = lastLine.match(/^[\s]*[—\-–]\s*\S/);
+        const clean = sigMatch ? lines.slice(0, -1).join('\n').trimEnd() : text.trim();
         b.innerHTML =
             `<span class="bubble-body">${clean.replace(/\n/g,'<br>')}</span>` +
             `<span class="bubble-sig">Для ответа была использована модель ${m.name}</span>`;
