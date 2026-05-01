@@ -119,18 +119,18 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
     backface-visibility:hidden;
     -webkit-backface-visibility:hidden;
     overflow:hidden;
+    cursor:pointer;
 }
-.s1b-face-front{
-    background:rgb(42,36,32);
-}
-.s1b-face-back{
-    background:rgb(220,205,185);
-    transform:rotateY(180deg);
-}
+.s1b-face-front{background:rgb(42,36,32);}
+.s1b-face-back{background:rgb(220,205,185);transform:rotateY(180deg);}
+#s1bInner{transition:transform 0.55s cubic-bezier(0.4,0,0.2,1);}
 #s1bInner.flipped{transform:rotateY(180deg);}
+/* Interactive elements don't trigger flip */
+.s1b-face select,
+.s1b-face button,
+.s1b-face .fields{cursor:auto;}
 @media(max-width:599px){
-    #s1bFlip{width:100%;max-width:100%;height:100vh;height:100dvh;}
-    .s1b-face{border-radius:0;}
+    #s1bFlip{width:92%;height:88vh;height:88dvh;}
 }
 @media(max-width:599px){
     #s1bStack{width:100%;max-width:100%;height:100vh;}
@@ -861,15 +861,31 @@ function renderSessions() {
     cont.innerHTML = `<div style="color:rgba(40,28,20,0.35);font-size:12px;text-align:center;padding:40px 0;">Сессий пока нет</div>`;
 }
 
-// Flip triggers — icon clicks
-document.getElementById('flipTrigger').addEventListener('click', () => {
-    s1bFlipped = true;
-    document.getElementById('s1bInner').classList.add('flipped');
-    renderSessions();
+// Flip triggers
+function doFlip(toBack) {
+    const inner = document.getElementById('s1bInner');
+    if (toBack) {
+        s1bFlipped = true;
+        inner.classList.add('flipped');
+        renderSessions();
+    } else {
+        s1bFlipped = false;
+        inner.classList.remove('flipped');
+    }
+}
+
+// Click on icon
+document.getElementById('flipTrigger').addEventListener('click', e => { e.stopPropagation(); doFlip(true); });
+document.getElementById('flipBackTrigger').addEventListener('click', e => { e.stopPropagation(); doFlip(false); });
+
+// Click anywhere on card body (except fields/buttons) triggers flip
+document.querySelector('.s1b-face-front').addEventListener('click', e => {
+    if (e.target.closest('select') || e.target.closest('button') || e.target.closest('.fields')) return;
+    doFlip(true);
 });
-document.getElementById('flipBackTrigger').addEventListener('click', () => {
-    s1bFlipped = false;
-    document.getElementById('s1bInner').classList.remove('flipped');
+document.querySelector('.s1b-face-back').addEventListener('click', e => {
+    if (e.target.closest('select') || e.target.closest('button')) return;
+    doFlip(false);
 });
 
 // S1b auth buttons
