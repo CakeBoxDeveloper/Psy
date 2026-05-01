@@ -1,15 +1,12 @@
 import chromium from '@sparticuz/chromium';
 import puppeteer from 'puppeteer-core';
-const CORS = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-};
 
 export default async function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    if (req.method === 'OPTIONS') return res.status(200).end();
+    if (req.method !== 'POST') return res.status(405).end();
 
     const { sessionDate, secInterlude, secContent, secConclusion, modelsUsed, msgCount } = req.body;
 
@@ -71,7 +68,7 @@ hr {
 </head>
 <body>
 <div class="title">Протокол сессии</div>
-<div class="date">${sessionDate}</div>
+<div class="date">${sessionDate || ''}</div>
 <hr>
 <div class="section">
     <div class="label">Интерлюдия</div>
@@ -111,11 +108,11 @@ hr {
 
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename="panacea-${new Date().toISOString().slice(0,10)}.pdf"`);
-        res.send(pdf);
+        res.send(Buffer.from(pdf));
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'PDF generation failed' });
+        res.status(500).json({ error: 'PDF generation failed', details: err.message });
     } finally {
         if (browser) await browser.close();
     }
