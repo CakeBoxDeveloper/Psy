@@ -1,5 +1,10 @@
 import chromium from '@sparticuz/chromium';
 import puppeteer from 'puppeteer-core';
+const CORS = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+};
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
