@@ -161,10 +161,13 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .s2-inner{width:90%;max-width:420px;height:90vh;display:flex;flex-direction:column;background:rgb(32,26,22);border-radius:12px;overflow:hidden;}
 @media(max-width:599px){
     .s2-wrap{background:rgb(32,26,22);}
-    .s2-inner{width:100%;max-width:100%;height:100vh;border-radius:0;}
+    .s2-inner{width:100%;max-width:100%;height:100vh;height:100dvh;border-radius:0;}
     .bg{filter:none !important;transform:none !important;}
     .bg-frame{display:none;}
     #screen1 .modal,#screen1b .modal{width:100%;max-width:100%;border-radius:0;min-height:100vh;}
+    #s1bStack{width:100%;max-width:100%;height:100vh;height:100dvh;}
+    .s1b-card{border-radius:0;}
+    .s1b-card.s1b-back{transform:translateX(-41%) scale(0.8);}
 }
 .chat-header{padding:12px 16px;background:transparent;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:space-between;}
 .chat-header-left{display:flex;align-items:center;}
@@ -506,7 +509,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 <div class="screen" id="screen1b">
 <div style="width:100%;height:100%;background:rgb(28,23,20);display:flex;align-items:center;justify-content:center;">
 
-<div id="s1bStack" style="width:90%;max-width:420px;height:90vh;position:relative;">
+<div id="s1bStack" style="width:90%;max-width:420px;height:min(90vh,90dvh);position:relative;">
 
     <!-- Card 1: Мои сессии (behind) -->
     <div id="s1bSessions" class="s1b-card s1b-back">
