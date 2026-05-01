@@ -296,7 +296,7 @@ body.light .bulb-btn img{filter:invert(15%) sepia(15%) saturate(200%) brightness
 .lc-slide.lc-center{z-index:5;opacity:1;filter:none;}
 .lc-slide.lc-near{z-index:4;opacity:0.7;filter:blur(4px);}
 .lc-slide.lc-far{z-index:3;opacity:0.45;filter:blur(10px);}
-.lc-mask{position:absolute;bottom:0;left:-1px;right:-1px;height:calc(65% + 1px);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);-webkit-mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);pointer-events:none;}
+.lc-mask{position:absolute;bottom:0;left:-2px;right:-2px;height:calc(65% + 2px);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);-webkit-mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);mask-image:linear-gradient(to top,black 0%,black 20%,transparent 100%);pointer-events:none;}
 .lc-quote{position:relative;z-index:2;color:rgba(210,190,165,0.95);font-size:14px;line-height:1.7;font-family:'Inter',-apple-system,sans-serif;font-weight:400;text-align:left;padding:20px 12px 24px;transition:opacity 0.4s ease;display:flex;flex-direction:column;gap:6px;width:100%;}
 .lc-quote-text{display:block;}
 .lc-quote-author{display:block;font-size:15px;font-weight:300;color:rgba(210,190,165,0.7);font-family:'TiemposHeadline',serif;text-align:right;}
@@ -858,6 +858,7 @@ function s1bReset() {
     s1bSessionsEl.classList.add('s1b-back');
     s1bSessionsEl.classList.remove('s1b-front');
     s1bFront = 'survey';
+    renderSessions(); // populate sessions panel on init
 }
 
 function renderSessions() {
@@ -914,6 +915,7 @@ document.getElementById('submitBtn').addEventListener('click', () => {
 
 // Chat
 const GROQ_MODEL = 'llama-3.3-70b-versatile'; // kept for reference only
+const API_BASE = 'https://panacea-ochre.vercel.app';
 
 const models = {
     tara: {
@@ -1059,7 +1061,7 @@ ${msgs || 'Диалог пуст'}
 Отвечай на русском языке. Будь конкретным и лаконичным.`;
 
     try {
-        const resp = await fetch('/api/chat', {
+        const resp = await fetch(`${API_BASE}/api/chat`, {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
@@ -1082,7 +1084,7 @@ ${msgs || 'Диалог пуст'}
         const secConclusion= getSection('ВЫВОД');
 
         // Generate PDF via server
-        const pdfResp = await fetch('/api/pdf', {
+        const pdfResp = await fetch(`${API_BASE}/api/pdf`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -1222,7 +1224,7 @@ function send() {
     ];
 
     setTimeout(() => {
-    fetch('/api/chat', {
+    fetch(`${API_BASE}/api/chat`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ messages })
