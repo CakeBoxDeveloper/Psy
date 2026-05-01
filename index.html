@@ -110,37 +110,28 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
                opacity 0.45s ease;
     will-change:transform;
 }
-/* Click shield — covers back card to intercept all clicks */
-.s1b-click-shield{display:none;position:absolute;inset:0;z-index:10;cursor:pointer;border-radius:12px;}
-.s1b-card.s1b-back .s1b-click-shield{display:block;}
-/* Front card */
-.s1b-card.s1b-front{
-    z-index:2;
-    transform:translateX(0) scale(1);
-    box-shadow:0 8px 32px rgba(0,0,0,0.3);
-    opacity:1;
-    cursor:default;
-    pointer-events:all;
+/* S1b flip card */
+.s1b-face{
+    position:absolute;top:0;left:0;width:100%;height:100%;
+    border-radius:12px;
+    display:flex;flex-direction:column;
+    padding:28px 24px 24px;gap:16px;box-sizing:border-box;
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+    overflow:hidden;
 }
-/* Back card — peeking from left, 80% size */
-.s1b-card.s1b-back{
-    z-index:1;
-    transform:translateX(-44%) scale(0.8);
-    box-shadow:none;
-    opacity:1;
-    cursor:pointer;
-    pointer-events:all;
+.s1b-face-front{
+    background:rgb(42,36,32);
 }
-/* Sessions card always light */
-#s1bSessions{
+.s1b-face-back{
     background:rgb(220,205,185);
-    color:rgb(40,28,20);
+    transform:rotateY(180deg);
 }
-#s1bSessions .s1b-title{color:rgb(40,28,20);}
-#s1bSessions .s1b-header img{width:18px;height:18px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.6;}
-#s1bSessions #sessionsContent img{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.35;}
-#s1bSessions #sessionsContent div{color:rgba(40,28,20,0.45);}
-#s1bSessions #sessionsContent span{color:rgba(40,28,20,0.35);}
+#s1bInner.flipped{transform:rotateY(180deg);}
+@media(max-width:599px){
+    #s1bFlip{width:100%;max-width:100%;height:100vh;height:100dvh;}
+    .s1b-face{border-radius:0;}
+}
 @media(max-width:599px){
     #s1bStack{width:100%;max-width:100%;height:100vh;}
     .s1b-card{border-radius:0;}
@@ -505,51 +496,51 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 </div>
 </div>
 
-<!-- SCREEN 1b: Survey + Sessions (stacked cards) -->
+<!-- SCREEN 1b: Flip card -->
 <div class="screen" id="screen1b">
 <div style="width:100%;height:100%;background:rgb(28,23,20);display:flex;align-items:center;justify-content:center;">
 
-<div id="s1bStack" style="width:90%;max-width:420px;height:min(90vh,90dvh);position:relative;">
+<div id="s1bFlip" style="width:90%;max-width:420px;height:min(90vh,90dvh);perspective:1200px;">
+    <div id="s1bInner" style="width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.6s cubic-bezier(0.4,0,0.2,1);">
 
-    <!-- Card 1: Мои сессии (behind) -->
-    <div id="s1bSessions" class="s1b-card s1b-back">
-        <div class="s1b-click-shield"></div>
-        <div class="s1b-header">
-            <div class="s1b-title">Мои сессии</div>
-            <img id="sessionsHeaderIcon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/11c4ba1a8f6ad668227bb0e60fdc43ba73de1c16/amphora.svg" style="width:18px;height:18px;" alt="">
+        <!-- Front: Анкета -->
+        <div class="s1b-face s1b-face-front">
+            <div class="s1b-header">
+                <div class="s1b-title">Расскажи о себе</div>
+                <img class="s1b-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/039080ffd25b01f8a0cc35ca478071d4c4b675ab/feather.svg" alt="" id="flipTrigger" style="cursor:pointer;">
+            </div>
+            <div class="fields" style="overflow-y:auto;scrollbar-width:none;flex:1;">
+                <div><div class="flabel">Что тебя беспокоит?</div>
+                <select class="fselect"><option value="" disabled selected>Выбери тему</option><option>Отношения и любовь</option><option>Карьера и деньги</option><option>Здоровье и энергия</option><option>Смысл и предназначение</option><option>Тревога и страхи</option><option>Семья и близкие</option><option>Одиночество</option><option>Другое</option></select></div>
+                <div><div class="flabel">Как ты себя чувствуешь сейчас?</div>
+                <select class="fselect"><option value="" disabled selected>Выбери состояние</option><option>Потерян и не знаю куда идти</option><option>Тревожно и неспокойно</option><option>Устал и нет сил</option><option>Ищу ответы на вопросы</option><option>Хочу перемен</option><option>В целом хорошо, но есть вопросы</option><option>Чувствую внутренний конфликт</option></select></div>
+                <div><div class="flabel">Твой возраст</div>
+                <select class="fselect"><option value="" disabled selected>Выбери диапазон</option><option>До 20 лет</option><option>20–30 лет</option><option>30–40 лет</option><option>40–50 лет</option><option>Старше 50</option></select></div>
+                <div><div class="flabel">Как часто обращаешься за советом?</div>
+                <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Впервые пробую</option><option>Иногда, в трудные моменты</option><option>Регулярно, это часть жизни</option><option>Скептически, но интересно</option></select></div>
+                <div><div class="flabel">Чего ожидаешь от сессии?</div>
+                <select class="fselect"><option value="" disabled selected>Выбери цель</option><option>Получить ясность и направление</option><option>Выговориться и быть услышанным</option><option>Узнать что-то о своей судьбе</option><option>Найти решение конкретной ситуации</option><option>Просто попробовать</option></select></div>
+                <div><div class="flabel">Есть ли у тебя конкретный вопрос?</div>
+                <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Да, есть чёткий вопрос</option><option>Скорее ощущение, чем вопрос</option><option>Хочу просто поговорить</option><option>Не знаю с чего начать</option></select></div>
+                <div><div class="flabel">Как ты относишься к мистическому?</div>
+                <select class="fselect"><option value="" disabled selected>Выбери позицию</option><option>Верю и практикую</option><option>Открыт, но с сомнениями</option><option>Скептик, но любопытен</option><option>Интересует только психология</option></select></div>
+            </div>
+            <button class="submit-btn" id="submitBtn">
+                <span>Начать сессию</span>
+                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg" alt="">
+            </button>
         </div>
-        <div id="sessionsContent" style="flex:1;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;"></div>
+
+        <!-- Back: Мои сессии -->
+        <div class="s1b-face s1b-face-back">
+            <div class="s1b-header">
+                <div class="s1b-title" style="color:rgb(40,28,20);">Мои сессии</div>
+                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/11c4ba1a8f6ad668227bb0e60fdc43ba73de1c16/amphora.svg" style="width:18px;height:18px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.6;cursor:pointer;" alt="" id="flipBackTrigger">
+            </div>
+            <div id="sessionsContent" style="flex:1;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+
     </div>
-
-    <!-- Card 0: Анкета (front) -->
-    <div id="s1bSurvey" class="s1b-card s1b-front">
-        <div class="s1b-click-shield"></div>
-        <div class="s1b-header">
-            <div class="s1b-title">Расскажи о себе</div>
-            <img class="s1b-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/039080ffd25b01f8a0cc35ca478071d4c4b675ab/feather.svg" alt="">
-        </div>
-        <div class="fields" style="overflow-y:auto;scrollbar-width:none;flex:1;">
-            <div><div class="flabel">Что тебя беспокоит?</div>
-            <select class="fselect"><option value="" disabled selected>Выбери тему</option><option>Отношения и любовь</option><option>Карьера и деньги</option><option>Здоровье и энергия</option><option>Смысл и предназначение</option><option>Тревога и страхи</option><option>Семья и близкие</option><option>Одиночество</option><option>Другое</option></select></div>
-            <div><div class="flabel">Как ты себя чувствуешь сейчас?</div>
-            <select class="fselect"><option value="" disabled selected>Выбери состояние</option><option>Потерян и не знаю куда идти</option><option>Тревожно и неспокойно</option><option>Устал и нет сил</option><option>Ищу ответы на вопросы</option><option>Хочу перемен</option><option>В целом хорошо, но есть вопросы</option><option>Чувствую внутренний конфликт</option></select></div>
-            <div><div class="flabel">Твой возраст</div>
-            <select class="fselect"><option value="" disabled selected>Выбери диапазон</option><option>До 20 лет</option><option>20–30 лет</option><option>30–40 лет</option><option>40–50 лет</option><option>Старше 50</option></select></div>
-            <div><div class="flabel">Как часто обращаешься за советом?</div>
-            <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Впервые пробую</option><option>Иногда, в трудные моменты</option><option>Регулярно, это часть жизни</option><option>Скептически, но интересно</option></select></div>
-            <div><div class="flabel">Чего ожидаешь от сессии?</div>
-            <select class="fselect"><option value="" disabled selected>Выбери цель</option><option>Получить ясность и направление</option><option>Выговориться и быть услышанным</option><option>Узнать что-то о своей судьбе</option><option>Найти решение конкретной ситуации</option><option>Просто попробовать</option></select></div>
-            <div><div class="flabel">Есть ли у тебя конкретный вопрос?</div>
-            <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Да, есть чёткий вопрос</option><option>Скорее ощущение, чем вопрос</option><option>Хочу просто поговорить</option><option>Не знаю с чего начать</option></select></div>
-            <div><div class="flabel">Как ты относишься к мистическому?</div>
-            <select class="fselect"><option value="" disabled selected>Выбери позицию</option><option>Верю и практикую</option><option>Открыт, но с сомнениями</option><option>Скептик, но любопытен</option><option>Интересует только психология</option></select></div>
-        </div>
-        <button class="submit-btn" id="submitBtn">
-            <span>Начать сессию</span>
-            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg" alt="">
-        </button>
-    </div>
-
 </div>
 </div>
 </div>
@@ -848,31 +839,12 @@ function init() {
     }
 }
 
-// S1b stacked cards swap
-let s1bFront = 'survey'; // 'survey' | 'sessions'
-const s1bSurveyEl   = document.getElementById('s1bSurvey');
-const s1bSessionsEl = document.getElementById('s1bSessions');
-
-function s1bSwap() {
-    if (s1bFront === 'survey') {
-        s1bSurveyEl.classList.replace('s1b-front', 's1b-back');
-        s1bSessionsEl.classList.replace('s1b-back', 's1b-front');
-        s1bFront = 'sessions';
-        renderSessions();
-    } else {
-        s1bSessionsEl.classList.replace('s1b-front', 's1b-back');
-        s1bSurveyEl.classList.replace('s1b-back', 's1b-front');
-        s1bFront = 'survey';
-    }
-}
+// S1b flip card
+let s1bFlipped = false;
 
 function s1bReset() {
-    s1bSurveyEl.classList.add('s1b-front');
-    s1bSurveyEl.classList.remove('s1b-back');
-    s1bSessionsEl.classList.add('s1b-back');
-    s1bSessionsEl.classList.remove('s1b-front');
-    s1bFront = 'survey';
-    renderSessions(); // populate sessions panel on init
+    s1bFlipped = false;
+    document.getElementById('s1bInner').classList.remove('flipped');
 }
 
 function renderSessions() {
@@ -889,22 +861,16 @@ function renderSessions() {
     cont.innerHTML = `<div style="color:rgba(40,28,20,0.35);font-size:12px;text-align:center;padding:40px 0;">Сессий пока нет</div>`;
 }
 
-// Click on back card shield → swap
-document.querySelectorAll('.s1b-click-shield').forEach(shield => {
-    shield.addEventListener('click', () => s1bSwap());
+// Flip triggers — icon clicks
+document.getElementById('flipTrigger').addEventListener('click', () => {
+    s1bFlipped = true;
+    document.getElementById('s1bInner').classList.add('flipped');
+    renderSessions();
 });
-
-// Swipe on mobile
-let s1bTouchX = 0;
-document.getElementById('s1bStack').addEventListener('touchstart', e => { s1bTouchX = e.touches[0].clientX; }, {passive:true});
-document.getElementById('s1bStack').addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - s1bTouchX;
-    if (Math.abs(dx) > 50) {
-        // swipe right → bring survey to front; swipe left → bring sessions to front
-        if (dx > 0 && s1bFront === 'sessions') s1bSwap();
-        if (dx < 0 && s1bFront === 'survey')   s1bSwap();
-    }
-}, {passive:true});
+document.getElementById('flipBackTrigger').addEventListener('click', () => {
+    s1bFlipped = false;
+    document.getElementById('s1bInner').classList.remove('flipped');
+});
 
 // S1b auth buttons
 document.getElementById('googleBtn').addEventListener('click', () => {
