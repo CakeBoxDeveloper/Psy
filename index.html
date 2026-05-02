@@ -1206,8 +1206,21 @@ ${msgs || 'Диалог пуст'}
 
 document.getElementById('endMenu').addEventListener('click', () => {
     endOverlay.classList.remove('show');
-    [KEY_USER, KEY_CHAT, KEY_SURVEY].forEach(k => localStorage.removeItem(k));
-    goTo('screen1');
+    const userRaw = localStorage.getItem(KEY_USER);
+    const user = userRaw ? JSON.parse(userRaw) : null;
+    if (!user || user.p === 'guest') {
+        // Guest → login screen
+        [KEY_USER, KEY_CHAT, KEY_SURVEY].forEach(k => localStorage.removeItem(k));
+        goTo('screen1');
+    } else {
+        // Logged in → sessions list (back side of card)
+        goTo('screen1b');
+        setTimeout(() => {
+            s1bFlipped = true;
+            document.getElementById('s1bInner').classList.add('flipped');
+            renderSessions();
+        }, 600); // after transition
+    }
 });
 document.getElementById('endNew').addEventListener('click', () => {
     endOverlay.classList.remove('show');
