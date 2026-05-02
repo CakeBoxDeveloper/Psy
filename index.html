@@ -326,6 +326,9 @@ body.light .bulb-btn img{filter:invert(15%) sepia(15%) saturate(200%) brightness
 /* End summary button — more prominent */
 .end-summary-btn{width:100%;height:42px;background:rgba(210,190,165,0.18);border:1px solid rgba(210,190,165,0.35);color:rgba(210,190,165,0.9);border-radius:8px;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all 0.15s;}
 .end-summary-btn:hover{background:rgba(210,190,165,0.28);color:rgba(210,190,165,1);}
+/* Scroll icon — matches button text color */
+.end-summary-icon{width:15px;height:15px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(90%);opacity:0.9;}
+body.light .end-summary-icon{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%) !important;opacity:0.8 !important;}
 body.light .end-summary-btn{background:rgba(60,45,35,0.1);border-color:rgba(60,45,35,0.3);color:rgba(40,28,20,0.8);}
 body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28,20);}
 </style>
@@ -675,7 +678,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
     <div class="end-title">Завершить сессию?</div>
     <div class="end-desc">Вы можете начать новую сессию с чистого листа или вернуться в главное меню.</div>
     <button class="end-summary-btn" id="endSummaryBtn">
-        <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/11c4ba1a8f6ad668227bb0e60fdc43ba73de1c16/amphora.svg" style="width:15px;height:15px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(90%);opacity:0.9;" alt="">
+        <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" class="end-summary-icon" alt="">
         Завершить и сохранить протокол
     </button>
     <div class="end-btns">
@@ -1172,29 +1175,145 @@ ${msgs || 'Диалог пуст'}
         const secContent   = getSection('СОДЕРЖАНИЕ');
         const secConclusion= getSection('ВЫВОД');
 
-        // Generate PDF via server
-        const pdfResp = await fetch(`${API_BASE}/api/pdf`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                sessionDate,
-                secInterlude: secInterlude || surveyText || 'Анкета не заполнена',
-                secContent:   secContent   || '—',
-                secConclusion:secConclusion|| '—',
-                modelsUsed:   modelsUsed.length ? modelsUsed.join(', ') : 'Тара',
-                msgCount:     chatHistory.length
-            })
+        // Generate PDF via pdfmake (client-side, no server needed)
+        const generatePDF = () => new Promise(resolve => {
+            const loadPdfMake = () => new Promise(res => {
+                if (window.pdfMake) { res(); return; }
+                const s1 = document.createElement('script');
+                s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js';
+                s1.onload = () => {
+                    const s2 = document.createElement('script');
+                    s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js';
+                    s2.onload = res;
+                    document.head.appendChild(s2);
+                };
+                document.head.appendChild(s1);
+            });
+
+            const fontToB64 = async (url) => {
+                try {
+                    const buf = await fetch(url).then(r => { if (!r.ok) throw new Error(); return r.arrayBuffer(); });
+                    let bin = '';
+                    new Uint8Array(buf).forEach(b => bin += String.fromCharCode(b));
+                    return btoa(bin);
+                } catch(e) { return null; }
+            };
+
+            Promise.all([
+                loadPdfMake(),
+                fontToB64('https://fonts.gstatic.com/s/ptsans/v17/jizaRExUiTo99u79D0KEwA.ttf'),
+                fontToB64('https://fonts.gstatic.com/s/ptsans/v17/jizaBExUiTo99u79B_mh0O6tKA.ttf'),
+            ]).then(([, ptNormal, ptBold]) => {
+                const hasPT = ptNormal && ptBold;
+                if (hasPT) {
+                    pdfMake.vfs['PTSans.ttf']     = ptNormal;
+                    pdfMake.vfs['PTSansBold.ttf'] = ptBold;
+                    pdfMake.fonts = {
+                        PTSans: { normal: 'PTSans.ttf', bold: 'PTSansBold.ttf' },
+                        Roboto: { normal: 'Roboto-Regular.ttf', bold: 'Roboto-Medium.ttf', italics: 'Roboto-Italic.ttf', bolditalics: 'Roboto-MediumItalic.ttf' }
+                    };
+                }
+                const FONT = hasPT ? 'PTSans' : 'Roboto';
+
+                const BG_COLOR  = '#DCC9B5';
+                const BOX_COLOR = '#C8B9A5';
+                const INK       = '#281C14';
+                const PAGE_W    = 495;
+
+                const LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 402.84 69.8"><defs><style>.cls-1{fill:#281C14;}</style></defs><path class="cls-1" d="M124.49,315.25v15.2q0,3.63,2.35,4.95t8.92,1.62v4.41H96.25V337q4.6-.5,5.69-1.62t1.08-4.95V283.59q0-3.82-1.08-4.95T96.25,277v-4.41h35.69q14,0,21.22,5.68a18.38,18.38,0,0,1,7.21,15.2q0,10.59-7.35,16.18t-22.16,5.58Zm0-37.74v32.16h1.27q6.57,0,10.15-4.32t3.58-11.86q0-7.55-3.78-11.76a12.7,12.7,0,0,0-10-4.22Z" transform="translate(-96.25 -272.61)"/><path class="cls-1" d="M210.76,304.67v26q0,4,2.45,4a8.61,8.61,0,0,0,3-.49l.69,2.94a19.53,19.53,0,0,1-13.63,5.29q-9.31,0-12.06-8.14-5,7.75-14.51,7.75-6.47,0-10.44-3.48t-4-9.85q0-5.9,3.38-9.17a24.86,24.86,0,0,1,9.37-5.34L191,308.69V297.9q0-6.57-4.22-6.57-4.71,0-4.7,7.55a31.54,31.54,0,0,0,1,7.26l-12.16,1.57q-5.1-1.66-5.1-7.16a10.75,10.75,0,0,1,6-10q6-3.33,15.83-3.33,11.38,0,17.26,4T210.76,304.67Zm-22.65,27.15a10.24,10.24,0,0,0,2.85-.49V313.2L187,314.67a8.17,8.17,0,0,0-4,2.74q-1.28,1.77-1.28,5.79Q181.74,331.83,188.11,331.82Z" transform="translate(-96.25 -272.61)"/><path class="cls-1" d="M257.62,333.78V305.06a6.83,6.83,0,0,0-1.32-4.51c-.88-1.05-2.47-1.57-4.75-1.57a22,22,0,0,0-7.26,1.27v33.53c0,1.38.33,2.28,1,2.7a9.1,9.1,0,0,0,3.92.83v4.12H218.9v-4.12c1.37-.13,2.38-.26,3-.39a2.62,2.62,0,0,0,1.57-.93,3.49,3.49,0,0,0,.58-2.21V299.47l-5.19-3.33v-3l21.86-5.88h3.92l-.39,9.9q7.54-9.9,18.33-9.9,7.26,0,11.23,4.06t4,12v30.49a3.49,3.49,0,0,0,.59,2.21,2.56,2.56,0,0,0,1.57.93c.65.13,1.66.26,3,.39v4.12h-30.3v-4.12a9.1,9.1,0,0,0,3.92-.83C257.3,336.06,257.62,335.16,257.62,333.78Z" transform="translate(-96.25 -272.61)"/><path class="cls-1" d="M333.51,304.67v26c0,2.68.81,4,2.45,4a8.65,8.65,0,0,0,3-.49l.68,2.94a19.51,19.51,0,0,1-13.63,5.29q-9.3,0-12.05-8.14Q309,342,299.49,342q-6.48,0-10.44-3.48t-4-9.85q0-5.9,3.39-9.17a24.74,24.74,0,0,1,9.36-5.34l15.88-5.49V297.9q0-6.57-4.21-6.57-4.71,0-4.71,7.55a32.1,32.1,0,0,0,1,7.26l-12.16,1.57q-5.09-1.66-5.09-7.16a10.75,10.75,0,0,1,6-10q6-3.33,15.83-3.33,11.37,0,17.26,4T333.51,304.67Zm-22.65,27.15a10.24,10.24,0,0,0,2.84-.49V313.2l-3.92,1.47a8.17,8.17,0,0,0-4,2.74q-1.28,1.77-1.27,5.79Q304.49,331.83,310.86,331.82Z" transform="translate(-96.25 -272.61)"/><path class="cls-1" d="M358.9,309.08q0,9.32,4,14.61T374.09,329q8.43,0,12.75-6.08l2.35,1.47q-4.6,18-22.94,18a24,24,0,0,1-17.74-7.06q-7.06-7.05-7.06-18.92,0-12.74,7.64-21t20-8.23q8.15,0,13.39,3.18a10.57,10.57,0,0,1,5.24,9.66q0,5.49-4.61,7.45H373a47.77,47.77,0,0,0,.39-5.88q0-9.7-5.88-9.71c-2.69,0-4.79,1.6-6.33,4.81S358.9,304.05,358.9,309.08Z" transform="translate(-96.25 -272.61)"/><path class="cls-1" d="M419.29,287.22q10.68,0,16.42,6t5.74,16v2.45H410.37q0,8,4.07,12.84a13.28,13.28,0,0,0,10.64,4.8q9.3,0,14.6-6.86l2.06,1.28q-2.16,8.82-8,13.77t-15.29,5q-11.37,0-18.83-7t-7.45-19.46q0-12.94,7.95-20.83A26.24,26.24,0,0,1,419.29,287.22ZM418,291.53q-6.87,0-7.55,15.29h13.82Q424.29,291.53,418,291.53Z" transform="translate(-96.25 -272.61)"/><path class="cls-1" d="M492.92,304.67v26c0,2.68.81,4,2.45,4a8.65,8.65,0,0,0,3-.49l.68,2.94a19.5,19.5,0,0,1-13.62,5.29q-9.32,0-12.06-8.14-5,7.75-14.51,7.75-6.48,0-10.44-3.48t-4-9.85q0-5.9,3.38-9.17a24.74,24.74,0,0,1,9.36-5.34l15.88-5.49V297.9q0-6.57-4.21-6.57-4.71,0-4.71,7.55a32.1,32.1,0,0,0,1,7.26L453,307.71q-5.08-1.66-5.09-7.16a10.75,10.75,0,0,1,6-10q6-3.33,15.83-3.33,11.37,0,17.26,4T492.92,304.67Zm-22.65,27.15a10.24,10.24,0,0,0,2.84-.49V313.2l-3.92,1.47a8.17,8.17,0,0,0-4,2.74q-1.28,1.77-1.27,5.79Q463.9,331.83,470.27,331.82Z" transform="translate(-96.25 -272.61)"/></svg>`;
+
+                const box = (text, estimatedLines) => {
+                    const lineH = 17;
+                    const padV  = 14;
+                    const h     = Math.max(estimatedLines * lineH + padV * 2, 50);
+                    return {
+                        stack: [
+                            {
+                                svg: `<svg width="${PAGE_W}" height="${h}" xmlns="http://www.w3.org/2000/svg"><rect width="${PAGE_W}" height="${h}" rx="8" fill="${BOX_COLOR}"/></svg>`,
+                                width: PAGE_W,
+                                marginBottom: -h
+                            },
+                            {
+                                text: text || '—',
+                                fontSize: 11, color: INK, lineHeight: 1.6,
+                                margin: [14, padV, 14, padV],
+                                font: 'PTSans'
+                            }
+                        ],
+                        marginBottom: 20
+                    };
+                };
+
+                const estLines = (t) => Math.ceil((t||'—').length / 70) + 1;
+
+                // Dashed border footer box
+                const DASH_H = 36;
+                const footerText = `Этот протокол сеанса от ${sessionDate} был составлен автоматически`;
+                const footerBox = {
+                    stack: [
+                        {
+                            svg: `<svg width="${PAGE_W}" height="${DASH_H}" xmlns="http://www.w3.org/2000/svg"><rect width="${PAGE_W}" height="${DASH_H}" rx="6" fill="none" stroke="${INK}" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.3"/></svg>`,
+                            width: PAGE_W,
+                            marginBottom: -DASH_H
+                        },
+                        {
+                            text: footerText,
+                            fontSize: 9, color: INK, opacity: 0.45,
+                            alignment: 'center',
+                            margin: [14, 11, 14, 11],
+                            font: 'PTSans'
+                        }
+                    ],
+                    marginTop: 20
+                };
+
+                const SCROLL_SVG = `<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 470.504964 512.000000" preserveAspectRatio="xMidYMid meet"><g transform="translate(-20.995036,512.000000) scale(0.100000,-0.100000)" fill="#281C14" stroke="none"><path d="M552 5113 c-21 -8 -42 -59 -42 -102 l0 -39 -131 -4 c-177 -4 -169 6 -169 -223 0 -95 3 -181 6 -190 13 -33 59 -45 179 -45 l115 0 0 -40 c0 -51 16 -85 47 -99 13 -6 80 -11 153 -11 l130 0 0 -225 c0 -255 -9 -227 93 -309 26 -21 47 -41 47 -45 0 -3 -31 -41 -70 -84 l-70 -78 0 -803 0 -803 23 -21 c31 -29 72 -28 102 3 l25 24 0 770 0 770 90 100 c125 140 125 142 -30 268 l-60 48 0 243 0 242 1575 0 1575 0 0 -465 c0 -452 1 -466 20 -485 30 -30 83 -27 109 6 20 26 21 37 21 435 l0 409 135 0 c131 0 137 1 160 25 20 19 25 34 25 75 l0 50 124 0 c118 0 127 1 153 24 l28 24 0 182 0 182 -28 24 c-26 23 -35 24 -153 24 l-124 0 0 50 c0 41 -5 56 -25 75 -24 25 -26 25 -208 25 -171 0 -186 -1 -211 -21 -17 -14 -26 -30 -26 -50 l0 -29 -1575 0 -1575 0 0 25 c0 14 -11 37 -25 50 -24 25 -25 25 -212 24 -103 0 -194 -3 -201 -6z m288 -373 l0 -230 -85 0 -85 0 0 230 0 230 85 0 85 0 0 -230z m3620 0 l0 -230 -85 0 -85 0 0 230 0 230 85 0 85 0 0 -230z m-325 0 l0 -125 -1572 -3 -1573 -2 0 130 0 130 1573 -2 1572 -3 0 -125z m-3625 0 l0 -81 -72 3 -73 3 -3 78 -3 77 76 0 75 0 0 -80z m4250 0 l0 -81 -72 3 -73 3 -3 78 -3 77 76 0 75 0 0 -80z"/></g></svg>`;
+
+                const docDef = {
+                    pageSize: 'A4',
+                    pageMargins: [50, 50, 50, 50],
+                    background: (page, size) => ({
+                        canvas: [{ type:'rect', x:0, y:0, w:size.width, h:size.height, color: BG_COLOR }]
+                    }),
+                    content: [
+                        // Header: logo left, scroll icon right
+                        {
+                            columns: [
+                                { svg: LOGO_SVG, width: 160, marginBottom: 8 },
+                                { svg: SCROLL_SVG, width: 28, alignment: 'right', marginTop: 4 }
+                            ],
+                            marginBottom: 8
+                        },
+                        { text: `протокол сессии от ${sessionDate}`, fontSize: 13, color: INK, marginBottom: 28, font: FONT },
+
+                        { text: 'ИНТЕРЛЮДИЯ', fontSize: 7, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8, font: FONT },
+                        box(secInterlude || surveyText || 'Анкета не заполнена', estLines(secInterlude || surveyText)),
+
+                        { text: 'СОДЕРЖАНИЕ', fontSize: 7, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8, font: FONT },
+                        box(secContent || '—', estLines(secContent)),
+
+                        { text: 'ВЫВОД', fontSize: 7, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8, font: FONT },
+                        box(secConclusion || '—', estLines(secConclusion)),
+
+                        footerBox,
+
+                        {
+                            columns: [
+                                { text: `Модели: ${modelsUsed.length ? modelsUsed.join(', ') : 'Тара'}`, fontSize: 8, color: INK, opacity: 0.4, font: FONT },
+                                { text: `${chatHistory.length} сообщений`, fontSize: 8, color: INK, opacity: 0.4, alignment: 'right', font: FONT }
+                            ],
+                            marginTop: 16
+                        }
+                    ],
+                    defaultStyle: { font: FONT }
+                };
+
+                pdfMake.createPdf(docDef).download(`Panacea (протокол сеанса от ${sessionDate}).pdf`);
+                resolve();
+            });
         });
 
-        if (!pdfResp.ok) throw new Error('PDF error');
-
-        const blob = await pdfResp.blob();
-        const url  = URL.createObjectURL(blob);
-        const a    = document.createElement('a');
-        a.href     = url;
-        a.download = `panacea-${new Date().toISOString().slice(0,10)}.pdf`;
-        a.click();
-        URL.revokeObjectURL(url);
+        await generatePDF();
 
     } catch(e) {
         alert('Не удалось создать протокол. Попробуй позже.');
