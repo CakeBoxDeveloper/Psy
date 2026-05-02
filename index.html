@@ -617,7 +617,9 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
                 <div class="s1b-title" style="color:rgb(40,28,20);">Мои сессии</div>
                 <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/11c4ba1a8f6ad668227bb0e60fdc43ba73de1c16/amphora.svg" style="width:18px;height:18px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.6;cursor:pointer;" alt="" id="flipBackTrigger">
             </div>
-            <div id="sessionsContent" style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;padding-bottom:4px;"></div>
+            <div style="flex:1;min-height:0;position:relative;-webkit-mask-image:linear-gradient(to bottom,transparent 0px,black 32px,black calc(100% - 32px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0px,black 32px,black calc(100% - 32px),transparent 100%);">
+                <div id="sessionsContent" style="height:100%;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;padding:4px 0;"></div>
+            </div>
             <button id="signOutBtn" style="background:none;border:none;color:rgba(40,28,20,0.35);font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;padding:8px 0;text-align:center;width:100%;transition:color 0.15s;flex-shrink:0;">Выйти из учётной записи</button>
         </div>
 
@@ -1371,14 +1373,18 @@ function showToast(msg, { icon = null, onClick = null, onClickToast = null, dura
     appToast.style.display = 'flex';
     void appToast.offsetWidth;
 
-    toastText.onclick = onClick || null;
-    appToast.onclick = onClickToast ? (e) => { if (!e.target.closest('.toast-text') || !onClick) onClickToast(); } : null;
+    toastText.onclick = null;
+    // Whole toast is clickable if onClickToast provided
+    appToast.onclick = (onClickToast || onClick) ? (e) => {
+        e.stopPropagation();
+        hideToast();
+        (onClickToast || onClick)();
+    } : null;
 
     // Guard against immediate close from the same click event
     _toastClickGuard = true;
-    setTimeout(() => { _toastClickGuard = false; }, 100);
+    setTimeout(() => { _toastClickGuard = false; }, 150);
 
-    // Auto-hide after duration
     toastTimer = setTimeout(() => hideToast(), duration);
 }
 
