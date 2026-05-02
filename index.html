@@ -1514,6 +1514,8 @@ function send() {
     if (text === '/plus') {
         isPremium = true;
         msgInput.value = '';
+        // Hide premium lock icons in dropdown
+        document.querySelectorAll('.ditem-star').forEach(el => el.style.display = 'none');
         addMsg('✨ Премиум-доступ активирован до обновления страницы', 'ai', true);
         return;
     }
@@ -1653,53 +1655,46 @@ async function handleOracleMode(text, typingIndicator, thinkDelay) {
 async function handleConsiliumMode(text, typingIndicator, thinkDelay) {
     setTimeout(async () => {
         try {
-            // Request responses from all models in parallel
             const modelKeys = ['tara', 'karma', 'astra', 'eva', 'psyche', 'gera'];
-            const promises = modelKeys.map(key => 
-                fetch(`${API_BASE}/api/chat`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        modelKey: key,
-                        history: chatHistory,
-                        max_tokens: 300,
-                        temperature: 0.85
-                    })
-                }).then(r => r.json())
-            );
             
-            const results = await Promise.all(promises);
+            // Sequential requests to avoid rate limiting
+            const results = [];
+            for (const key of modelKeys) {
+                try {
+                    const resp = await fetch(`${API_BASE}/api/chat`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            modelKey: key,
+                            history: chatHistory,
+                            max_tokens: 250,
+                            temperature: 0.85
+                        })
+                    });
+                    const data = await resp.json();
+                    results.push({ key, text: data.choices?.[0]?.message?.content || '' });
+                } catch (e) {
+                    results.push({ key, text: '' });
+                }
+            }
             
             typingIndicator.remove();
             isTyping = false;
             
-            // Combine all responses with HTML formatting
             let combinedHTML = '<div class="consilium-body">';
-            modelKeys.forEach((key, i) => {
-                let reply = results[i].choices?.[0]?.message?.content || '';
-                if (reply) {
-                    const lastPunct = Math.max(reply.lastIndexOf('.'), reply.lastIndexOf('?'), reply.lastIndexOf('!'));
-                    if (lastPunct > reply.length * 0.5) {
-                        reply = reply.slice(0, lastPunct + 1);
-                    }
-                    combinedHTML += `<div class="consilium-item"><span class="consilium-name">${models[key].name}</span><span class="consilium-text">${reply}</span></div>`;
-                }
+            let plainParts = [];
+            
+            results.forEach(({ key, text: reply }) => {
+                if (!reply) return;
+                const lastPunct = Math.max(reply.lastIndexOf('.'), reply.lastIndexOf('?'), reply.lastIndexOf('!'));
+                const clean = lastPunct > reply.length * 0.5 ? reply.slice(0, lastPunct + 1) : reply;
+                combinedHTML += `<div class="consilium-item"><span class="consilium-name">${models[key].name}</span><span class="consilium-text">${clean}</span></div>`;
+                plainParts.push(`${models[key].name}: ${clean}`);
             });
             combinedHTML += '</div>';
             
-            const plainText = modelKeys.map((key, i) => {
-                let reply = results[i].choices?.[0]?.message?.content || '';
-                if (reply) {
-                    const lastPunct = Math.max(reply.lastIndexOf('.'), reply.lastIndexOf('?'), reply.lastIndexOf('!'));
-                    if (lastPunct > reply.length * 0.5) {
-                        reply = reply.slice(0, lastPunct + 1);
-                    }
-                    return `${models[key].name}: ${reply}`;
-                }
-                return '';
-            }).filter(Boolean).join('\n\n');
-            
-            chatHistory.push({role: 'assistant', content: plainText});
+            const plainText = plainParts.join('\n\n');
+            chatHistory.push({ role: 'assistant', content: plainText });
             addMsgHTML(combinedHTML, 'ai', true, 'consilium');
             saveChat();
         } catch (err) {
@@ -1707,7 +1702,7 @@ async function handleConsiliumMode(text, typingIndicator, thinkDelay) {
             isTyping = false;
             addMsg('Связь прервалась. Попробуй ещё раз.', 'ai', true);
         }
-    }, thinkDelay * 1.5); // Longer delay for consilium
+    }, thinkDelay);
 }
 
 sendBtn.addEventListener('click', send);
