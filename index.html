@@ -1747,11 +1747,36 @@ voiceBtn.addEventListener('click', () => {
             speechRecognition.continuous = false;
             speechRecognition.interimResults = false;
 
-            speechRecognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                console.log('[Voice] result:', transcript);
-                msgInput.value = transcript;
-                msgInput.focus();
+            speechRecognition.onresult = async (event) => {
+                const raw = event.results[0][0].transcript;
+                console.log('[Voice] raw result:', raw);
+
+                // Format via API — fix grammar and punctuation
+                let formatted = raw;
+                try {
+                    const resp = await fetch(`${API_BASE}/api/chat`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            modelKey: 'tara',
+                            history: [{
+                                role: 'user',
+                                content: `Исправь орфографию и пунктуацию в тексте по правилам русского языка. Верни ТОЛЬКО исправленный текст, без пояснений и кавычек:\n\n${raw}`
+                            }],
+                            max_tokens: 300,
+                            temperature: 0.1
+                        })
+                    });
+                    const data = await resp.json();
+                    formatted = data.choices?.[0]?.message?.content?.trim() || raw;
+                    console.log('[Voice] formatted:', formatted);
+                } catch(e) {
+                    console.warn('[Voice] format failed, using raw:', e);
+                }
+
+                // Send as user message immediately
+                msgInput.value = formatted;
+                send();
             };
 
             speechRecognition.onerror = (e) => {
