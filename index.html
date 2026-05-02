@@ -190,8 +190,8 @@ body.light .premium-desc{background:rgba(60,45,35,0.08);color:rgba(40,28,20,0.7)
 .premium-features{display:flex;flex-direction:column;gap:8px;}
 .premium-feature{display:flex;align-items:flex-start;gap:10px;color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;}
 .premium-feature-icon{width:14px;height:14px;flex-shrink:0;margin-top:1px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
-.pf-marker{width:14px;height:14px;flex-shrink:0;margin-top:2px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);opacity:0.7;}
-body.light .pf-marker{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:1;}
+.pf-marker{width:14px;height:14px;flex-shrink:0;margin-top:2px;filter:invert(85%) sepia(15%) saturate(200%) hue-rotate(10deg) brightness(110%);opacity:0.85;}
+body.light .pf-marker{filter:invert(10%) sepia(10%) saturate(300%) brightness(15%);opacity:1;}
 .premium-btn{width:100%;height:42px;background:rgba(210,190,165,0.2);border:1px solid rgba(210,190,165,0.3);color:rgba(210,190,165,1);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
 .premium-btn:hover{background:rgba(210,190,165,0.3);}
 .premium-close{background:none;border:none;color:rgba(210,190,165,0.4);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;text-align:center;transition:all 0.15s;}
@@ -279,6 +279,9 @@ body.light #screen2 .premium-btn{background:rgba(60,45,35,0.2);border-color:rgba
 body.light .premium-btn .shimmer-layer{background:linear-gradient(105deg,transparent 20%,rgba(60,45,35,0.12) 50%,transparent 80%);}
 body.light .premium-close{color:rgba(40,28,20,0.5);}
 body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);}
+/* pf-marker icons: #d2bea5 dark theme, #281c14 light theme */
+.pf-marker{width:14px;height:14px;flex-shrink:0;margin-top:2px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);opacity:0.85;}
+body.light .pf-marker{filter:invert(10%) sepia(10%) saturate(300%) hue-rotate(5deg) brightness(10%);opacity:1;}
 /* New icon & markers in light theme */
 body.light .premium-modal img[src*="e_AzA"]{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:1;}
 body.light .ditem-star{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%) !important;opacity:1 !important;}
@@ -529,7 +532,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
             </div>
             <button class="submit-btn" id="submitBtn">
                 <span>Начать сессию</span>
-                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg" alt="">
+                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/09eec5a30d5df884937b3b146abfe78e437fa2fc/torch-2-svgrepo-com.svg" alt="" style="width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);">
             </button>
         </div>
 
@@ -540,6 +543,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
                 <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/11c4ba1a8f6ad668227bb0e60fdc43ba73de1c16/amphora.svg" style="width:18px;height:18px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.6;cursor:pointer;" alt="" id="flipBackTrigger">
             </div>
             <div id="sessionsContent" style="flex:1;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;"></div>
+            <button id="signOutBtn" style="background:none;border:none;color:rgba(40,28,20,0.35);font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;padding:8px 0;text-align:center;width:100%;transition:color 0.15s;flex-shrink:0;">Выйти из учётной записи</button>
         </div>
 
     </div>
@@ -664,7 +668,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
         <div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.18) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;pointer-events:none;"></div>
         Подключить Panacea Plus
     </button>
-    <button class="premium-close" id="premiumClose">Не сейчас, возможно позже</button>
+    <button class="premium-close" id="premiumClose">Не сейчас</button>
 </div>
 </div>
 
@@ -1080,6 +1084,15 @@ function doFlip(toBack) {
 document.getElementById('flipTrigger').addEventListener('click', e => { e.stopPropagation(); doFlip(true); });
 document.getElementById('flipBackTrigger').addEventListener('click', e => { e.stopPropagation(); doFlip(false); });
 
+// Sign out
+document.getElementById('signOutBtn').addEventListener('click', e => {
+    e.stopPropagation();
+    if (window._fbSignOut) window._fbSignOut();
+    [KEY_USER, KEY_CHAT, KEY_SURVEY].forEach(k => localStorage.removeItem(k));
+    currentSessionId = null;
+    goTo('screen1');
+});
+
 // Click anywhere on card body (except fields/buttons) triggers flip
 document.querySelector('.s1b-face-front').addEventListener('click', e => {
     if (e.target.closest('select') || e.target.closest('button') || e.target.closest('.fields')) return;
@@ -1313,6 +1326,8 @@ document.getElementById('endNew').addEventListener('click', () => {
 
 function initChat() {
     chatHistory = [];
+    // Generate session ID once per session (not reset on re-init)
+    if (!currentSessionId) currentSessionId = 'session_' + Date.now();
     // Restore saved model
     const savedModel = localStorage.getItem('soma_model');
     if (savedModel && models[savedModel]) {
@@ -1602,7 +1617,7 @@ async function generatePDFDoc({ sessionDate, secInterlude, secContent, secConclu
 
             const LOGO = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 402.84 69.8"><defs><style>.cls-1{fill:#281C14;}</style></defs><path class="cls-1" d="M124.49,315.25v15.2q0,3.63,2.35,4.95t8.92,1.62v4.41H96.25V337q4.6-.5,5.69-1.62t1.08-4.95V283.59q0-3.82-1.08-4.95T96.25,277v-4.41h35.69q14,0,21.22,5.68a18.38,18.38,0,0,1,7.21,15.2q0,10.59-7.35,16.18t-22.16,5.58Zm0-37.74v32.16h1.27q6.57,0,10.15-4.32t3.58-11.86q0-7.55-3.78-11.76a12.7,12.7,0,0,0-10-4.22Z" transform="translate(-96.25 -272.61)"/><path class="cls-1" d="M210.76,304.67v26q0,4,2.45,4a8.61,8.61,0,0,0,3-.49l.69,2.94a19.53,19.53,0,0,1-13.63,5.29q-9.31,0-12.06-8.14-5,7.75-14.51,7.75-6.47,0-10.44-3.48t-4-9.85q0-5.9,3.38-9.17a24.86,24.86,0,0,1,9.37-5.34L191,308.69V297.9q0-6.57-4.22-6.57-4.71,0-4.7,7.55a31.54,31.54,0,0,0,1,7.26l-12.16,1.57q-5.1-1.66-5.1-7.16a10.75,10.75,0,0,1,6-10q6-3.33,15.83-3.33,11.38,0,17.26,4T210.76,304.67Zm-22.65,27.15a10.24,10.24,0,0,0,2.85-.49V313.2L187,314.67a8.17,8.17,0,0,0-4,2.74q-1.28,1.77-1.28,5.79Q181.74,331.83,188.11,331.82Z" transform="translate(-96.25 -272.61)"/><path class="cls-1" d="M257.62,333.78V305.06a6.83,6.83,0,0,0-1.32-4.51c-.88-1.05-2.47-1.57-4.75-1.57a22,22,0,0,0-7.26,1.27v33.53c0,1.38.33,2.28,1,2.7a9.1,9.1,0,0,0,3.92.83v4.12H218.9v-4.12c1.37-.13,2.38-.26,3-.39a2.62,2.62,0,0,0,1.57-.93,3.49,3.49,0,0,0,.58-2.21V299.47l-5.19-3.33v-3l21.86-5.88h3.92l-.39,9.9q7.54-9.9,18.33-9.9,7.26,0,11.23,4.06t4,12v30.49a3.49,3.49,0,0,0,.59,2.21,2.56,2.56,0,0,0,1.57.93c.65.13,1.66.26,3,.39v4.12h-30.3v-4.12a9.1,9.1,0,0,0,3.92-.83C257.3,336.06,257.62,335.16,257.62,333.78Z" transform="translate(-96.25 -272.61)"/><path class="cls-1" d="M333.51,304.67v26c0,2.68.81,4,2.45,4a8.65,8.65,0,0,0,3-.49l.68,2.94a19.51,19.51,0,0,1-13.63,5.29q-9.3,0-12.05-8.14Q309,342,299.49,342q-6.48,0-10.44-3.48t-4-9.85q0-5.9,3.39-9.17a24.74,24.74,0,0,1,9.36-5.34l15.88-5.49V297.9q0-6.57-4.21-6.57-4.71,0-4.71,7.55a32.1,32.1,0,0,0,1,7.26l-12.16,1.57q-5.09-1.66-5.09-7.16a10.75,10.75,0,0,1,6-10q6-3.33,15.83-3.33,11.37,0,17.26,4T333.51,304.67Zm-22.65,27.15a10.24,10.24,0,0,0,2.84-.49V313.2l-3.92,1.47a8.17,8.17,0,0,0-4,2.74q-1.28,1.77-1.27,5.79Q304.49,331.83,310.86,331.82Z" transform="translate(-96.25 -272.61)"/><path class="cls-1" d="M358.9,309.08q0,9.32,4,14.61T374.09,329q8.43,0,12.75-6.08l2.35,1.47q-4.6,18-22.94,18a24,24,0,0,1-17.74-7.06q-7.06-7.05-7.06-18.92,0-12.74,7.64-21t20-8.23q8.15,0,13.39,3.18a10.57,10.57,0,0,1,5.24,9.66q0,5.49-4.61,7.45H373a47.77,47.77,0,0,0,.39-5.88q0-9.7-5.88-9.71c-2.69,0-4.79,1.6-6.33,4.81S358.9,304.05,358.9,309.08Z" transform="translate(-96.25 -272.61)"/><path class="cls-1" d="M419.29,287.22q10.68,0,16.42,6t5.74,16v2.45H410.37q0,8,4.07,12.84a13.28,13.28,0,0,0,10.64,4.8q9.3,0,14.6-6.86l2.06,1.28q-2.16,8.82-8,13.77t-15.29,5q-11.37,0-18.83-7t-7.45-19.46q0-12.94,7.95-20.83A26.24,26.24,0,0,1,419.29,287.22ZM418,291.53q-6.87,0-7.55,15.29h13.82Q424.29,291.53,418,291.53Z" transform="translate(-96.25 -272.61)"/><path class="cls-1" d="M492.92,304.67v26c0,2.68.81,4,2.45,4a8.65,8.65,0,0,0,3-.49l.68,2.94a19.5,19.5,0,0,1-13.62,5.29q-9.32,0-12.06-8.14-5,7.75-14.51,7.75-6.48,0-10.44-3.48t-4-9.85q0-5.9,3.38-9.17a24.74,24.74,0,0,1,9.36-5.34l15.88-5.49V297.9q0-6.57-4.21-6.57-4.71,0-4.71,7.55a32.1,32.1,0,0,0,1,7.26L453,307.71q-5.08-1.66-5.09-7.16a10.75,10.75,0,0,1,6-10q6-3.33,15.83-3.33,11.37,0,17.26,4T492.92,304.67Zm-22.65,27.15a10.24,10.24,0,0,0,2.84-.49V313.2l-3.92,1.47a8.17,8.17,0,0,0-4,2.74q-1.28,1.77-1.27,5.79Q463.9,331.83,470.27,331.82Z" transform="translate(-96.25 -272.61)"/></svg>`;
 
-            const SCROLL = `<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 470.504964 512.000000"><g transform="translate(-20.995036,512.000000) scale(0.100000,-0.100000)" fill="#281C14" stroke="none"><path d="M552 5113 c-21 -8 -42 -59 -42 -102 l0 -39 -131 -4 c-177 -4 -169 6 -169 -223 0 -95 3 -181 6 -190 13 -33 59 -45 179 -45 l115 0 0 -40 c0 -51 16 -85 47 -99 13 -6 80 -11 153 -11 l130 0 0 -225 c0 -255 -9 -227 93 -309 26 -21 47 -41 47 -45 0 -3 -31 -41 -70 -84 l-70 -78 0 -803 0 -803 23 -21 c31 -29 72 -28 102 3 l25 24 0 770 0 770 90 100 c125 140 125 142 -30 268 l-60 48 0 243 0 242 1575 0 1575 0 0 -465 c0 -452 1 -466 20 -485 30 -30 83 -27 109 6 20 26 21 37 21 435 l0 409 135 0 c131 0 137 1 160 25 20 19 25 34 25 75 l0 50 124 0 c118 0 127 1 153 24 l28 24 0 182 0 182 -28 24 c-26 23 -35 24 -153 24 l-124 0 0 50 c0 41 -5 56 -25 75 -24 25 -26 25 -208 25 -171 0 -186 -1 -211 -21 -17 -14 -26 -30 -26 -50 l0 -29 -1575 0 -1575 0 0 25 c0 14 -11 37 -25 50 -24 25 -25 25 -212 24 -103 0 -194 -3 -201 -6z m288 -373 l0 -230 -85 0 -85 0 0 230 0 230 85 0 85 0 0 -230z m3620 0 l0 -230 -85 0 -85 0 0 230 0 230 85 0 85 0 0 -230z m-325 0 l0 -125 -1572 -3 -1573 -2 0 130 0 130 1573 -2 1572 -3 0 -125z m-3625 0 l0 -81 -72 3 -73 3 -3 78 -3 77 76 0 75 0 0 -80z m4250 0 l0 -81 -72 3 -73 3 -3 78 -3 77 76 0 75 0 0 -80z"/></g></svg>`;
+            const SCROLL = `<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="470.504964pt" height="512.000000pt" viewBox="0 0 470.504964 512.000000" preserveAspectRatio="xMidYMid meet"><g transform="translate(-20.995036,512.000000) scale(0.100000,-0.100000)" fill="#281C14" stroke="none"><path d="M552 5113 c-21 -8 -42 -59 -42 -102 l0 -39 -131 -4 c-177 -4 -169 6 -169 -223 0 -95 3 -181 6 -190 13 -33 59 -45 179 -45 l115 0 0 -40 c0 -51 16 -85 47 -99 13 -6 80 -11 153 -11 l130 0 0 -225 c0 -255 -9 -227 93 -309 26 -21 47 -41 47 -45 0 -3 -31 -41 -70 -84 l-70 -78 0 -803 0 -803 23 -21 c31 -29 72 -28 102 3 l25 24 0 770 0 770 90 100 c125 140 125 142 -30 268 l-60 48 0 243 0 242 1575 0 1575 0 0 -465 c0 -452 1 -466 20 -485 30 -30 83 -27 109 6 20 26 21 37 21 435 l0 409 135 0 c131 0 137 1 160 25 20 19 25 34 25 75 l0 50 124 0 c118 0 127 1 153 24 l28 24 0 182 0 182 -28 24 c-26 23 -35 24 -153 24 l-124 0 0 50 c0 41 -5 56 -25 75 -24 25 -26 25 -208 25 -171 0 -186 -1 -211 -21 -17 -14 -26 -30 -26 -50 l0 -29 -1575 0 -1575 0 0 25 c0 14 -11 37 -25 50 -24 25 -25 25 -212 24 -103 0 -194 -3 -201 -6z m288 -373 l0 -230 -85 0 -85 0 0 230 0 230 85 0 85 0 0 -230z m3620 0 l0 -230 -85 0 -85 0 0 230 0 230 85 0 85 0 0 -230z m-325 0 l0 -125 -1572 -3 -1573 -2 0 130 0 130 1573 -2 1572 -3 0 -125z m-3625 0 l0 -81 -72 3 -73 3 -3 78 -3 77 76 0 75 0 0 -80z m4250 0 l0 -81 -72 3 -73 3 -3 78 -3 77 76 0 75 0 0 -80z"/><path d="M1873 4178 c-46 -22 -49 -103 -4 -127 13 -8 226 -11 655 -11 l635 0 20 26 c28 35 26 69 -4 99 l-24 25 -628 -1 c-421 0 -635 -4 -650 -11z"/><path d="M1600 3740 c-30 -30 -27 -83 6 -109 27 -21 31 -21 951 -21 791 0 928 2 952 15 46 23 54 66 20 109 l-20 26 -945 0 c-931 0 -944 0 -964 -20z"/><path d="M1385 3271 c-48 -29 -173 -165 -181 -195 -10 -41 22 -80 70 -84 32 -3 43 3 96 54 l61 58 57 -57 c48 -48 63 -57 93 -57 40 0 64 20 74 63 7 26 -1 37 -97 133 -61 61 -112 104 -124 104 -10 0 -32 -8 -49 -19z"/><path d="M2353 3266 c-27 -24 -28 -27 -28 -130 0 -145 6 -151 151 -151 103 0 106 1 130 28 27 31 29 45 13 80 -14 31 -48 47 -99 47 -40 0 -40 0 -40 40 0 51 -16 85 -47 99 -35 16 -49 14 -80 -13z"/><path d="M2725 3265 c-32 -31 -33 -74 -2 -103 18 -17 36 -22 75 -22 l52 0 0 -49 c0 -64 28 -101 76 -101 62 0 74 24 74 149 0 106 -1 110 -26 130 -23 18 -41 21 -126 21 -92 0 -101 -2 -123 -25z"/><path d="M3268 3193 c-88 -88 -101 -105 -100 -133 1 -44 27 -70 71 -70 30 0 45 9 93 57 l57 57 60 -57 c82 -78 107 -78 191 0 l61 56 57 -56 c46 -46 64 -57 90 -57 41 0 72 30 72 72 0 27 -15 47 -98 130 -121 121 -128 123 -216 38 l-62 -59 -54 54 c-35 35 -67 57 -88 61 -31 6 -38 1 -134 -93z"/><path d="M1810 3127 c-30 -15 -45 -54 -36 -91 11 -44 55 -56 211 -56 156 0 200 12 211 56 9 37 -6 76 -36 91 -17 9 -74 13 -175 13 -101 0 -158 -4 -175 -13z"/></g></svg>`;
 
             const box = (t, n) => {
                 const h = Math.max(n * 17 + 28, 50);
