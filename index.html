@@ -513,23 +513,19 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
                 <img class="s1b-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/039080ffd25b01f8a0cc35ca478071d4c4b675ab/feather.svg" alt="" id="flipTrigger" style="cursor:pointer;">
             </div>
             <div style="background:rgba(255,255,255,0.05);border-radius:8px;padding:10px 14px;font-size:12px;color:rgba(210,190,165,0.55);line-height:1.6;flex-shrink:0;">
-                Расскажи немного о себе — это поможет нам выбрать проводника, который лучше всего услышит именно тебя
+                Опиши свой вопрос. Это поможет настроить сессию именно под тебя
             </div>
             <div class="fields" style="overflow-y:auto;scrollbar-width:none;flex:1;">
                 <div><div class="flabel">Что тебя беспокоит?</div>
                 <select class="fselect"><option value="" disabled selected>Выбери тему</option><option>Отношения и любовь</option><option>Карьера и деньги</option><option>Здоровье и энергия</option><option>Смысл и предназначение</option><option>Тревога и страхи</option><option>Семья и близкие</option><option>Одиночество</option><option>Другое</option></select></div>
                 <div><div class="flabel">Как ты себя чувствуешь сейчас?</div>
                 <select class="fselect"><option value="" disabled selected>Выбери состояние</option><option>Потерян и не знаю куда идти</option><option>Тревожно и неспокойно</option><option>Устал и нет сил</option><option>Ищу ответы на вопросы</option><option>Хочу перемен</option><option>В целом хорошо, но есть вопросы</option><option>Чувствую внутренний конфликт</option></select></div>
-                <div><div class="flabel">Твой возраст</div>
-                <select class="fselect"><option value="" disabled selected>Выбери диапазон</option><option>До 20 лет</option><option>20–30 лет</option><option>30–40 лет</option><option>40–50 лет</option><option>Старше 50</option></select></div>
                 <div><div class="flabel">Как часто обращаешься за советом?</div>
                 <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Впервые пробую</option><option>Иногда, в трудные моменты</option><option>Регулярно, это часть жизни</option><option>Скептически, но интересно</option></select></div>
                 <div><div class="flabel">Чего ожидаешь от сессии?</div>
                 <select class="fselect"><option value="" disabled selected>Выбери цель</option><option>Получить ясность и направление</option><option>Выговориться и быть услышанным</option><option>Узнать что-то о своей судьбе</option><option>Найти решение конкретной ситуации</option><option>Просто попробовать</option></select></div>
                 <div><div class="flabel">Есть ли у тебя конкретный вопрос?</div>
                 <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Да, есть чёткий вопрос</option><option>Скорее ощущение, чем вопрос</option><option>Хочу просто поговорить</option><option>Не знаю с чего начать</option></select></div>
-                <div><div class="flabel">Как ты относишься к мистическому?</div>
-                <select class="fselect"><option value="" disabled selected>Выбери позицию</option><option>Верю и практикую</option><option>Открыт, но с сомнениями</option><option>Скептик, но любопытен</option><option>Интересует только психология</option></select></div>
             </div>
             <button class="submit-btn" id="submitBtn">
                 <span>Начать сессию</span>
@@ -1600,22 +1596,31 @@ async function generatePDFDoc({ sessionDate, secInterlude, secContent, secConclu
                 pageSize: 'A4', pageMargins: [50, 50, 50, 50],
                 background: (p, s) => ({ canvas: [{ type:'rect', x:0, y:0, w:s.width, h:s.height, color: BG }] }),
                 content: [
-                    { columns: [{ svg: LOGO, width: 160 }, { svg: SCROLL, width: 28, alignment: 'right', marginTop: 4 }], marginBottom: 8 },
-                    { text: `протокол сессии от ${sessionDate}`, fontSize: 13, color: INK, marginBottom: 28 },
+                    // Header row: logo left, scroll icon right — fixed alignment
+                    {
+                        columns: [
+                            { svg: LOGO, width: 160, margin: [0, 0, 0, 0] },
+                            { svg: SCROLL, width: 32, height: 32, alignment: 'right', margin: [0, 6, 0, 0] }
+                        ],
+                        marginBottom: 6
+                    },
+                    // Dashed disclaimer under header
+                    { stack: [
+                        { svg: `<svg width="${W}" height="${DH}" xmlns="http://www.w3.org/2000/svg"><rect width="${W}" height="${DH}" rx="6" fill="none" stroke="${INK}" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.3"/></svg>`, width: W, marginBottom: -DH },
+                        { text: `Этот протокол сеанса от ${sessionDate} был составлен автоматически`, fontSize: 9, color: INK, opacity: 0.45, alignment: 'center', margin: [14, 11, 14, 11] }
+                    ], marginBottom: 24 },
+                    // Sections
                     { text: 'ИНТЕРЛЮДИЯ', fontSize: 7, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
                     box(secInterlude || '—', est(secInterlude)),
                     { text: 'СОДЕРЖАНИЕ', fontSize: 7, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
                     box(secContent || '—', est(secContent)),
                     { text: 'ВЫВОД', fontSize: 7, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
                     box(secConclusion || '—', est(secConclusion)),
-                    { stack: [
-                        { svg: `<svg width="${W}" height="${DH}" xmlns="http://www.w3.org/2000/svg"><rect width="${W}" height="${DH}" rx="6" fill="none" stroke="${INK}" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.3"/></svg>`, width: W, marginBottom: -DH },
-                        { text: `Этот протокол сеанса от ${sessionDate} был составлен автоматически`, fontSize: 9, color: INK, opacity: 0.45, alignment: 'center', margin: [14, 11, 14, 11] }
-                    ], marginTop: 20 },
+                    // Footer: models & count
                     { columns: [
-                        { text: `Модели: ${(modelsUsed||[]).length ? modelsUsed.join(', ') : 'Тара'}`, fontSize: 8, color: INK, opacity: 0.4 },
-                        { text: `${msgCount || 0} сообщений`, fontSize: 8, color: INK, opacity: 0.4, alignment: 'right' }
-                    ], marginTop: 16 }
+                        { text: `Модели: ${(modelsUsed||[]).length ? modelsUsed.join(', ') : 'Тара'}`, fontSize: 11, bold: true, color: INK },
+                        { text: `${msgCount || 0} сообщений`, fontSize: 11, bold: true, color: INK, alignment: 'right' }
+                    ], marginTop: 20 }
                 ],
                 defaultStyle: { font: 'Roboto' }
             }).download(`Panacea (протокол сеанса от ${sessionDate}).pdf`);
