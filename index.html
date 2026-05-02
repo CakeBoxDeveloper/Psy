@@ -1410,7 +1410,11 @@ function initChat() {
         const data = JSON.parse(raw);
         if (Date.now() - data.ts < 86400000) {
             data.msgs.forEach(m => {
-                addMsg(m.t, m.s, false, m.m || null);
+                if (m.m === 'consilium' && m.h) {
+                    addMsgHTML(m.h, m.s, false, 'consilium');
+                } else {
+                    addMsg(m.t, m.s, false, m.m || null);
+                }
                 chatHistory.push({role: m.s === 'user' ? 'user' : 'assistant', content: m.t});
             });
             setTimeout(updateChatMask, 50);
@@ -1430,6 +1434,7 @@ function saveChat() {
     const msgs = Array.from(chatArea.querySelectorAll('.message')).map(el => ({
         s: el.classList.contains('user') ? 'user' : 'ai',
         t: el.querySelector('.bubble-body') ? el.querySelector('.bubble-body').textContent : el.querySelector('.bubble').textContent,
+        h: el.dataset.modelKey === 'consilium' ? (el.querySelector('.consilium-body')?.outerHTML || null) : null,
         m: el.dataset.modelKey || null
     }));
     localStorage.setItem(KEY_CHAT, JSON.stringify({ts: Date.now(), msgs}));
