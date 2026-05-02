@@ -1596,27 +1596,27 @@ async function generatePDFDoc({ sessionDate, secInterlude, secContent, secConclu
                 pageSize: 'A4', pageMargins: [50, 50, 50, 50],
                 background: (p, s) => ({ canvas: [{ type:'rect', x:0, y:0, w:s.width, h:s.height, color: BG }] }),
                 content: [
-                    // Header row: logo left, scroll icon right — fixed alignment
+                    // Header: logo left, scroll icon absolute top-right via column
                     {
                         columns: [
-                            { svg: LOGO, width: 160, margin: [0, 0, 0, 0] },
-                            { svg: SCROLL, width: 32, height: 32, alignment: 'right', margin: [0, 6, 0, 0] }
+                            { svg: LOGO, width: 160 },
+                            { svg: SCROLL, width: 36, height: 36, alignment: 'right' }
                         ],
-                        marginBottom: 6
+                        marginBottom: 10
                     },
-                    // Dashed disclaimer under header
+                    // Dashed disclaimer
                     { stack: [
                         { svg: `<svg width="${W}" height="${DH}" xmlns="http://www.w3.org/2000/svg"><rect width="${W}" height="${DH}" rx="6" fill="none" stroke="${INK}" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.3"/></svg>`, width: W, marginBottom: -DH },
-                        { text: `Этот протокол сеанса от ${sessionDate} был составлен автоматически`, fontSize: 9, color: INK, opacity: 0.45, alignment: 'center', margin: [14, 11, 14, 11] }
-                    ], marginBottom: 24 },
+                        { text: `Этот протокол сеанса от ${sessionDate} был составлен автоматически`, fontSize: 11, color: INK, opacity: 0.5, alignment: 'center', margin: [14, 10, 14, 10] }
+                    ], marginBottom: 28 },
                     // Sections
-                    { text: 'ИНТЕРЛЮДИЯ', fontSize: 7, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
+                    { text: 'ИНТЕРЛЮДИЯ', fontSize: 10, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
                     box(secInterlude || '—', est(secInterlude)),
-                    { text: 'СОДЕРЖАНИЕ', fontSize: 7, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
+                    { text: 'СОДЕРЖАНИЕ', fontSize: 10, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
                     box(secContent || '—', est(secContent)),
-                    { text: 'ВЫВОД', fontSize: 7, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
+                    { text: 'ВЫВОД', fontSize: 10, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
                     box(secConclusion || '—', est(secConclusion)),
-                    // Footer: models & count
+                    // Footer
                     { columns: [
                         { text: `Модели: ${(modelsUsed||[]).length ? modelsUsed.join(', ') : 'Тара'}`, fontSize: 11, bold: true, color: INK },
                         { text: `${msgCount || 0} сообщений`, fontSize: 11, bold: true, color: INK, alignment: 'right' }
