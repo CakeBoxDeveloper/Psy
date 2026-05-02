@@ -644,10 +644,12 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
                 </button>
                 <button class="ditem ditem-premium" data-premium="auto">
                     <div class="ditem-text"><span class="ditem-name">Оракул</span><span class="ditem-desc">Анализирует запрос и выбирает лучшего проводника</span></div>
+                    <span class="ditem-check"></span>
                     <img class="ditem-star" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" alt="">
                 </button>
                 <button class="ditem ditem-premium" data-premium="consilium">
                     <div class="ditem-text"><span class="ditem-name">Консилиум</span><span class="ditem-desc">Мнения всех проводников сразу</span></div>
+                    <span class="ditem-check"></span>
                     <img class="ditem-star" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" alt="">
                 </button>
             </div>
@@ -1671,39 +1673,18 @@ function handleRegularMode(text, typingIndicator, thinkDelay) {
 }
 
 async function handleOracleMode(text, typingIndicator, thinkDelay) {
-    // First, ask a meta-model to choose the best specialist
-    const analyzePrompt = `Проанализируй запрос пользователя и выбери ОДНУ наиболее подходящую модель из списка:
-
-- tara (таролог) - для вопросов о будущем, раскладах, символах
-- karma (кармолог) - для повторяющихся ситуаций, кармических узлов
-- astra (астролог) - для вопросов о планетах, натальной карте, циклах
-- eva (регрессолог) - для глубинной памяти, прошлых жизней
-- psyche (психолог) - для эмоций, отношений, внутренних конфликтов
-- gera (нумеролог) - для чисел, дат, имён
-
-Запрос: "${text}"
-
-Ответь ТОЛЬКО названием модели (одно слово: tara, karma, astra, eva, psyche или gera).`;
+    // Choose model locally by keywords — fast, no extra API call
+    const t = text.toLowerCase();
+    let validModel = 'psyche'; // default
+    if (/тар[оа]|карт[аы]|расклад|аркан|символ|предсказ/i.test(t)) validModel = 'tara';
+    else if (/карм|прошл.*жизн|урок|повтор|цикл|судьб/i.test(t)) validModel = 'karma';
+    else if (/астр|планет|натальн|гороскоп|знак зодиак|луна|солнц|транзит/i.test(t)) validModel = 'astra';
+    else if (/регресс|прошл.*жизн|душ[аи]|воспоминан|память|реинкарн/i.test(t)) validModel = 'eva';
+    else if (/числ[оа]|нумерол|дат[аы]|имя|имен|цифр/i.test(t)) validModel = 'gera';
+    else if (/чувств|эмоц|отношен|тревог|страх|психолог|конфликт|депресс|одиноч/i.test(t)) validModel = 'psyche';
 
     setTimeout(async () => {
         try {
-            const analyzeResp = await fetch(`${API_BASE}/api/chat`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    modelKey: 'psyche',
-                    history: [{role: 'user', content: analyzePrompt}],
-                    max_tokens: 50,
-                    temperature: 0.3
-                })
-            });
-            const analyzeData = await analyzeResp.json();
-            const chosenModel = (analyzeData.choices?.[0]?.message?.content || 'tara').trim().toLowerCase();
-            
-            // Validate chosen model
-            const validModel = ['tara', 'karma', 'astra', 'eva', 'psyche', 'gera'].includes(chosenModel) ? chosenModel : 'tara';
-            
-            // Now get response from chosen model
             const resp = await fetch(`${API_BASE}/api/chat`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -1715,18 +1696,16 @@ async function handleOracleMode(text, typingIndicator, thinkDelay) {
                 })
             });
             const data = await resp.json();
-            
+
             typingIndicator.remove();
             isTyping = false;
-            
+
             let reply = data.choices?.[0]?.message?.content || 'Что-то пошло не так. Попробуй ещё раз.';
             const lastPunct = Math.max(reply.lastIndexOf('.'), reply.lastIndexOf('?'), reply.lastIndexOf('!'));
-            if (lastPunct > reply.length * 0.5) {
-                reply = reply.slice(0, lastPunct + 1);
-            }
-            
+            if (lastPunct > reply.length * 0.5) reply = reply.slice(0, lastPunct + 1);
+
             chatHistory.push({role: 'assistant', content: reply});
-            // Custom sig: "Оракул выбрал для ответа модель X"
+
             const oracleSig = `Оракул выбрал для ответа модель ${models[validModel].name}`;
             const div = document.createElement('div');
             div.className = 'message ai';
