@@ -183,12 +183,12 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 /* Panacea Plus modal */
 .premium-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:600;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
 .premium-overlay.show{display:flex;}
-.premium-modal{width:80%;max-width:340px;background:rgba(42,36,32,0.97);border-radius:12px;padding:28px 22px 22px;display:flex;flex-direction:column;gap:16px;animation:fadeIn 0.3s ease-out forwards;}
+.premium-modal{width:80%;max-width:340px;background:rgba(42,36,32,0.97);border-radius:12px;padding:28px 22px 22px;display:flex;flex-direction:column;gap:16px;animation:fadeIn 0.3s ease-out forwards;overflow:visible;}
 .premium-title{color:rgba(210,190,165,1);font-size:20px;font-weight:900;font-family:'TiemposHeadline',serif;text-align:center;line-height:1.3;}
 .premium-desc{color:rgba(210,190,165,0.65);font-size:12px;line-height:1.7;text-align:center;background:rgba(255,255,255,0.06);border-radius:8px;padding:10px 12px;}
 body.light .premium-desc{background:rgba(60,45,35,0.08);color:rgba(40,28,20,0.7);}
 .premium-features{display:flex;flex-direction:column;gap:8px;}
-.premium-feature{display:flex;align-items:flex-start;gap:10px;color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;}
+.premium-feature{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;}
 .premium-feature-icon{width:14px;height:14px;flex-shrink:0;margin-top:1px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
 .pf-marker{width:14px;height:14px;flex-shrink:0;margin-top:2px;filter:invert(85%) sepia(15%) saturate(200%) hue-rotate(10deg) brightness(110%);opacity:0.85;}
 body.light .pf-marker{filter:invert(10%) sepia(10%) saturate(300%) brightness(15%);opacity:1;}
@@ -211,7 +211,7 @@ body.light .pf-marker{filter:invert(10%) sepia(10%) saturate(300%) brightness(15
 .light .bubble-sig{color:rgba(40,28,20,0.65);border-top-color:rgba(40,28,20,0.2);}
 .light .ditem-check{background:rgb(40,28,20) !important;}
 .typing-bubble{display:flex;align-items:center;gap:4px;padding:10px 14px;background:rgba(255,255,255,0.06);border-radius:8px;width:fit-content;}
-.typing-bubble span{width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:50%;animation:typing 1.2s infinite;}
+.typing-bubble span{width:5px;height:5px;background:#d2bea5;border-radius:50%;animation:typing 1.2s infinite;}
 .typing-bubble span:nth-child(2){animation-delay:0.2s;}
 .typing-bubble span:nth-child(3){animation-delay:0.4s;}
 @keyframes typing{0%,60%,100%{opacity:0.3;transform:scale(1);}30%{opacity:1;transform:scale(1.2);}}
@@ -225,6 +225,41 @@ body.light .pf-marker{filter:invert(10%) sepia(10%) saturate(300%) brightness(15
 .send-btn:hover{background:rgba(255,255,255,0.1);}
 .send-btn:active{transform:scale(0.95);}
 .send-btn img{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(60%);opacity:0.7;}
+
+/* Voice input button */
+.voice-btn{width:36px;height:36px;background:rgba(255,255,255,0.06);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;position:relative;}
+.voice-btn:hover{background:rgba(255,255,255,0.1);}
+.voice-btn:active{transform:scale(0.95);}
+.voice-btn img{width:16px;height:16px;}
+.voice-btn img path, .voice-btn img circle, .voice-btn img rect, .voice-btn img line, .voice-btn img polyline, .voice-btn img polygon{stroke:#d2bea5 !important;fill:#d2bea5 !important;}
+.light .voice-btn{background:rgba(60,45,35,0.1);}
+.light .voice-btn:hover{background:rgba(60,45,35,0.18);}
+.light .voice-btn img path, .light .voice-btn img circle, .light .voice-btn img rect, .light .voice-btn img line, .light .voice-btn img polyline, .light .voice-btn img polygon{stroke:#281c14 !important;fill:#281c14 !important;}
+
+/* Voice recording animation */
+.voice-btn.recording{background:rgba(210,190,165,0.15);}
+.light .voice-btn.recording{background:rgba(40,28,20,0.15);}
+@keyframes voicePulse{
+    0%{transform:scale(1);opacity:0.6;}
+    100%{transform:scale(1.8);opacity:0;}
+}
+.voice-btn.recording::before,
+.voice-btn.recording::after{
+    content:'';
+    position:absolute;
+    inset:-4px;
+    border:2px solid #d2bea5;
+    border-radius:10px;
+    pointer-events:none;
+    animation:voicePulse 1.5s ease-out infinite;
+}
+.voice-btn.recording::after{
+    animation-delay:0.75s;
+}
+.light .voice-btn.recording::before,
+.light .voice-btn.recording::after{
+    border-color:#281c14;
+}
 
 /* Icon color token — dove beige, same for theme/menu/send */
 .icon-dove{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(60%);opacity:0.7;}
@@ -253,7 +288,7 @@ body.light .pf-marker{filter:invert(10%) sepia(10%) saturate(300%) brightness(15
 .light .ditem.active .ditem-star{opacity:1;filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);}
 .light .bubble{background:rgba(60,45,35,0.1);color:rgb(40,28,20);}
 .light .typing-bubble{background:rgba(60,45,35,0.1);}
-.light .typing-bubble span{background:rgba(60,45,35,0.4);}
+.light .typing-bubble span{background:#281c14;}
 .light .empty-state{color:rgba(40,28,20,0.4);}
 .light .empty-state img{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);opacity:0.5;}
 .light .input-field{background:rgba(60,45,35,0.1);color:rgb(40,28,20);}
@@ -280,14 +315,18 @@ body.light .premium-btn .shimmer-layer{background:linear-gradient(105deg,transpa
 body.light .premium-close{color:rgba(40,28,20,0.5);}
 body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);}
 /* pf-marker icons: #d2bea5 dark theme, #281c14 light theme */
-.pf-marker{width:14px;height:14px;flex-shrink:0;margin-top:2px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);opacity:0.85;}
-body.light .pf-marker{filter:invert(10%) sepia(10%) saturate(300%) hue-rotate(5deg) brightness(10%);opacity:1;}
+.pf-marker{width:14px;height:14px;flex-shrink:0;margin-top:2px;}
+.pf-marker path, .pf-marker circle, .pf-marker rect, .pf-marker line, .pf-marker polyline, .pf-marker polygon{stroke:#d2bea5 !important;fill:#d2bea5 !important;}
+body.light .pf-marker path, body.light .pf-marker circle, body.light .pf-marker rect, body.light .pf-marker line, body.light .pf-marker polyline, body.light .pf-marker polygon{stroke:#281c14 !important;fill:#281c14 !important;}
 /* New icon & markers in light theme */
 body.light .premium-modal img[src*="e_AzA"]{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:1;}
 body.light .ditem-star{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%) !important;opacity:1 !important;}
 body.light .end-summary-btn img{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%) !important;opacity:1 !important;}
 body.light .bulb-btn img{filter:invert(15%) sepia(15%) saturate(200%) brightness(30%);opacity:0.8;}
 .light ~ .bg, .light ~ .bg-frame{display:none !important;}
+
+/* List markers in light theme */
+body.light span[style*="width:5px;height:5px;background:#d2bea5"]{background:#281c14 !important;}
 
 /* Loader screen */
 .loader-wrap{width:100%;height:100vh;background:rgb(28,23,20);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;}
@@ -473,21 +512,21 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
                 <div style="padding:14px;background:rgb(52,44,38);border-radius:10px;">
                     <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;margin-bottom:8px;">Да, бесплатно:</div>
                     <div style="display:flex;flex-direction:column;gap:5px;">
-                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Неограниченное количество сессий — без лимитов и таймеров</div>
-                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Шесть моделей: Тара, Карма, Астра, Ева, Психея и Гера — каждая со своим подходом</div>
-                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>История сессий сохраняется на 24 часа — можно вернуться и продолжить</div>
-                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.4);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Полный доступ без регистрации — достаточно войти как гость</div>
+                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Неограниченное количество сессий — без лимитов и таймеров</div>
+                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Шесть моделей: Тара, Карма, Астра, Ева, Психея и Гера — каждая со своим подходом</div>
+                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>История сессий сохраняется на 24 часа — можно вернуться и продолжить</div>
+                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Полный доступ без регистрации — достаточно войти как гость</div>
                     </div>
                 </div>
                 <div style="padding:14px;background:rgb(48,40,34);border-radius:10px;border:1px solid rgba(210,190,165,0.2);">
                     <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;margin-bottom:6px;">Panacea Plus</div>
                     <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.6;margin-bottom:10px;">Ты можешь поддержать развитие платформы, подключив Panacea Plus. Это помогает нам обучать модели и развивать сеть. Взамен ты получаешь расширенные возможности:</div>
                     <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px;">
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Режим Оракул — нейронка сама выбирает подходящую модель под твой запрос</div>
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Консилиум — все шесть нейронок отвечают одновременно, ты выбираешь резонирующий ответ</div>
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>История сессий без ограничений по времени</div>
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Приоритетная обработка запросов</div>
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:rgba(210,190,165,0.35);border-radius:1px;flex-shrink:0;margin-top:4px;"></span>PDF-саммари каждой сессии с ключевыми инсайтами</div>
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Режим Оракул — нейронка сама выбирает подходящую модель под твой запрос</div>
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Консилиум — все шесть нейронок отвечают одновременно, ты выбираешь резонирующий ответ</div>
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>История сессий без ограничений по времени</div>
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Приоритетная обработка запросов</div>
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>PDF-саммари каждой сессии с ключевыми инсайтами</div>
                     </div>
                     <button class="premium-btn" style="position:relative;z-index:1;overflow:hidden;" onclick="document.getElementById('premiumOverlay').classList.add('show')">
                         <div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,0.3) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;pointer-events:none;"></div>
@@ -621,6 +660,9 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
     <div class="chat-area" id="chatArea"></div>
     <div class="input-area">
         <input type="text" class="input-field" id="msgInput" placeholder="Задай свой вопрос..." autocomplete="off">
+        <button class="voice-btn" id="voiceBtn" title="Голосовой ввод">
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/97130ce75b7a93ea2aee5ce8d5235262329b8ffa/harp-svgrepo-com.svg" alt="">
+        </button>
         <button class="send-btn" id="sendBtn">
             <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg" class="icon-dove" alt="">
         </button>
@@ -1471,6 +1513,74 @@ function send() {
 
 sendBtn.addEventListener('click', send);
 msgInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); send(); } });
+
+// Voice input with Groq Whisper
+const voiceBtn = document.getElementById('voiceBtn');
+let mediaRecorder = null;
+let audioChunks = [];
+let isRecording = false;
+
+voiceBtn.addEventListener('click', async () => {
+    if (!isRecording) {
+        // Start recording
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+            
+            mediaRecorder.ondataavailable = (event) => {
+                audioChunks.push(event.data);
+            };
+            
+            mediaRecorder.onstop = async () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                await transcribeAudio(audioBlob);
+                stream.getTracks().forEach(track => track.stop());
+            };
+            
+            mediaRecorder.start();
+            isRecording = true;
+            voiceBtn.classList.add('recording');
+        } catch (err) {
+            console.error('Microphone access denied:', err);
+            alert('Не удалось получить доступ к микрофону');
+        }
+    } else {
+        // Stop recording
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+            isRecording = false;
+            voiceBtn.classList.remove('recording');
+        }
+    }
+});
+
+async function transcribeAudio(audioBlob) {
+    try {
+        // Convert webm to a format Groq accepts (mp3, wav, etc.)
+        const formData = new FormData();
+        formData.append('file', audioBlob, 'audio.webm');
+        
+        // Use your Vercel API endpoint for transcription
+        const response = await fetch(`${API_BASE}/api/transcribe`, {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (!response.ok) {
+            throw new Error('Transcription failed');
+        }
+        
+        const data = await response.json();
+        if (data.text) {
+            msgInput.value = data.text;
+            msgInput.focus();
+        }
+    } catch (err) {
+        console.error('Transcription error:', err);
+        alert('Не удалось распознать речь. Попробуйте ещё раз.');
+    }
+}
 
 // Loader
 const LOADER_QUOTES = [
