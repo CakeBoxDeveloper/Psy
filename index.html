@@ -164,7 +164,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .chat-header-left{display:flex;align-items:center;}
 .model-btn{background:rgba(255,255,255,0.08);border:none;color:rgba(210,190,165,0.85);font-size:13px;font-weight:500;cursor:pointer;padding:8px 16px;border-radius:8px;font-family:'Inter',sans-serif;transition:all 0.15s;}
 .model-btn:hover{background:rgba(255,255,255,0.12);color:rgba(210,190,165,1);}
-.dropdown{position:absolute;top:calc(100% + 4px);left:16px;background:rgba(42,36,32,0.98);border:1px solid rgba(210,190,165,0.12);border-radius:10px;min-width:220px;z-index:100;display:none;flex-direction:column;overflow:hidden;backdrop-filter:none;}
+.dropdown{position:absolute;top:calc(100% + 4px);left:16px;background:rgb(42,36,32);border:1px solid rgba(210,190,165,0.12);border-radius:10px;min-width:220px;z-index:100;display:none;flex-direction:column;overflow:hidden;backdrop-filter:none;}
 .dropdown.show{display:flex;}
 .ditem{padding:10px 14px;background:none;border:none;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:all 0.15s;display:flex;align-items:center;gap:8px;}
 .ditem:hover{background:rgba(255,255,255,0.06);}
@@ -176,9 +176,9 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .ditem.active .ditem-desc{color:rgba(210,190,165,0.45);}
 .ditem-check{font-size:12px;color:rgba(210,190,165,0.9);opacity:0;flex-shrink:0;width:8px;height:8px;border-radius:50%;background:rgba(210,190,165,0.9);display:inline-block;font-size:0;}
 .ditem.active .ditem-check{opacity:1;}
-.ditem-star{width:14px;height:14px;flex-shrink:0;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
-.light .ditem-star{filter:invert(0%) sepia(20%) saturate(200%) brightness(20%);opacity:0.6;}
-.light .ditem.active .ditem-star{filter:invert(0%) sepia(20%) saturate(200%) brightness(20%);opacity:0.8;}
+.ditem-star{width:14px;height:14px;flex-shrink:0;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);opacity:0.85;}
+.light .ditem-star{filter:invert(10%) sepia(10%) saturate(300%) brightness(15%);opacity:1;}
+.light .ditem.active .ditem-star{filter:invert(10%) sepia(10%) saturate(300%) brightness(15%);opacity:1;}
 
 /* Panacea Plus modal */
 .premium-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:600;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
@@ -260,6 +260,12 @@ body.light .pf-marker{filter:invert(10%) sepia(10%) saturate(300%) brightness(15
     border-color:#281c14;
 }
 
+/* Consilium message formatting */
+.consilium-body{display:flex;flex-direction:column;gap:10px;}
+.consilium-item{display:flex;flex-direction:column;gap:3px;}
+.consilium-name{font-size:12px;font-weight:600;opacity:1;}
+.consilium-text{font-size:12px;line-height:1.6;opacity:0.85;}
+
 /* Icon color token — dove beige, same for theme/menu/send */
 .icon-dove{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(60%);opacity:0.7;}
 .light .icon-dove{filter:invert(15%) sepia(15%) saturate(200%) brightness(30%);opacity:0.75;}
@@ -275,7 +281,7 @@ body.light .pf-marker{filter:invert(10%) sepia(10%) saturate(300%) brightness(15
 .light .s2-inner{background:rgb(235,220,200);}
 .light .model-btn{background:rgba(60,45,35,0.25);color:rgb(40,28,20);font-weight:600;border:none;}
 .light .model-btn:hover{background:rgba(60,45,35,0.35);}
-.light .dropdown{background:rgb(235,220,200);border-color:rgba(60,45,35,0.2);}
+.light .dropdown{background:rgb(230,215,195);border-color:rgba(60,45,35,0.2);}
 .light .ditem-name{color:rgba(40,28,20,0.85);}
 .light .ditem-desc{color:rgba(40,28,20,0.55);}
 .light .ditem:hover{background:rgba(60,45,35,0.08);}
@@ -283,8 +289,8 @@ body.light .pf-marker{filter:invert(10%) sepia(10%) saturate(300%) brightness(15
 .light .ditem.active .ditem-name{color:rgb(40,28,20);}
 .light .ditem.active .ditem-desc{color:rgba(40,28,20,0.7);}
 .light .ditem-check{color:rgb(40,28,20);}
-.light .ditem-star{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);opacity:0.35;}
-.light .ditem.active .ditem-star{opacity:1;filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);}
+.light .ditem-star{filter:invert(10%) sepia(10%) saturate(300%) brightness(15%);opacity:0.7;}
+.light .ditem.active .ditem-star{filter:invert(10%) sepia(10%) saturate(300%) brightness(15%);opacity:1;}
 .light .bubble{background:rgba(60,45,35,0.1);color:rgb(40,28,20);}
 .light .typing-bubble{background:rgba(60,45,35,0.1);}
 .light .typing-bubble span{background:#281c14;}
@@ -315,7 +321,6 @@ body.light .premium-close{color:rgba(40,28,20,0.5);}
 body.light .premium-feature-icon{filter:invert(15%) sepia(15%) saturate(200%) brightness(40%);}
 /* New icon & markers in light theme */
 body.light .premium-modal img[src*="e_AzA"]{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:1;}
-body.light .ditem-star{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%) !important;opacity:1 !important;}
 body.light .end-summary-btn img{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%) !important;opacity:1 !important;}
 body.light .bulb-btn img{filter:invert(15%) sepia(15%) saturate(200%) brightness(30%);opacity:0.8;}
 .light ~ .bg, .light ~ .bg-frame{display:none !important;}
@@ -1255,7 +1260,11 @@ document.getElementById('endSummaryBtn').addEventListener('click', async () => {
         Array.from(chatArea.querySelectorAll('.message'))
             .map(el => el.dataset.modelKey)
             .filter(Boolean)
-            .map(k => models[k]?.name || k)
+            .map(k => {
+                if (k === 'consilium') return 'Консилиум';
+                if (k === 'auto') return 'Оракул';
+                return models[k]?.name || k;
+            })
     )];
 
     const sessionDate = new Date().toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'});
@@ -1407,7 +1416,11 @@ function saveChat() {
     const user = userRaw ? JSON.parse(userRaw) : null;
     if (user && user.uid && user.p !== 'guest' && window._fbSaveSession) {
         if (!currentSessionId) currentSessionId = 'session_' + Date.now();
-        const modelsUsed = [...new Set(msgs.filter(m => m.m).map(m => m.m))];
+        const modelsUsed = [...new Set(msgs.filter(m => m.m).map(m => {
+            if (m.m === 'consilium') return 'Консилиум';
+            if (m.m === 'auto') return 'Оракул';
+            return models[m.m]?.name || m.m;
+        }))];
         const surveyRaw = localStorage.getItem(KEY_SURVEY);
         window._fbSaveSession(user.uid, currentSessionId, {
             date: new Date().toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'}),
@@ -1636,7 +1649,7 @@ async function handleConsiliumMode(text, typingIndicator, thinkDelay) {
             isTyping = false;
             
             // Combine all responses with HTML formatting
-            let combinedHTML = '<div style="display:flex;flex-direction:column;gap:12px;">';
+            let combinedHTML = '<div class="consilium-body">';
             modelKeys.forEach((key, i) => {
                 let reply = results[i].choices?.[0]?.message?.content || '';
                 if (reply) {
@@ -1644,7 +1657,7 @@ async function handleConsiliumMode(text, typingIndicator, thinkDelay) {
                     if (lastPunct > reply.length * 0.5) {
                         reply = reply.slice(0, lastPunct + 1);
                     }
-                    combinedHTML += `<div style="margin-bottom:8px;"><strong style="color:rgba(210,190,165,1);font-size:13px;">${models[key].name}:</strong><div style="margin-top:4px;color:rgba(210,190,165,0.8);font-size:12px;line-height:1.6;">${reply}</div></div>`;
+                    combinedHTML += `<div class="consilium-item"><span class="consilium-name">${models[key].name}</span><span class="consilium-text">${reply}</span></div>`;
                 }
             });
             combinedHTML += '</div>';
@@ -1675,80 +1688,55 @@ async function handleConsiliumMode(text, typingIndicator, thinkDelay) {
 sendBtn.addEventListener('click', send);
 msgInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); send(); } });
 
-// Voice input with Groq Whisper
+// Voice input — Web Speech API (works in browser, no server needed)
 const voiceBtn = document.getElementById('voiceBtn');
-let mediaRecorder = null;
-let audioChunks = [];
 let isRecording = false;
+let speechRecognition = null;
 
 if (voiceBtn) {
-    voiceBtn.addEventListener('click', async () => {
-        // Check premium access
+    voiceBtn.addEventListener('click', () => {
         if (!isPremium) {
             premiumOverlay.classList.add('show');
             return;
         }
-        
-    if (!isRecording) {
-        // Start recording
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
-            audioChunks = [];
-            
-            mediaRecorder.ondataavailable = (event) => {
-                audioChunks.push(event.data);
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            alert('Ваш браузер не поддерживает голосовой ввод. Попробуйте Chrome.');
+            return;
+        }
+
+        if (!isRecording) {
+            speechRecognition = new SpeechRecognition();
+            speechRecognition.lang = 'ru-RU';
+            speechRecognition.continuous = false;
+            speechRecognition.interimResults = false;
+
+            speechRecognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                msgInput.value = transcript;
+                msgInput.focus();
             };
-            
-            mediaRecorder.onstop = async () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                await transcribeAudio(audioBlob);
-                stream.getTracks().forEach(track => track.stop());
+
+            speechRecognition.onerror = () => {
+                isRecording = false;
+                voiceBtn.classList.remove('recording');
             };
-            
-            mediaRecorder.start();
+
+            speechRecognition.onend = () => {
+                isRecording = false;
+                voiceBtn.classList.remove('recording');
+            };
+
+            speechRecognition.start();
             isRecording = true;
             voiceBtn.classList.add('recording');
-        } catch (err) {
-            console.error('Microphone access denied:', err);
-            alert('Не удалось получить доступ к микрофону');
-        }
-    } else {
-        // Stop recording
-        if (mediaRecorder && mediaRecorder.state === 'recording') {
-            mediaRecorder.stop();
+        } else {
+            if (speechRecognition) speechRecognition.stop();
             isRecording = false;
             voiceBtn.classList.remove('recording');
         }
-    }
     });
-}
-
-async function transcribeAudio(audioBlob) {
-    try {
-        // Convert webm to a format Groq accepts (mp3, wav, etc.)
-        const formData = new FormData();
-        formData.append('file', audioBlob, 'audio.webm');
-        
-        // Use your Vercel API endpoint for transcription
-        const response = await fetch(`${API_BASE}/api/transcribe`, {
-            method: 'POST',
-            body: formData
-        });
-        
-        if (!response.ok) {
-            throw new Error('Transcription failed');
-        }
-        
-        const data = await response.json();
-        if (data.text) {
-            msgInput.value = data.text;
-            msgInput.focus();
-        }
-    } catch (err) {
-        console.error('Transcription error:', err);
-        alert('Не удалось распознать речь. Попробуйте ещё раз.');
-    }
 }
 
 // Loader
