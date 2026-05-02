@@ -37,7 +37,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .screen{position:relative;z-index:10;display:none;justify-content:center;align-items:center;width:100%;height:100%;}
 .screen.active{display:flex;}
 
-/* Modal � ��� screen1 � screen1b */
+/* Modal — для screen1 и screen1b */
 .modal{width:75%;max-width:380px;background:rgba(20,20,20,0.6);border:none;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.7);display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:28px 24px 24px;gap:20px;animation:fadeIn 0.6s ease-out forwards;}
 @keyframes fadeIn{from{opacity:0;filter:blur(8px);transform:translateY(12px);}to{opacity:1;filter:blur(0);transform:translateY(0);}}
 @keyframes shimmer{0%{left:-120%;}65%,100%{left:180%;}}
@@ -59,7 +59,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .c-slide.is-far{z-index:3;opacity:0.45;filter:blur(10px);}
 .c-slide-content{position:absolute;top:0;left:0;right:0;bottom:0;padding:24px;display:flex;flex-direction:column;gap:14px;}
 .c-slide-content *::-webkit-scrollbar{display:none;}
-/* Opaque beige text blocks � replaces backdrop-filter blocks */
+/* Opaque beige text blocks — replaces backdrop-filter blocks */
 .tb{background:rgb(52,44,38);border-radius:8px;padding:10px 12px;}
 .tb-sm{background:rgb(52,44,38);border-radius:8px;padding:9px 11px;}
 .tb-prem{background:rgb(48,40,34);border-radius:8px;padding:9px 11px;border:1px solid rgba(210,190,165,0.15);}
@@ -122,7 +122,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
     cursor:pointer;
 }
 .s1b-face-front{background:rgb(42,36,32);}
-.s1b-face-back{background:rgb(220,205,185);transform:rotateY(180deg);overflow:hidden;}
+.s1b-face-back{background:rgb(220,205,185);transform:rotateY(180deg);}
 #s1bInner{transition:transform 0.55s cubic-bezier(0.4,0,0.2,1);}
 #s1bInner.flipped{transform:rotateY(180deg);}
 /* Interactive elements don't trigger flip */
@@ -270,7 +270,7 @@ body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%)
 .consilium-name{font-size:12px;font-weight:600;opacity:1;}
 .consilium-text{font-size:12px;line-height:1.6;opacity:0.85;}
 
-/* Icon color token � dove beige, same for theme/menu/send */
+/* Icon color token — dove beige, same for theme/menu/send */
 .icon-dove{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(60%);opacity:0.7;}
 .light .icon-dove{filter:invert(15%) sepia(15%) saturate(200%) brightness(30%);opacity:0.75;}
 /* menuBtn SVG same color as icon-dove */
@@ -308,7 +308,7 @@ body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%)
 .light .bulb-btn{background:rgba(60,45,35,0.1);color:rgba(40,28,20,0.7);}
 .light .bulb-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28,20);}
 .light .bulb-btn svg{stroke:rgba(40,28,20,0.7);}
-/* ������� � ������� ���� */
+/* Модалки в светлой теме */
 body.light .end-modal{background:rgb(235,220,200);}
 body.light .end-title{color:rgb(40,28,20);}
 body.light .end-desc{color:rgba(40,28,20,0.6);}
@@ -369,12 +369,12 @@ body.light span[style*="width:5px;height:5px;background:#d2bea5"]{background:#28
 .end-btn-menu:hover{background:rgba(255,255,255,0.12);}
 .end-btn-new{background:rgba(210,190,165,0.15);color:rgba(210,190,165,1);}
 .end-btn-new:hover{background:rgba(210,190,165,0.22);}
-.end-btn-delete{background:rgba(60,45,35,0.35);color:rgba(210,190,165,0.9);}
-.end-btn-delete:hover{background:rgba(60,45,35,0.5);color:rgba(210,190,165,1);}
-/* End summary button � more prominent */
+.end-btn-delete{background:rgba(180,50,50,0.35);color:rgb(240,140,140);}
+.end-btn-delete:hover{background:rgba(180,50,50,0.5);}
+/* End summary button — more prominent */
 .end-summary-btn{width:100%;height:42px;background:rgba(210,190,165,0.18);border:1px solid rgba(210,190,165,0.35);color:rgba(210,190,165,0.9);border-radius:8px;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all 0.15s;}
 .end-summary-btn:hover{background:rgba(210,190,165,0.28);color:rgba(210,190,165,1);}
-/* Scroll icon � matches button text color */
+/* Scroll icon — matches button text color */
 .end-summary-icon{width:15px;height:15px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(90%);opacity:0.9;}
 body.light .end-summary-icon{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%) !important;opacity:0.8 !important;}
 body.light .end-summary-btn{background:rgba(60,45,35,0.1);border-color:rgba(60,45,35,0.3);color:rgba(40,28,20,0.8);}
@@ -398,145 +398,145 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
         <div style="position:absolute;bottom:0;left:0;right:0;padding:24px;display:flex;flex-direction:column;gap:20px;">
             <div style="text-align:center;display:flex;flex-direction:column;gap:8px;">
                 <div class="s1-title" style="font-weight:300;">Panacea</div>
-                <div class="s1-sub">������ ���� ����� ������ �������</div>
+                <div class="s1-sub">Познай себя через призму времени</div>
             </div>
             <div style="display:flex;flex-direction:column;gap:8px;">
-                <button class="auth-btn auth-google" id="googleBtn"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>����� ����� Google</button>
-                <button class="auth-btn auth-apple" id="appleBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>����� ����� Apple</button>
-                <button class="auth-btn auth-apple" id="guestBtn">���������� ��� �����</button>
+                <button class="auth-btn auth-google" id="googleBtn"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Войти через Google</button>
+                <button class="auth-btn auth-apple" id="appleBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>Войти через Apple</button>
+                <button class="auth-btn auth-apple" id="guestBtn">Продолжить как гость</button>
             </div>
-            <div class="s1-footer">���������, �� ������������ � ��������� �������������</div>
+            <div class="s1-footer">Продолжая, ты соглашаешься с условиями использования</div>
         </div>
     </div>
 
-    <!-- Slide 1: � ��� -->
+    <!-- Slide 1: О нас -->
     <div class="c-slide" id="slide1">
         <div style="position:absolute;top:-2px;left:-2px;right:-2px;height:calc(38% + 2px);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);pointer-events:none;"></div>
         <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;position:relative;z-index:2;">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;flex-shrink:0;">
-                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">���� ���� � ���</div>
+                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Пара слов о нас</div>
             </div>
             <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;gap:10px;">
                 <div class="tb">
-                    <div style="color:rgba(210,190,165,0.85);font-size:13px;line-height:1.7;">Panacea � ��� ������������, ��� ������������ ���� ����������� � ������������ ������� ������������. �������� �������, �������� � �������, ��������� � ����� ����� � ����� ������ ���� ����� ������ ������ ����.</div>
+                    <div style="color:rgba(210,190,165,0.85);font-size:13px;line-height:1.7;">Panacea — это пространство, где человеческий опыт встречается с коллективным знанием человечества. Миллионы текстов, традиций и историй, собранных в одном месте — чтобы помочь тебе найти ответы внутри себя.</div>
                 </div>
                 <div class="tb">
-                    <div style="color:rgba(210,190,165,0.6);font-size:12px;line-height:1.6;">������ ������ � ��� �� ������� � �� �����. ��� �������. ������ �� ������� ����, ��� ������ � ��� �������� ������� ��, ��� �� ��� ������, �� ��� �� �������������.</div>
+                    <div style="color:rgba(210,190,165,0.6);font-size:12px;line-height:1.6;">Каждая сессия — это не гадание и не совет. Это зеркало. Модели не говорят тебе, что делать — они помогают увидеть то, что ты уже знаешь, но ещё не сформулировал.</div>
                 </div>
                 <div class="tb">
-                    <div style="color:rgba(210,190,165,0.7);font-size:12px;line-height:1.7;">�� � ��������� ������� ��������� � �����������. �� �� ������������ ��, ��� ������� ������, � �� ���������� �� ������ � ��������� ���������. ���� ������ � ���������� ������ ������� � ���������� �� ���������.</div>
+                    <div style="color:rgba(210,190,165,0.7);font-size:12px;line-height:1.7;">Мы — небольшая команда инженеров и энтузиастов. Мы не контролируем то, что говорят модели, и не претендуем на истину в последней инстанции. Наша задача — обеспечить работу системы и продолжать её развивать.</div>
                 </div>
                 <div class="tb">
-                    <div style="color:rgba(210,190,165,0.5);font-size:11px;line-height:1.6;">�������� � ��������� ��������� ����� � ��� ������ � ������. ������ � Panacea Plus � ������������ ������, ������� �� ������ ������ ����� ������� ������������ � �����. ������ ����� ���� �� �������, �������� ������� � �������� ����.</div>
+                    <div style="color:rgba(210,190,165,0.5);font-size:11px;line-height:1.6;">Обучение и поддержка нейронных сетей — это дорого и сложно. Донаты и Panacea Plus — единственный способ, которым ты можешь помочь этому проекту существовать и расти. Каждый рубль идёт на серверы, обучение моделей и развитие сети.</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Slide 2: ��� ��� �������� -->
+    <!-- Slide 2: Как это работает -->
     <div class="c-slide" id="slide2">
         <div style="position:absolute;top:-2px;left:-2px;right:-2px;height:calc(38% + 2px);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);pointer-events:none;"></div>
         <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;position:relative;z-index:2;">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;flex-shrink:0;">
-                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">��� ��� ��������</div>
+                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Как это работает</div>
             </div>
             <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;gap:8px;">
-                <div class="tb" style="color:rgba(210,190,165,0.65);font-size:12px;line-height:1.6;">������ ������� �� ���� ������� ���������� � ���������, ����������, �������� ���������, �������������� ������� ���� ������� � ����. � ���������� ��������� �� ������ ����� ������.</div>
+                <div class="tb" style="color:rgba(210,190,165,0.65);font-size:12px;line-height:1.6;">Модели обучены на всей мировой литературе — философии, психологии, духовных практиках, архетипических текстах всех культур и эпох. И продолжают обучаться на каждой новой сессии.</div>
                 <div style="display:flex;flex-direction:column;gap:6px;">
-                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">I</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">������� ������ � �� �������� ������, ������� ����� ����� �������� ��� ���� ������</div></div>
-                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">II</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">����� �������� � � ����� ������ �� ������ ������� ������ ����� � ���� ������</div></div>
-                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">III</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">������ ����� � �� ���������, � �������������� ��� ���� ���������� �������� � ������</div></div>
-                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">IV</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">�� ��������� ������ �������� ������ � ����� �������������� ��� ������� � ������ ���������</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">I</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Заполни анкету — мы подберём модель, которая лучше всего подходит под твой запрос</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">II</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Начни разговор — в любой момент ты можешь сменить модель прямо в ходе сессии</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">III</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">Получи ответ — не шаблонный, а сформированный под твой конкретный контекст и запрос</div></div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:rgb(52,44,38);border-radius:8px;"><div style="width:20px;height:20px;border-radius:4px;background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.55);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'TiemposHeadline',serif;">IV</div><div style="color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;">По окончании забери протокол сессии — изучи самостоятельно или передай в начале следующей</div></div>
                 </div>
-                <div class="tb" style="color:rgba(210,190,165,0.5);font-size:11px;line-height:1.6;">� ������� ������� ����� ������ � � ������ ����� ������ ��� ���������� ���� �������� ������� � ����� ������������� ���� ������ ������������ � �������� ����� ������. ��� ������ �� ������������� � ��� ������ � ������ �����.</div>
+                <div class="tb" style="color:rgba(210,190,165,0.5);font-size:11px;line-height:1.6;">У моделей большой запас памяти — в рамках одной сессии они удерживают весь разговор целиком и могут рассматривать твой вопрос одновременно с десятков точек зрения. Чем больше ты рассказываешь — тем точнее и глубже ответ.</div>
             </div>
         </div>
     </div>
 
-    <!-- Slide 3: ������ -->
+    <!-- Slide 3: Модели -->
     <div class="c-slide" id="slide3">
         <div style="position:absolute;top:-2px;left:-2px;right:-2px;height:calc(38% + 2px);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);pointer-events:none;"></div>
         <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;position:relative;z-index:2;">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;flex-shrink:0;">
-                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">���� ������</div>
+                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Наши модели</div>
             </div>
             <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;gap:5px;">
                 <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">����</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">�������</span></div>
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Тара</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">таролог</span></div>
                     <div style="height:6px;"></div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">������ ������������ ����� ���������. ������ ������� � ��� �������� � ���������, ������� ��� ����� �����. ���� �� �������������, ��� �������� ������� ��, ��� ������ �� ������������ �������.</div>
+                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Мастер традиционной школы тарологии. Каждый расклад — это разговор с символами, которые уже знают ответ. Тара не предсказывает, она помогает увидеть то, что скрыто за поверхностью событий.</div>
                 </div>
                 <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">�����</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">��������</span></div>
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Карма</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">кармолог</span></div>
                     <div style="height:6px;"></div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">������ ����������� ���� � ���������� �����. ���, ��� ������ ����� �����������, ����� ������� ��������������. ���������������� �� ������������� ��������� � ������� ������ ������.</div>
+                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Читает кармические узлы и незакрытые циклы. Там, где другие видят случайность, Карма находит закономерность. Специализируется на повторяющихся ситуациях и скрытых уроках судьбы.</div>
                 </div>
                 <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">�����</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">��������</span></div>
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Астра</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">астролог</span></div>
                     <div style="height:6px;"></div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">������� � ������� ���������� � ��������� ����. ������ ����������� ����� ��� ����, �� ������� ��������� ������� � ������ �� ���. �������� ������, � ����� ����� ������ ���� �� ���������� ����� ������.</div>
+                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Эксперт в области астрологии и натальных карт. Читает планетарные циклы как язык, на котором Вселенная говорит с каждым из нас. Помогает понять, в какой точке своего пути ты находишься прямо сейчас.</div>
                 </div>
                 <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">���</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">�����������</span></div>
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Ева</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">регрессолог</span></div>
                     <div style="height:6px;"></div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">��������� � ��������� ������ ������� ������. �������� � ���, ��� ���� ����� ������ �����. �������� ����� ������ �������, ���������� � ������������� ��������� � �����, ������� ������������ ���� �����.</div>
+                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Проводник в глубинную память прошлых жизней. Работает с тем, что душа несёт сквозь время. Помогает найти корень страхов, притяжений и повторяющихся сценариев в опыте, который предшествует этой жизни.</div>
                 </div>
                 <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">������</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">��������</span></div>
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Психея</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">психолог</span></div>
                     <div style="height:6px;"></div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">���������� �������� � ����������� ��������. ������� �� ������ �����, �� � ��, ��� ����� �� ����. �������� ������������� ������ ������� � ����� � ��� ����� �����.</div>
+                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Юнгианский психолог и нарративный терапевт. Слушает не только слова, но и то, что стоит за ними. Помогает переосмыслить личную историю и найти в ней новый смысл.</div>
                 </div>
                 <div class="tb-sm">
-                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">����</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">���������</span></div>
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Гера</span><span style="color:rgba(210,190,165,0.4);font-size:10px;font-weight:400;">нумеролог</span></div>
                     <div style="height:6px;"></div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">���������, ������� ������� ������� � ������. ����, �����, ������������� ����� � ��� ��� ����� ������ ��������. ���� �������� ������������ �������� ��� ����� �����.</div>
+                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Нумеролог, видящий скрытый порядок в числах. Даты, имена, повторяющиеся цифры — всё это части одного послания. Гера помогает расшифровать числовой код твоей жизни.</div>
                 </div>
                 <div class="tb-prem" style="position:relative;">
                     <div style="position:absolute;inset:0;overflow:hidden;border-radius:8px;pointer-events:none;"><div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.07) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;"></div></div>
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">������</span><img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" style="width:14px;height:14px;opacity:0.6;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt=""></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Оракул</span><img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" style="width:14px;height:14px;opacity:0.6;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt=""></div>
                     <div style="height:6px;"></div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">����������� ������ � �������� �������� ���������� ������. ��������, ���� �� ������ � ���� ������.</div>
+                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Анализирует запрос и выбирает наиболее подходящую модель. Идеально, если не знаешь с чего начать.</div>
                 </div>
                 <div class="tb-prem" style="position:relative;">
                     <div style="position:absolute;inset:0;overflow:hidden;border-radius:8px;pointer-events:none;"><div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.07) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;"></div></div>
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">���������</span><img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" style="width:14px;height:14px;opacity:0.6;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt=""></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;"><span style="color:rgba(210,190,165,0.95);font-size:13px;font-weight:500;">Консилиум</span><img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" style="width:14px;height:14px;opacity:0.6;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);" alt=""></div>
                     <div style="height:6px;"></div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">��� ����� ������� �������� ������������. ����� ������ �������� �� ���� ������ � ���������, ��� ����������.</div>
+                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.5;">Все шесть моделей отвечают одновременно. Шесть разных взглядов на один вопрос — выбираешь, что резонирует.</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Slide 4: ������ -->
+    <!-- Slide 4: Тарифы -->
     <div class="c-slide" id="slide4">
         <div style="position:absolute;top:-2px;left:-2px;right:-2px;height:calc(38% + 2px);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 40%,transparent 100%);pointer-events:none;"></div>
         <div class="c-slide-content" style="height:100%;display:flex;flex-direction:column;position:relative;z-index:2;">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;flex-shrink:0;">
-                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">��� ���������?</div>
+                <div class="s1-title" style="font-size:28px;text-align:left;color:rgba(210,190,165,1);">Это бесплатно?</div>
             </div>
             <div style="overflow-y:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;gap:8px;">
                 <div style="padding:14px;background:rgb(52,44,38);border-radius:10px;">
-                    <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;margin-bottom:8px;">��, ���������:</div>
+                    <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;margin-bottom:8px;">Да, бесплатно:</div>
                     <div style="display:flex;flex-direction:column;gap:5px;">
-                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>�������������� ���������� ������ � ��� ������� � ��������</div>
-                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>����� �������: ����, �����, �����, ���, ������ � ���� � ������ �� ����� ��������</div>
-                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>������� ������ ����������� �� 24 ���� � ����� ��������� � ����������</div>
-                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>������ ������ ��� ����������� � ���������� ����� ��� �����</div>
+                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Неограниченное количество сессий — без лимитов и таймеров</div>
+                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Шесть моделей: Тара, Карма, Астра, Ева, Психея и Гера — каждая со своим подходом</div>
+                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>История сессий сохраняется на 24 часа — можно вернуться и продолжить</div>
+                        <div style="color:rgba(210,190,165,0.75);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Полный доступ без регистрации — достаточно войти как гость</div>
                     </div>
                 </div>
                 <div style="padding:14px;background:rgb(48,40,34);border-radius:10px;border:1px solid rgba(210,190,165,0.2);">
                     <div style="color:rgba(210,190,165,1);font-size:14px;font-weight:600;margin-bottom:6px;">Panacea Plus</div>
-                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.6;margin-bottom:10px;">�� ������ ���������� �������� ���������, ��������� Panacea Plus. ��� �������� ��� ������� ������ � ��������� ����. ������ �� ��������� ����������� �����������:</div>
+                    <div style="color:rgba(210,190,165,0.55);font-size:11px;line-height:1.6;margin-bottom:10px;">Ты можешь поддержать развитие платформы, подключив Panacea Plus. Это помогает нам обучать модели и развивать сеть. Взамен ты получаешь расширенные возможности:</div>
                     <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px;">
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>����� ������ � �������� ���� �������� ���������� ������ ��� ���� ������</div>
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>��������� � ��� ����� �������� �������� ������������, �� ��������� ������������ �����</div>
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>������� ������ ��� ����������� �� �������</div>
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>������������ ��������� ��������</div>
-                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>PDF-������� ������ ������ � ��������� ���������</div>
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Режим Оракул — нейронка сама выбирает подходящую модель под твой запрос</div>
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Консилиум — все шесть нейронок отвечают одновременно, ты выбираешь резонирующий ответ</div>
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>История сессий без ограничений по времени</div>
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Приоритетная обработка запросов</div>
+                        <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>PDF-саммари каждой сессии с ключевыми инсайтами</div>
                     </div>
                     <button class="premium-btn" style="position:relative;z-index:1;overflow:hidden;" onclick="document.getElementById('premiumOverlay').classList.add('show')">
                         <div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,0.3) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;pointer-events:none;"></div>
-                        ���������� Panacea Plus
+                        Подключить Panacea Plus
                     </button>
                 </div>
             </div>
@@ -554,41 +554,41 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 <div id="s1bFlip" style="width:90%;max-width:420px;height:min(90vh,90dvh);perspective:1200px;">
     <div id="s1bInner" style="width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.6s cubic-bezier(0.4,0,0.2,1);">
 
-        <!-- Front: ������ -->
+        <!-- Front: Анкета -->
         <div class="s1b-face s1b-face-front">
             <div class="s1b-header">
-                <div class="s1b-title">����� ������</div>
+                <div class="s1b-title">Новая сессия</div>
                 <img class="s1b-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/039080ffd25b01f8a0cc35ca478071d4c4b675ab/feather.svg" alt="" id="flipTrigger" style="cursor:pointer;">
             </div>
             <div style="background:rgba(255,255,255,0.05);border-radius:8px;padding:10px 14px;font-size:12px;color:rgba(210,190,165,0.55);line-height:1.6;flex-shrink:0;">
-                ����� ���� ������. ��� ������� ��������� ������ ������ ��� ����
+                Опиши свой вопрос. Это поможет настроить сессию именно под тебя
             </div>
             <div class="fields" style="overflow-y:auto;scrollbar-width:none;flex:1;">
-                <div><div class="flabel">��� ���� ���������?</div>
-                <select class="fselect"><option value="" disabled selected>������ ����</option><option>��������� � ������</option><option>������� � ������</option><option>�������� � �������</option><option>����� � ��������������</option><option>������� � ������</option><option>����� � �������</option><option>�����������</option><option>������</option></select></div>
-                <div><div class="flabel">��� �� ���� ���������� ������?</div>
-                <select class="fselect"><option value="" disabled selected>������ ���������</option><option>������� � �� ���� ���� ����</option><option>�������� � ����������</option><option>����� � ��� ���</option><option>��� ������ �� �������</option><option>���� �������</option><option>� ����� ������, �� ���� �������</option><option>�������� ���������� ��������</option></select></div>
-                <div><div class="flabel">��� ����� ����������� �� �������?</div>
-                <select class="fselect"><option value="" disabled selected>������ �������</option><option>������� ������</option><option>������, � ������� �������</option><option>���������, ��� ����� �����</option><option>�����������, �� ���������</option></select></div>
-                <div><div class="flabel">���� �������� �� ������?</div>
-                <select class="fselect"><option value="" disabled selected>������ ����</option><option>�������� ������� � �����������</option><option>������������ � ���� ����������</option><option>������ ���-�� � ����� ������</option><option>����� ������� ���������� ��������</option><option>������ �����������</option></select></div>
-                <div><div class="flabel">���� �� � ���� ���������� ������?</div>
-                <select class="fselect"><option value="" disabled selected>������ �������</option><option>��, ���� ������ ������</option><option>������ ��������, ��� ������</option><option>���� ������ ����������</option><option>�� ���� � ���� ������</option></select></div>
+                <div><div class="flabel">Что тебя беспокоит?</div>
+                <select class="fselect"><option value="" disabled selected>Выбери тему</option><option>Отношения и любовь</option><option>Карьера и деньги</option><option>Здоровье и энергия</option><option>Смысл и предназначение</option><option>Тревога и страхи</option><option>Семья и близкие</option><option>Одиночество</option><option>Другое</option></select></div>
+                <div><div class="flabel">Как ты себя чувствуешь сейчас?</div>
+                <select class="fselect"><option value="" disabled selected>Выбери состояние</option><option>Потерян и не знаю куда идти</option><option>Тревожно и неспокойно</option><option>Устал и нет сил</option><option>Ищу ответы на вопросы</option><option>Хочу перемен</option><option>В целом хорошо, но есть вопросы</option><option>Чувствую внутренний конфликт</option></select></div>
+                <div><div class="flabel">Как часто обращаешься за советом?</div>
+                <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Впервые пробую</option><option>Иногда, в трудные моменты</option><option>Регулярно, это часть жизни</option><option>Скептически, но интересно</option></select></div>
+                <div><div class="flabel">Чего ожидаешь от сессии?</div>
+                <select class="fselect"><option value="" disabled selected>Выбери цель</option><option>Получить ясность и направление</option><option>Выговориться и быть услышанным</option><option>Узнать что-то о своей судьбе</option><option>Найти решение конкретной ситуации</option><option>Просто попробовать</option></select></div>
+                <div><div class="flabel">Есть ли у тебя конкретный вопрос?</div>
+                <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Да, есть чёткий вопрос</option><option>Скорее ощущение, чем вопрос</option><option>Хочу просто поговорить</option><option>Не знаю с чего начать</option></select></div>
             </div>
             <button class="submit-btn" id="submitBtn">
-                <span>������ ������</span>
+                <span>Начать сессию</span>
                 <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/09eec5a30d5df884937b3b146abfe78e437fa2fc/torch-2-svgrepo-com.svg" alt="" style="width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);">
             </button>
         </div>
 
-        <!-- Back: ��� ������ -->
+        <!-- Back: Мои сессии -->
         <div class="s1b-face s1b-face-back">
             <div class="s1b-header">
-                <div class="s1b-title" style="color:rgb(40,28,20);">��� ������</div>
+                <div class="s1b-title" style="color:rgb(40,28,20);">Мои сессии</div>
                 <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/11c4ba1a8f6ad668227bb0e60fdc43ba73de1c16/amphora.svg" style="width:18px;height:18px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.6;cursor:pointer;" alt="" id="flipBackTrigger">
             </div>
-            <div id="sessionsContent" style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;"></div>
-            <button id="signOutBtn" style="background:none;border:none;color:rgba(40,28,20,0.35);font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;padding:8px 0;text-align:center;width:100%;transition:color 0.15s;flex-shrink:0;">����� �� ������� ������</button>
+            <div id="sessionsContent" style="flex:1;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;"></div>
+            <button id="signOutBtn" style="background:none;border:none;color:rgba(40,28,20,0.35);font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;padding:8px 0;text-align:center;width:100%;transition:color 0.15s;flex-shrink:0;">Выйти из учётной записи</button>
         </div>
 
     </div>
@@ -607,7 +607,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
         <div class="lc-slide" id="lc4"></div>
     </div>
     <div class="loader-progress">
-        <div class="loader-stage" id="loaderStage">���������� ��������...</div>
+        <div class="loader-stage" id="loaderStage">Определяем проблему...</div>
         <div class="loader-bar"><div class="loader-bar-fill" id="loaderFill" style="width:0%"></div></div>
     </div>
 </div>
@@ -618,57 +618,57 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 <div class="s2-inner">
     <div class="chat-header">
         <div class="chat-header-left">
-            <button class="model-btn" id="modelBtn">����</button>
+            <button class="model-btn" id="modelBtn">Тара</button>
             <div class="dropdown" id="dropdown">
                 <button class="ditem active" data-model="tara">
-                    <div class="ditem-text"><span class="ditem-name">����</span><span class="ditem-desc">������ ������������ ����� ���������</span></div>
+                    <div class="ditem-text"><span class="ditem-name">Тара</span><span class="ditem-desc">Мастер традиционной школы тарологии</span></div>
                     <span class="ditem-check">?</span>
                 </button>
                 <button class="ditem" data-model="karma">
-                    <div class="ditem-text"><span class="ditem-name">�����</span><span class="ditem-desc">������ ����������� ���� � ���������� �����</span></div>
+                    <div class="ditem-text"><span class="ditem-name">Карма</span><span class="ditem-desc">Читает кармические узлы и незакрытые циклы</span></div>
                     <span class="ditem-check">?</span>
                 </button>
                 <button class="ditem" data-model="astra">
-                    <div class="ditem-text"><span class="ditem-name">�����</span><span class="ditem-desc">������� � ������� ���������� � ��������� ����</span></div>
+                    <div class="ditem-text"><span class="ditem-name">Астра</span><span class="ditem-desc">Эксперт в области астрологии и натальных карт</span></div>
                     <span class="ditem-check">?</span>
                 </button>
                 <button class="ditem" data-model="eva">
-                    <div class="ditem-text"><span class="ditem-name">���</span><span class="ditem-desc">��������� � ��������� ������ ������� ������</span></div>
+                    <div class="ditem-text"><span class="ditem-name">Ева</span><span class="ditem-desc">Проводник в глубинную память прошлых жизней</span></div>
                     <span class="ditem-check">?</span>
                 </button>
                 <button class="ditem" data-model="psyche">
-                    <div class="ditem-text"><span class="ditem-name">������</span><span class="ditem-desc">���������� �������� � ����������� ��������</span></div>
+                    <div class="ditem-text"><span class="ditem-name">Психея</span><span class="ditem-desc">Юнгианский психолог и нарративный терапевт</span></div>
                     <span class="ditem-check">?</span>
                 </button>
                 <button class="ditem" data-model="gera">
-                    <div class="ditem-text"><span class="ditem-name">����</span><span class="ditem-desc">���������, ������� ������� ������� � ������</span></div>
+                    <div class="ditem-text"><span class="ditem-name">Гера</span><span class="ditem-desc">Нумеролог, видящий скрытый порядок в числах</span></div>
                     <span class="ditem-check">?</span>
                 </button>
                 <button class="ditem ditem-premium" data-premium="auto">
-                    <div class="ditem-text"><span class="ditem-name">������</span><span class="ditem-desc">����������� ������ � �������� ������� ����������</span></div>
+                    <div class="ditem-text"><span class="ditem-name">Оракул</span><span class="ditem-desc">Анализирует запрос и выбирает лучшего проводника</span></div>
                     <span class="ditem-check"></span>
                     <img class="ditem-star" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" alt="">
                 </button>
                 <button class="ditem ditem-premium" data-premium="consilium">
-                    <div class="ditem-text"><span class="ditem-name">���������</span><span class="ditem-desc">������ ���� ����������� �����</span></div>
+                    <div class="ditem-text"><span class="ditem-name">Консилиум</span><span class="ditem-desc">Мнения всех проводников сразу</span></div>
                     <span class="ditem-check"></span>
                     <img class="ditem-star" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" alt="">
                 </button>
             </div>
         </div>
         <div class="chat-header-right">
-            <button class="bulb-btn" id="themeBtn" title="������� ����">
+            <button class="bulb-btn" id="themeBtn" title="Сменить тему">
                 <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/11c4ba1a8f6ad668227bb0e60fdc43ba73de1c16/sun_1.svg" class="icon-dove" alt="">
             </button>
-            <button class="bulb-btn" id="menuBtn" title="��������� ������">
+            <button class="bulb-btn" id="menuBtn" title="Завершить сессию">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
         </div>
     </div>
     <div class="chat-area" id="chatArea"></div>
     <div class="input-area">
-        <input type="text" class="input-field" id="msgInput" placeholder="����� ���� ������..." autocomplete="off">
-        <button class="voice-btn" id="voiceBtn" title="��������� ����">
+        <input type="text" class="input-field" id="msgInput" placeholder="Задай свой вопрос..." autocomplete="off">
+        <button class="voice-btn" id="voiceBtn" title="Голосовой ввод">
             <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/97130ce75b7a93ea2aee5ce8d5235262329b8ffa/harp-svgrepo-com.svg" alt="">
         </button>
         <button class="send-btn" id="sendBtn">
@@ -683,42 +683,42 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 <div class="premium-overlay" id="premiumOverlay">
 <div class="premium-modal">
     <div class="premium-title">Panacea Plus</div>
-    <div class="premium-desc">�������� ������ ������ � ������������ ���� ������� � ������������ �������.</div>
+    <div class="premium-desc">Откройте полный доступ к возможностям всех моделей и эксклюзивным режимам.</div>
     <div class="premium-features">
         <div class="premium-feature">
             <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/infinity-svgrepo-com.svg" class="pf-marker" alt="">
-            <span>��� ����������� �� ���������� ������</span>
+            <span>Нет ограничений на количество сессий</span>
         </div>
         <div class="premium-feature">
             <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/history-3-svgrepo-com.svg" class="pf-marker" alt="">
-            <span>����� ��������� ������� ������� ����� 24 ����</span>
+            <span>Можно отключить очистку истории через 24 часа</span>
         </div>
         <div class="premium-feature">
             <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" class="pf-marker" alt="">
-            <span>������� �������� ������ ������</span>
+            <span>Скачать протокол каждой сессии</span>
         </div>
         <div class="premium-feature">
             <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/eye-scan-svgrepo-com.svg" class="pf-marker" alt="">
-            <span>������ � ������� ���� �������� �������� ���������� ������</span>
+            <span>Оракул — система сама выбирает наиболее подходящую модель</span>
         </div>
         <div class="premium-feature">
             <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/discussion-square-svgrepo-com.svg" class="pf-marker" alt="">
-            <span>��������� � ����� �������� ������ ���� ����� ������� ������������</span>
+            <span>Консилиум — ответ содержит мнения всех шести моделей одновременно</span>
         </div>
         <div class="premium-feature">
             <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/quiz-submissions-svgrepo-com.svg" class="pf-marker" alt="">
-            <span>����� � � ���� ������� ������������ ������������� �����</span>
+            <span>Тесты — в ходе общения используются интерактивные тесты</span>
         </div>
         <div class="premium-feature">
             <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/voice-recognition-frame-svgrepo-com.svg" class="pf-marker" alt="">
-            <span>��������� ����� � ����� �������� � �������� ������� � ������� �� ��������� ������</span>
+            <span>Голосовой режим — можно общаться с моделями голосом и слышать их голосовые ответы</span>
         </div>
     </div>
     <button class="premium-btn" style="position:relative;overflow:hidden;">
         <div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.18) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;pointer-events:none;"></div>
-        ���������� Panacea Plus
+        Подключить Panacea Plus
     </button>
-    <button class="premium-close" id="premiumClose">�� ������</button>
+    <button class="premium-close" id="premiumClose">Не сейчас</button>
 </div>
 </div>
 
@@ -726,31 +726,31 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 <!-- Delete session modal -->
 <div class="end-overlay" id="deleteSessionOverlay" style="z-index:700;">
 <div class="end-modal">
-    <div class="end-title">������� ������?</div>
-    <div class="end-desc">��� �������� ������ ��������. ������ ����� ������� ��������.</div>
+    <div class="end-title">Удалить сессию?</div>
+    <div class="end-desc">Это действие нельзя отменить. Сессия будет удалена навсегда.</div>
     <div class="end-btns">
-        <button class="end-btn end-btn-menu" id="deleteSessionNo">������</button>
-        <button class="end-btn end-btn-delete" id="deleteSessionYes">�������</button>
+        <button class="end-btn end-btn-menu" id="deleteSessionNo">Отмена</button>
+        <button class="end-btn end-btn-delete" id="deleteSessionYes">Удалить</button>
     </div>
 </div>
 </div>
 <div class="end-overlay" id="endOverlay">
 <div class="end-modal">
-    <div class="end-title">��������� ������?</div>
-    <div class="end-desc">�� ������ ������ ����� ������ � ������� ����� ��� ��������� � ������� ����.</div>
+    <div class="end-title">Завершить сессию?</div>
+    <div class="end-desc">Вы можете начать новую сессию с чистого листа или вернуться в главное меню.</div>
     <button class="end-summary-btn" id="endSummaryBtn">
         <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" class="end-summary-icon" alt="">
-        ��������� � ��������� ��������
+        Завершить и сохранить протокол
     </button>
     <div class="end-btns">
-        <button class="end-btn end-btn-menu" id="endMenu">� ����</button>
-        <button class="end-btn end-btn-new" id="endNew">����� ������</button>
+        <button class="end-btn end-btn-menu" id="endMenu">В меню</button>
+        <button class="end-btn end-btn-new" id="endNew">Новая сессия</button>
     </div>
 </div>
 </div>
 
 <script type="module">
-// -- Firebase SDK ------------------------------------------
+// ── Firebase SDK ──────────────────────────────────────────
 import { initializeApp }        from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, signInWithPopup, GoogleAuthProvider, OAuthProvider, signInAnonymously, onAuthStateChanged }
                                  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
@@ -772,7 +772,7 @@ const db    = getFirestore(fbApp);
 const googleProvider = new GoogleAuthProvider();
 const appleProvider  = new OAuthProvider('apple.com');
 
-// -- Auth helpers (called from main script) ----------------
+// ── Auth helpers (called from main script) ────────────────
 window._fbSignIn = async (provider) => {
     try {
         if      (provider === 'google') await signInWithPopup(auth, googleProvider);
@@ -783,7 +783,7 @@ window._fbSignIn = async (provider) => {
 
 window._fbSignOut = () => auth.signOut();
 
-// -- Firestore helpers -------------------------------------
+// ── Firestore helpers ─────────────────────────────────────
 // Save session: uid, sessionId, {date, survey, messages, modelsUsed}
 window._fbSaveSession = async (uid, sessionId, data) => {
     if (!uid || uid === 'guest') return;
@@ -822,19 +822,19 @@ window._fbDeleteSession = async (uid, sessionId) => {
     } catch(e) { console.error('Delete session:', e); }
 };
 
-// -- Auth state --------------------------------------------
+// ── Auth state ────────────────────────────────────────────
 onAuthStateChanged(auth, user => {
     if (user) {
         const p = user.isAnonymous ? 'guest'
                 : user.providerData[0]?.providerId === 'apple.com' ? 'apple' : 'google';
         localStorage.setItem('soma_user', JSON.stringify({ uid: user.uid, p, ts: Date.now() }));
-        // If on login screen � go to survey
+        // If on login screen — go to survey
         if (document.getElementById('screen1')?.classList.contains('active')) {
             window._goToAfterAuth?.();
         }
     }
 });
-// ---------------------------------------------------------
+// ─────────────────────────────────────────────────────────
 </script>
 
 <script>
@@ -863,7 +863,7 @@ const imgUrl = `${BG}${Math.ceil(Math.random()*11)}.jpeg`;
 bgEl.style.backgroundImage = `url('${imgUrl}')`;
 bgFrame.style.backgroundImage = `url('${imgUrl}')`;
 
-// Carousel � 5 static DOM slides
+// Carousel — 5 static DOM slides
 const allImgs = Array.from({length:11},(_,i)=>i+1).sort(()=>Math.random()-0.5);
 const N_SLIDES = 5;
 // Assign unique random bg to each slide
@@ -973,7 +973,7 @@ function goTo(id) {
 function switchScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    // bg ���������� ������ �� screen1 (�������� � �������)
+    // bg показываем только на screen1 (карусель с логином)
     const showBg = id === 'screen1';
     bgEl.style.display = showBg ? 'block' : 'none';
     bgFrame.style.display = showBg ? 'block' : 'none';
@@ -983,7 +983,7 @@ function switchScreen(id) {
     if (id === 'screen1b') s1bReset();
 }
 
-// Init � check if already logged in � ���������� � ����� �������
+// Init — check if already logged in — вызывается в конце скрипта
 function init() {
     if (localStorage.getItem(KEY_USER)) {
         switchScreen('screen2');
@@ -1009,16 +1009,16 @@ function renderSessions(highlightId) {
     if (!user || user.p === 'guest') {
         cont.innerHTML = `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:40px 0;">
             <img src="${HOURGLASS}" style="width:32px;height:32px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.3;" alt="">
-            <div style="color:rgba(40,28,20,0.45);font-size:12px;line-height:1.7;">������� ������ ����������<br>� �������� ������.<br><span style="font-size:11px;color:rgba(40,28,20,0.3);">������� ����� Google ��� Apple,<br>����� ��������� ������.</span></div>
+            <div style="color:rgba(40,28,20,0.45);font-size:12px;line-height:1.7;">История сессий недоступна<br>в гостевом режиме.<br><span style="font-size:11px;color:rgba(40,28,20,0.3);">Войдите через Google или Apple,<br>чтобы сохранять сессии.</span></div>
         </div>`;
         return;
     }
-    cont.innerHTML = `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:rgba(40,28,20,0.35);font-size:12px;text-align:center;">���������...</div>`;
+    cont.innerHTML = `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:rgba(40,28,20,0.35);font-size:12px;text-align:center;">Загружаем...</div>`;
 
     if (!window._fbLoadSessions) return;
     window._fbLoadSessions(user.uid).then(sessions => {
         if (!sessions.length) {
-            cont.innerHTML = `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:rgba(40,28,20,0.35);font-size:12px;text-align:center;">������ ���� ���</div>`;
+            cont.innerHTML = `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:rgba(40,28,20,0.35);font-size:12px;text-align:center;">Сессий пока нет</div>`;
             return;
         }
         cont.innerHTML = '';
@@ -1036,21 +1036,21 @@ function renderSessions(highlightId) {
 
             card.innerHTML += `
                 <div style="flex:1;min-width:0;">
-                    <div style="font-size:13px;font-weight:600;color:rgb(40,28,20);margin-bottom:3px;">${s.date || '������'}</div>
-                    <div style="font-size:11px;color:rgba(40,28,20,0.5);">${s.msgCount || 0} ��������� � ${(s.modelsUsed||[]).map(k => {
-                        if (k === 'consilium') return '���������';
-                        if (k === 'auto') return '������';
+                    <div style="font-size:13px;font-weight:600;color:rgb(40,28,20);margin-bottom:3px;">${s.date || 'Сессия'}</div>
+                    <div style="font-size:11px;color:rgba(40,28,20,0.5);">${s.msgCount || 0} сообщений · ${(s.modelsUsed||[]).map(k => {
+                        if (k === 'consilium') return 'Консилиум';
+                        if (k === 'auto') return 'Оракул';
                         return models[k]?.name || k;
-                    }).join(', ') || '�'}</div>
+                    }).join(', ') || '—'}</div>
                 </div>
-                <button class="sess-pdf-btn" title="������� ��������" style="flex-shrink:0;width:28px;height:28px;background:rgba(40,28,20,0.08);border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;">
+                <button class="sess-pdf-btn" title="Скачать протокол" style="flex-shrink:0;width:28px;height:28px;background:rgba(40,28,20,0.08);border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;">
                     <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" style="width:14px;height:14px;filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);opacity:0.85;" alt="">
                 </button>`;
 
             card.addEventListener('mouseenter', () => card.style.background = 'rgba(40,28,20,0.13)');
             card.addEventListener('mouseleave', () => card.style.background = 'rgba(40,28,20,0.08)');
 
-            // Long press > delete modal
+            // Long press → delete modal
             let pressTimer = null;
             const startPress = () => {
                 pressTimer = setTimeout(() => {
@@ -1128,33 +1128,33 @@ function showDeleteSessionModal(s, highlightId) {
 
 async function generateSessionPDF(s) {
     const msgs = (s.messages || []);
-    if (!msgs.length) { alert('� ���� ������ ��� ���������.'); return; }
+    if (!msgs.length) { alert('В этой сессии нет сообщений.'); return; }
 
     const sessionDate = s.date || new Date().toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'});
     const modelsUsed  = s.modelsUsed || [];
 
     // Build dialogue text for summary
     const dialogue = msgs.map(m => {
-        if (m.s === 'user') return `������������: ${m.t}`;
-        const name = m.m && models[m.m] ? models[m.m].name : '������';
+        if (m.s === 'user') return `Пользователь: ${m.t}`;
+        const name = m.m && models[m.m] ? models[m.m].name : 'Модель';
         return `${name}: ${m.t}`;
     }).join('\n\n');
 
-    const prompt = `������� ������� ������� ������ ������ � �������:
+    const prompt = `Составь краткое саммари сессии строго в формате:
 
-����������
-[1-2 �����������: � ����� �������� ������ ������������]
+ИНТЕРЛЮДИЯ
+[1-2 предложения: с каким запросом пришёл пользователь]
 
-����������
-[3-5 �����������: � ��� ��������, ��� ���������� ������]
+СОДЕРЖАНИЕ
+[3-5 предложений: о чём говорили, как развивался диалог]
 
-�����
-[2-3 �����������: �������� �������]
+ВЫВОД
+[2-3 предложения: ключевые инсайты]
 
-������:
+Диалог:
 ${dialogue}
 
-������� �� �������. ���� ����������.`;
+Отвечай на русском. Будь конкретным.`;
 
     try {
         const resp = await fetch(`${API_BASE}/api/chat`, {
@@ -1166,18 +1166,18 @@ ${dialogue}
         const summary = data.choices?.[0]?.message?.content || '';
 
         const getSection = (label) => {
-            const re = new RegExp(label + '\\s*\\n([\\s\\S]*?)(?=\\n[�-ߨ]{3,}\\s*\\n|$)', 'i');
+            const re = new RegExp(label + '\\s*\\n([\\s\\S]*?)(?=\\n[А-ЯЁ]{3,}\\s*\\n|$)', 'i');
             const m = summary.match(re);
             return m ? m[1].trim() : '';
         };
 
         // Reuse the same PDF generation logic
         const tempChatHistory = msgs;
-        const secInterlude  = getSection('����������');
-        const secContent    = getSection('����������');
-        const secConclusion = getSection('�����');
+        const secInterlude  = getSection('ИНТЕРЛЮДИЯ');
+        const secContent    = getSection('СОДЕРЖАНИЕ');
+        const secConclusion = getSection('ВЫВОД');
 
-        // Trigger PDF via shared function � temporarily override globals
+        // Trigger PDF via shared function — temporarily override globals
         const _savedHistory = chatHistory;
         const _savedDate    = sessionDate;
         chatHistory = msgs;
@@ -1185,7 +1185,7 @@ ${dialogue}
         chatHistory = _savedHistory;
 
     } catch(e) {
-        alert('�� ������� ������� ��������.');
+        alert('Не удалось создать протокол.');
     }
 }
 
@@ -1251,25 +1251,13 @@ document.getElementById('submitBtn').addEventListener('click', () => {
 const GROQ_MODEL = 'llama-3.3-70b-versatile'; // kept for reference only
 const API_BASE = 'https://panacea-ochre.vercel.app';
 
-// Fallback responses when API is unavailable
-const FALLBACK_RESPONSES = [
-    '������ ������� ������, �� �� �������� ���� ������� � ������. �������� ������ ������ �����.',
-    '����� �����������. ������ �� ������ ������ ��� ������ � �� ��� ���� ����. ������� ������� ���� �����.',
-    '���� ������ ����������. ������ �������� ���������� � �������� ����� ��������� �����.',
-    '������ ������. ������ ������ � ��� ���� �����. �������� ��� ���.',
-    '������� ��������. ������ ���������� � ������� ������ � �������.',
-    '�������� �� ����� �� ��������. �������� ��� ��� � ��������� �������.',
-    '����� ����� �������� ������. ��� �� �������� � �������� ����� ������.',
-];
-const getFallback = () => FALLBACK_RESPONSES[Math.floor(Math.random() * FALLBACK_RESPONSES.length)];
-
 const models = {
-    tara:   { name: '����',   sig: '���� �������'     },
-    karma:  { name: '�����',  sig: '����� �������'    },
-    astra:  { name: '�����',  sig: '����� �����'      },
-    eva:    { name: '���',    sig: '��� �������'       },
-    psyche: { name: '������', sig: '������ ��������'  },
-    gera:   { name: '����',   sig: '���� �����'       },
+    tara:   { name: 'Тара',   sig: 'Тара говорит'     },
+    karma:  { name: 'Карма',  sig: 'Карма говорит'    },
+    astra:  { name: 'Астра',  sig: 'Астра пишет'      },
+    eva:    { name: 'Ева',    sig: 'Ева говорит'       },
+    psyche: { name: 'Психея', sig: 'Психея отвечает'  },
+    gera:   { name: 'Гера',   sig: 'Гера пишет'       },
 };
 
 // Chat history per session
@@ -1314,7 +1302,7 @@ ditems.forEach(d => d.addEventListener('click', () => {
         return;
     }
     curModel = d.dataset.model || d.dataset.premium;
-    modelBtn.textContent = d.dataset.premium === 'auto' ? '������' : d.dataset.premium === 'consilium' ? '���������' : models[curModel].name;
+    modelBtn.textContent = d.dataset.premium === 'auto' ? 'Оракул' : d.dataset.premium === 'consilium' ? 'Консилиум' : models[curModel].name;
     ditems.forEach(i => i.classList.remove('active'));
     d.classList.add('active');
     dropdown.classList.remove('show');
@@ -1332,9 +1320,9 @@ document.getElementById('endSummaryBtn').addEventListener('click', async () => {
     // Gather survey data
     const surveyRaw = localStorage.getItem(KEY_SURVEY);
     const surveyLabels = [
-        '��� ���������', '���������', '�������',
-        '������� ���������', '�������� �� ������',
-        '������� ����������� �������', '��������� � ������������'
+        'Что беспокоит', 'Состояние', 'Возраст',
+        'Частота обращений', 'Ожидания от сессии',
+        'Наличие конкретного вопроса', 'Отношение к мистическому'
     ];
     let surveyText = '';
     if (surveyRaw) {
@@ -1342,14 +1330,14 @@ document.getElementById('endSummaryBtn').addEventListener('click', async () => {
         surveyText = vals.map((v, i) => v ? `${surveyLabels[i]}: ${v}` : null).filter(Boolean).join('\n');
     }
 
-    // Gather chat messages � include model sig for summary context
+    // Gather chat messages — include model sig for summary context
     const msgs = Array.from(chatArea.querySelectorAll('.message')).map(el => {
         const isUser = el.classList.contains('user');
         const bodyEl = el.querySelector('.bubble-body');
         const text = bodyEl ? bodyEl.textContent : el.querySelector('.bubble')?.textContent || '';
-        if (isUser) return `������������: ${text}`;
+        if (isUser) return `Пользователь: ${text}`;
         const mk = el.dataset.modelKey;
-        const sig = mk && models[mk] ? models[mk].sig : '������';
+        const sig = mk && models[mk] ? models[mk].sig : 'Модель';
         return `${sig}: ${text}`;
     }).join('\n\n');
 
@@ -1359,8 +1347,8 @@ document.getElementById('endSummaryBtn').addEventListener('click', async () => {
             .map(el => el.dataset.modelKey)
             .filter(Boolean)
             .map(k => {
-                if (k === 'consilium') return '���������';
-                if (k === 'auto') return '������';
+                if (k === 'consilium') return 'Консилиум';
+                if (k === 'auto') return 'Оракул';
                 return models[k]?.name || k;
             })
     )];
@@ -1370,29 +1358,29 @@ document.getElementById('endSummaryBtn').addEventListener('click', async () => {
     // Show loading state
     const btn = document.getElementById('endSummaryBtn');
     const origHTML = btn.innerHTML;
-    btn.innerHTML = '����������...';
+    btn.innerHTML = 'Генерируем...';
     btn.disabled = true;
 
-    const prompt = `�� � ���������, ������� ���������� ������� ������� ���������������/������������� ������.
+    const prompt = `Ты — ассистент, который составляет краткое саммари психологической/эзотерической сессии.
 
-�������� ������ ������������ (������):
-${surveyText || '�� ���������'}
+Входящие данные пользователя (анкета):
+${surveyText || 'Не заполнена'}
 
-������ ������:
-${msgs || '������ ����'}
+Диалог сессии:
+${msgs || 'Диалог пуст'}
 
-������� ������� ������ � ��������� ������� (��� ������ ����, ������ ����������):
+Составь саммари строго в следующем формате (без лишних слов, только содержание):
 
-����������
-[1-2 �����������: � ����� �������� � ���������� ������ ������������, ������ �� ������ � ������ �������]
+ИНТЕРЛЮДИЯ
+[1-2 предложения: с каким запросом и состоянием пришёл пользователь, исходя из анкеты и начала диалога]
 
-����������
-[3-5 �����������: � ��� ��������, ����� ���� �������������, ��� ���������� ������]
+СОДЕРЖАНИЕ
+[3-5 предложений: о чём говорили, какие темы затрагивались, как развивался диалог]
 
-�����
-[2-3 �����������: �������� ������� ��� ����� ������]
+ВЫВОД
+[2-3 предложения: ключевые инсайты или итоги сессии]
 
-������� �� ������� �����. ���� ���������� � ����������.`;
+Отвечай на русском языке. Будь конкретным и лаконичным.`;
 
     try {
         const resp = await fetch(`${API_BASE}/api/chat`, {
@@ -1406,22 +1394,22 @@ ${msgs || '������ ����'}
             })
         });
         const data = await resp.json();
-        const summary = data.choices?.[0]?.message?.content || '�� ������� ������������� �������.';
+        const summary = data.choices?.[0]?.message?.content || 'Не удалось сгенерировать саммари.';
 
         // Parse summary sections
         const getSection = (label) => {
-            const re = new RegExp(label + '\\s*\\n([\\s\\S]*?)(?=\\n[�-ߨ]{3,}\\s*\\n|$)', 'i');
+            const re = new RegExp(label + '\\s*\\n([\\s\\S]*?)(?=\\n[А-ЯЁ]{3,}\\s*\\n|$)', 'i');
             const m = summary.match(re);
             return m ? m[1].trim() : '';
         };
-        const secInterlude = getSection('����������');
-        const secContent   = getSection('����������');
-        const secConclusion= getSection('�����');
+        const secInterlude = getSection('ИНТЕРЛЮДИЯ');
+        const secContent   = getSection('СОДЕРЖАНИЕ');
+        const secConclusion= getSection('ВЫВОД');
 
         // Generate PDF via pdfmake (client-side, no server needed)
-        await generatePDFDoc({ sessionDate, secInterlude: secInterlude || surveyText || '������ �� ���������', secContent, secConclusion, modelsUsed, msgCount: chatHistory.length });
+        await generatePDFDoc({ sessionDate, secInterlude: secInterlude || surveyText || 'Анкета не заполнена', secContent, secConclusion, modelsUsed, msgCount: chatHistory.length });
 
-        // After download � go to sessions list and highlight the saved session
+        // After download — go to sessions list and highlight the saved session
         const userRaw2 = localStorage.getItem(KEY_USER);
         const user2 = userRaw2 ? JSON.parse(userRaw2) : null;
         if (user2 && user2.p !== 'guest') {
@@ -1435,7 +1423,7 @@ ${msgs || '������ ����'}
         }
 
     } catch(e) {
-        alert('�� ������� ������� ��������. �������� �����.');
+        alert('Не удалось создать протокол. Попробуй позже.');
     } finally {
         btn.innerHTML = origHTML;
         btn.disabled = false;
@@ -1447,11 +1435,11 @@ document.getElementById('endMenu').addEventListener('click', () => {
     const userRaw = localStorage.getItem(KEY_USER);
     const user = userRaw ? JSON.parse(userRaw) : null;
     if (!user || user.p === 'guest') {
-        // Guest > login screen
+        // Guest → login screen
         [KEY_USER, KEY_CHAT, KEY_SURVEY].forEach(k => localStorage.removeItem(k));
         goTo('screen1');
     } else {
-        // Logged in > sessions list (back side of card)
+        // Logged in → sessions list (back side of card)
         goTo('screen1b');
         setTimeout(() => {
             s1bFlipped = true;
@@ -1473,7 +1461,7 @@ function initChat() {
     chatHistory = [];
     // Generate session ID once per session (not reset on re-init)
     if (!currentSessionId) currentSessionId = 'session_' + Date.now();
-    // Restore saved model � only regular models, not premium modes
+    // Restore saved model — only regular models, not premium modes
     const savedModel = localStorage.getItem('soma_model');
     if (savedModel && models[savedModel]) {
         curModel = savedModel;
@@ -1526,7 +1514,7 @@ function initChat() {
 }
 
 function showPlaceholder() {
-    chatArea.innerHTML = `<div class="empty-state"><img src="${HOURGLASS}" style="width:36px;height:36px;margin-bottom:14px;"><div>��������� ����� �������.<br>������������ ������ ��� ������ �� ���.<br><span style="font-size:11px;">��� ��������� ��������� ����� 24 ����.</span></div></div>`;
+    chatArea.innerHTML = `<div class="empty-state"><img src="${HOURGLASS}" style="width:36px;height:36px;margin-bottom:14px;"><div>Задавайте любые вопросы.<br>Переключайте модели для ответа на них.<br><span style="font-size:11px;">Все сообщения удаляются через 24 часа.</span></div></div>`;
 }
 
 function saveChat() {
@@ -1544,8 +1532,8 @@ function saveChat() {
     if (user && user.uid && user.p !== 'guest' && window._fbSaveSession) {
         if (!currentSessionId) currentSessionId = 'session_' + Date.now();
         const modelsUsed = [...new Set(msgs.filter(m => m.m).map(m => {
-            if (m.m === 'consilium') return '���������';
-            if (m.m === 'auto') return '������';
+            if (m.m === 'consilium') return 'Консилиум';
+            if (m.m === 'auto') return 'Оракул';
             return models[m.m]?.name || m.m;
         }))];
         const surveyRaw = localStorage.getItem(KEY_SURVEY);
@@ -1569,14 +1557,14 @@ function addMsg(text, sender, animate, modelKey) {
 
     if (sender === 'ai' && modelKey && models[modelKey]) {
         const m = models[modelKey];
-        // Strip signature only if model appended "� Name" at the very end (last line)
+        // Strip signature only if model appended "— Name" at the very end (last line)
         const lines = text.trimEnd().split('\n');
         const lastLine = lines[lines.length - 1];
-        const sigMatch = lastLine.match(/^[\s]*[�\-�]\s*\S/);
+        const sigMatch = lastLine.match(/^[\s]*[—\-–]\s*\S/);
         const clean = sigMatch ? lines.slice(0, -1).join('\n').trimEnd() : text.trim();
         b.innerHTML =
             `<span class="bubble-body">${clean.replace(/\n/g,'<br>')}</span>` +
-            `<span class="bubble-sig">��� ������ ���� ������������ ������ ${m.name}</span>`;
+            `<span class="bubble-sig">Для ответа была использована модель ${m.name}</span>`;
     } else {
         b.textContent = text;
     }
@@ -1594,7 +1582,7 @@ function addMsgHTML(html, sender, animate, modelKey, sig) {
     if (!animate) div.style.animation = 'none';
     const b = document.createElement('div');
     b.className = 'bubble';
-    b.innerHTML = html + `<span class="bubble-sig">${sig || '��� ����� ������ ���� ������������ ��� ������'}</span>`;
+    b.innerHTML = html + `<span class="bubble-sig">${sig || 'Для этого ответа были использованы все модели'}</span>`;
     div.appendChild(b);
     chatArea.appendChild(div);
     chatArea.scrollTop = chatArea.scrollHeight;
@@ -1619,7 +1607,7 @@ function send() {
         isPremium = true;
         msgInput.value = '';
         document.body.classList.add('is-premium');
-        addMsg('? �������-������ ����������� �� ���������� ��������', 'ai', true);
+        addMsg('✨ Премиум-доступ активирован до обновления страницы', 'ai', true);
         return;
     }
     
@@ -1663,20 +1651,13 @@ function handleRegularMode(text, typingIndicator, thinkDelay) {
             temperature: 0.85
         })
     })
-    .then(r => {
-        console.log('[API] status:', r.status);
-        return r.json();
-    })
+    .then(r => r.json())
     .then(data => {
-        console.log('[API] response:', JSON.stringify(data).slice(0, 300));
+        console.log('[API] response:', JSON.stringify(data).slice(0, 200));
         typingIndicator.remove();
         isTyping = false;
-        let reply = data.choices?.[0]?.message?.content;
-        if (!reply) {
-            console.warn('[API] no content, full response:', data);
-            reply = getFallback();
-        }
-        // Fix truncated response � ensure it ends with sentence-ending punctuation
+        let reply = data.choices?.[0]?.message?.content || 'Что-то пошло не так. Попробуй ещё раз.';
+        // Fix truncated response — ensure it ends with sentence-ending punctuation
         const lastPunct = Math.max(reply.lastIndexOf('.'), reply.lastIndexOf('?'), reply.lastIndexOf('!'));
         if (lastPunct > reply.length * 0.5) {
             reply = reply.slice(0, lastPunct + 1);
@@ -1689,21 +1670,22 @@ function handleRegularMode(text, typingIndicator, thinkDelay) {
         console.error('[API] fetch error:', err);
         typingIndicator.remove();
         isTyping = false;
-        addMsg(getFallback(), 'ai', true);
+        const fallback = 'Связь прервалась. Попробуй ещё раз.';
+        addMsg(fallback, 'ai', true);
     });
     }, thinkDelay);
 }
 
 async function handleOracleMode(text, typingIndicator, thinkDelay) {
-    // Choose model locally by keywords � fast, no extra API call
+    // Choose model locally by keywords — fast, no extra API call
     const t = text.toLowerCase();
     let validModel = 'psyche'; // default
-    if (/���[��]|����[��]|�������|�����|������|��������/i.test(t)) validModel = 'tara';
-    else if (/����|�����.*����|����|������|����|�����/i.test(t)) validModel = 'karma';
-    else if (/����|������|�������|��������|���� ������|����|�����|�������/i.test(t)) validModel = 'astra';
-    else if (/�������|�����.*����|���[��]|����������|������|��������/i.test(t)) validModel = 'eva';
-    else if (/����[��]|�������|���[��]|���|����|����/i.test(t)) validModel = 'gera';
-    else if (/������|����|�������|������|�����|��������|��������|�������|������/i.test(t)) validModel = 'psyche';
+    if (/тар[оа]|карт[аы]|расклад|аркан|символ|предсказ/i.test(t)) validModel = 'tara';
+    else if (/карм|прошл.*жизн|урок|повтор|цикл|судьб/i.test(t)) validModel = 'karma';
+    else if (/астр|планет|натальн|гороскоп|знак зодиак|луна|солнц|транзит/i.test(t)) validModel = 'astra';
+    else if (/регресс|прошл.*жизн|душ[аи]|воспоминан|память|реинкарн/i.test(t)) validModel = 'eva';
+    else if (/числ[оа]|нумерол|дат[аы]|имя|имен|цифр/i.test(t)) validModel = 'gera';
+    else if (/чувств|эмоц|отношен|тревог|страх|психолог|конфликт|депресс|одиноч/i.test(t)) validModel = 'psyche';
 
     setTimeout(async () => {
         try {
@@ -1722,13 +1704,13 @@ async function handleOracleMode(text, typingIndicator, thinkDelay) {
             typingIndicator.remove();
             isTyping = false;
 
-            let reply = data.choices?.[0]?.message?.content || '���-�� ����� �� ���. �������� ��� ���.';
+            let reply = data.choices?.[0]?.message?.content || 'Что-то пошло не так. Попробуй ещё раз.';
             const lastPunct = Math.max(reply.lastIndexOf('.'), reply.lastIndexOf('?'), reply.lastIndexOf('!'));
             if (lastPunct > reply.length * 0.5) reply = reply.slice(0, lastPunct + 1);
 
             chatHistory.push({role: 'assistant', content: reply});
 
-            const oracleSig = `������ ������ ��� ������ ������ ${models[validModel].name}`;
+            const oracleSig = `Оракул выбрал для ответа модель ${models[validModel].name}`;
             const div = document.createElement('div');
             div.className = 'message ai';
             div.dataset.modelKey = validModel;
@@ -1743,7 +1725,7 @@ async function handleOracleMode(text, typingIndicator, thinkDelay) {
         } catch (err) {
             typingIndicator.remove();
             isTyping = false;
-            addMsg(getFallback(), 'ai', true);
+            addMsg('Связь прервалась. Попробуй ещё раз.', 'ai', true);
         }
     }, thinkDelay);
 }
@@ -1791,12 +1773,12 @@ async function handleConsiliumMode(text, typingIndicator, thinkDelay) {
             
             const plainText = plainParts.join('\n\n');
             chatHistory.push({ role: 'assistant', content: plainText });
-            addMsgHTML(combinedHTML, 'ai', true, 'consilium', '��� ����� ������ ���� ������������ ��� ������');
+            addMsgHTML(combinedHTML, 'ai', true, 'consilium', 'Для этого ответа были использованы все модели');
             saveChat();
         } catch (err) {
             typingIndicator.remove();
             isTyping = false;
-            addMsg(getFallback(), 'ai', true);
+            addMsg('Связь прервалась. Попробуй ещё раз.', 'ai', true);
         }
     }, thinkDelay);
 }
@@ -1804,14 +1786,14 @@ async function handleConsiliumMode(text, typingIndicator, thinkDelay) {
 sendBtn.addEventListener('click', send);
 msgInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); send(); } });
 
-// Voice input � MediaRecorder + Groq Whisper
+// Voice input — MediaRecorder + Groq Whisper
 const voiceBtn = document.getElementById('voiceBtn');
 let isRecording = false;
 
 voiceBtn.addEventListener('click', async () => {
     console.log('[Voice] click fired, isPremium:', isPremium);
     if (!isPremium) {
-        console.log('[Voice] no premium > showing overlay');
+        console.log('[Voice] no premium → showing overlay');
         premiumOverlay.classList.add('show');
         return;
     }
@@ -1822,7 +1804,7 @@ voiceBtn.addEventListener('click', async () => {
     console.log('[Voice] window.webkitSpeechRecognition:', window.webkitSpeechRecognition);
     console.log('[Voice] isRecording:', isRecording);
     if (!SpeechRecognition) {
-        alert('��� ������� �� ������������ ��������� ����. ���������� Chrome.');
+        alert('Ваш браузер не поддерживает голосовой ввод. Попробуйте Chrome.');
         return;
     }
 
@@ -1861,7 +1843,7 @@ voiceBtn.addEventListener('click', async () => {
                                 headers: {'Content-Type': 'application/json'},
                                 body: JSON.stringify({
                                     modelKey: 'tara',
-                                    history: [{ role: 'user', content: `������� ���������� � ���������� �� �������� �������� �����. ����� ������ ������������ ����� ��� ���������:\n\n${raw}` }],
+                                    history: [{ role: 'user', content: `Исправь орфографию и пунктуацию по правилам русского языка. Верни ТОЛЬКО исправленный текст без пояснений:\n\n${raw}` }],
                                     max_tokens: 300,
                                     temperature: 0.1
                                 })
@@ -1874,7 +1856,7 @@ voiceBtn.addEventListener('click', async () => {
                     }
                 } catch(e) {
                     console.error('[Voice] transcribe failed:', e);
-                    alert('�� ������� ���������� ����.');
+                    alert('Не удалось распознать речь.');
                 }
                 isRecording = false;
                 voiceBtn.classList.remove('recording');
@@ -1886,7 +1868,7 @@ voiceBtn.addEventListener('click', async () => {
             voiceBtn._recorder = mediaRecorder;
         } catch(err) {
             console.error('[Voice] microphone error:', err);
-            alert('��� ������� � ���������. ��������� ������ � ���������� ��������.');
+            alert('Нет доступа к микрофону. Разрешите доступ в настройках браузера.');
             isRecording = false;
             voiceBtn.classList.remove('recording');
         }
@@ -1902,25 +1884,25 @@ voiceBtn.addEventListener('click', async () => {
 
 // Loader
 const LOADER_QUOTES = [
-    {text: "������ ���� � � �� �������� ����� � ���������.", author: "������� � ����� �������� � �������"},
-    {text: "����� ��������, ���������� ��-��������, ������� �� ���� ����������: ���� �������� �����������, ������ � �������������.", author: "���� �. �������"},
-    {text: "���, ��� ��� ���������� � ������, ����� �������� ��� � ��������� ����� ����.", author: "���� ������ ���"},
-    {text: "������� �� �������� �� ����, ��� ����������, � �� ����, ��� �� ��� ������������.", author: "���� �������"},
-    {text: "�� ��, ��� � ���� ���������, ���������� ���� �����, � ��, ��� �� �� ��� ���������.", author: "������ ������"},
-    {text: "���, ��� ������� ������, � ����. ���, ��� ������� ������, � ������������.", author: "���� ������ ���"},
-    {text: "����������� � ������ �� ���������� � ������ ����.", author: "���-���"},
-    {text: "�� �� ����� ������ ��������, ��������� �� �� ��������, ������� �� �������.", author: "������� ��������"},
-    {text: "��������� ������������, ����� �� ��������� �������������� ����, ��� ����.", author: "���������� ��������"},
-    {text: "������ �� ������ � ������ ������ ������ ������ �� ������.", author: "���������� ���������"},
+    {text: "Познай себя — и ты познаешь богов и Вселенную.", author: "Надпись в храме Аполлона в Дельфах"},
+    {text: "Слово «кризис», написанное по-китайски, состоит из двух иероглифов: один означает «опасность», другой — «возможность».", author: "Джон Ф. Кеннеди"},
+    {text: "Всё, что нас раздражает в других, может привести нас к пониманию самих себя.", author: "Карл Густав Юнг"},
+    {text: "Человек не страдает от того, что происходит, а от того, как он это воспринимает.", author: "Марк Аврелий"},
+    {text: "Не то, что с нами случается, определяет нашу жизнь, а то, как мы на это реагируем.", author: "Виктор Франкл"},
+    {text: "Тот, кто смотрит наружу, — спит. Тот, кто смотрит внутрь, — пробуждается.", author: "Карл Густав Юнг"},
+    {text: "Путешествие в тысячу ли начинается с одного шага.", author: "Лао-цзы"},
+    {text: "Мы не можем решить проблему, используя то же мышление, которое её создало.", author: "Альберт Эйнштейн"},
+    {text: "Страдание прекращается, когда мы перестаём сопротивляться тому, что есть.", author: "Буддийская мудрость"},
+    {text: "Звёзды не гаснут — просто иногда облака мешают их видеть.", author: "Персидская пословица"},
 ];
 
 const LOADER_STAGES = [
-    {text: "���������� ��������...", pct: 15},
-    {text: "��������� ���������...", pct: 35},
-    {text: "����������� ��������...", pct: 55},
-    {text: "������� ������...", pct: 75},
-    {text: "����������� �����...", pct: 90},
-    {text: "��������� �����...", pct: 100},
+    {text: "Определяем проблему...", pct: 15},
+    {text: "Учитываем пожелания...", pct: 35},
+    {text: "Анализируем контекст...", pct: 55},
+    {text: "Готовим модель...", pct: 75},
+    {text: "Настраиваем сеанс...", pct: 90},
+    {text: "Запускаем сеанс...", pct: 100},
 ];
 
 function startLoader() {
@@ -1993,7 +1975,7 @@ function startLoader() {
     // Auto-advance every 6s
     let slideTimer = setInterval(lcShift, 6000);
 
-    // Random total duration: 14000�30000 ms
+    // Random total duration: 14000–30000 ms
     const totalDuration = 14000 + Math.random() * 16000;
     const n = LOADER_STAGES.length;
     const weights = Array.from({length: n}, () => 0.5 + Math.random());
@@ -2024,7 +2006,7 @@ function startLoader() {
     runStage(0);
 }
 
-// -- PDF generation (Roboto, client-side) -----------------
+// ── PDF generation (Roboto, client-side) ─────────────────
 async function generatePDFDoc({ sessionDate, secInterlude, secContent, secConclusion, modelsUsed, msgCount }) {
     return new Promise(resolve => {
         const loadPdfMake = () => new Promise(res => {
@@ -2049,10 +2031,10 @@ async function generatePDFDoc({ sessionDate, secInterlude, secContent, secConclu
                 const h = Math.max(n * 17 + 28, 50);
                 return { stack: [
                     { svg: `<svg width="${W}" height="${h}" xmlns="http://www.w3.org/2000/svg"><rect width="${W}" height="${h}" rx="8" fill="${BOX}"/></svg>`, width: W, marginBottom: -h },
-                    { text: t || '�', fontSize: 11, color: INK, lineHeight: 1.6, margin: [14, 14, 14, 14] }
+                    { text: t || '—', fontSize: 11, color: INK, lineHeight: 1.6, margin: [14, 14, 14, 14] }
                 ], marginBottom: 20 };
             };
-            const est = (t) => Math.ceil((t||'�').length / 70) + 1;
+            const est = (t) => Math.ceil((t||'—').length / 70) + 1;
             const DH = 36;
 
             pdfMake.createPdf({
@@ -2064,28 +2046,28 @@ async function generatePDFDoc({ sessionDate, secInterlude, secContent, secConclu
                     // Dashed disclaimer
                     { stack: [
                         { svg: `<svg width="${W}" height="${DH}" xmlns="http://www.w3.org/2000/svg"><rect width="${W}" height="${DH}" rx="6" fill="none" stroke="${INK}" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.3"/></svg>`, width: W, marginBottom: -DH },
-                        { text: `���� �������� ������ �� ${sessionDate} ��� ��������� �������������`, fontSize: 11, color: INK, opacity: 0.5, alignment: 'center', margin: [14, 10, 14, 10] }
+                        { text: `Этот протокол сеанса от ${sessionDate} был составлен автоматически`, fontSize: 11, color: INK, opacity: 0.5, alignment: 'center', margin: [14, 10, 14, 10] }
                     ], marginBottom: 28 },
                     // Sections
-                    { text: '����������', fontSize: 10, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
-                    box(secInterlude || '�', est(secInterlude)),
-                    { text: '����������', fontSize: 10, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
-                    box(secContent || '�', est(secContent)),
-                    { text: '�����', fontSize: 10, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
-                    box(secConclusion || '�', est(secConclusion)),
+                    { text: 'ИНТЕРЛЮДИЯ', fontSize: 10, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
+                    box(secInterlude || '—', est(secInterlude)),
+                    { text: 'СОДЕРЖАНИЕ', fontSize: 10, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
+                    box(secContent || '—', est(secContent)),
+                    { text: 'ВЫВОД', fontSize: 10, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
+                    box(secConclusion || '—', est(secConclusion)),
                     // Footer
                     { columns: [
-                        { text: `������: ${(modelsUsed||[]).length ? modelsUsed.join(', ') : '����'}`, fontSize: 11, bold: true, color: INK },
-                        { text: `${msgCount || 0} ���������`, fontSize: 11, bold: true, color: INK, alignment: 'right' }
+                        { text: `Модели: ${(modelsUsed||[]).length ? modelsUsed.join(', ') : 'Тара'}`, fontSize: 11, bold: true, color: INK },
+                        { text: `${msgCount || 0} сообщений`, fontSize: 11, bold: true, color: INK, alignment: 'right' }
                     ], marginTop: 20 }
                 ],
                 defaultStyle: { font: 'Roboto' }
-            }).download(`Panacea (�������� ������ �� ${sessionDate}).pdf`);
+            }).download(`Panacea (протокол сеанса от ${sessionDate}).pdf`);
             resolve();
         });
     });
 }
-// ---------------------------------------------------------
+// ─────────────────────────────────────────────────────────
 
 init();
 </script>
