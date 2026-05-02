@@ -685,6 +685,86 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 </div>
 </div>
 
+<script type="module">
+// ── Firebase SDK ──────────────────────────────────────────
+import { initializeApp }        from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, signInWithPopup, GoogleAuthProvider, OAuthProvider, signInAnonymously, onAuthStateChanged }
+                                 from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, collection, doc, setDoc, getDocs, getDoc, orderBy, query, serverTimestamp }
+                                 from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const FB_CFG = {
+    apiKey:            "AIzaSyBi59uMZ1DKGIl7f8tDgIyoCfKKsip3TkM",
+    authDomain:        "panacea-c0edd.firebaseapp.com",
+    projectId:         "panacea-c0edd",
+    storageBucket:     "panacea-c0edd.firebasestorage.app",
+    messagingSenderId: "8005666614462",
+    appId:             "1:8005666614462:web:4c6f3d84f74aa848e801ef"
+};
+const fbApp = initializeApp(FB_CFG);
+const auth  = getAuth(fbApp);
+const db    = getFirestore(fbApp);
+
+const googleProvider = new GoogleAuthProvider();
+const appleProvider  = new OAuthProvider('apple.com');
+
+// ── Auth helpers (called from main script) ────────────────
+window._fbSignIn = async (provider) => {
+    try {
+        if      (provider === 'google') await signInWithPopup(auth, googleProvider);
+        else if (provider === 'apple')  await signInWithPopup(auth, appleProvider);
+        else                            await signInAnonymously(auth);
+    } catch(e) { console.error('Auth:', e.code); }
+};
+
+window._fbSignOut = () => auth.signOut();
+
+// ── Firestore helpers ─────────────────────────────────────
+// Save session: uid, sessionId, {date, survey, messages, modelsUsed}
+window._fbSaveSession = async (uid, sessionId, data) => {
+    if (!uid || uid === 'guest') return;
+    try {
+        await setDoc(doc(db, 'sessions', uid, 'list', sessionId), {
+            ...data,
+            updatedAt: serverTimestamp()
+        }, { merge: true });
+    } catch(e) { console.error('Save session:', e); }
+};
+
+// Load sessions list for uid
+window._fbLoadSessions = async (uid) => {
+    if (!uid || uid === 'guest') return [];
+    try {
+        const q = query(collection(db, 'sessions', uid, 'list'), orderBy('updatedAt', 'desc'));
+        const snap = await getDocs(q);
+        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch(e) { console.error('Load sessions:', e); return []; }
+};
+
+// Load single session
+window._fbLoadSession = async (uid, sessionId) => {
+    if (!uid) return null;
+    try {
+        const snap = await getDoc(doc(db, 'sessions', uid, 'list', sessionId));
+        return snap.exists() ? { id: snap.id, ...snap.data() } : null;
+    } catch(e) { return null; }
+};
+
+// ── Auth state ────────────────────────────────────────────
+onAuthStateChanged(auth, user => {
+    if (user) {
+        const p = user.isAnonymous ? 'guest'
+                : user.providerData[0]?.providerId === 'apple.com' ? 'apple' : 'google';
+        localStorage.setItem('soma_user', JSON.stringify({ uid: user.uid, p, ts: Date.now() }));
+        // If on login screen — go to survey
+        if (document.getElementById('screen1')?.classList.contains('active')) {
+            window._goToAfterAuth?.();
+        }
+    }
+});
+// ─────────────────────────────────────────────────────────
+</script>
+
 <script>
 const BG = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/BG/';
 const DOVE = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg';
@@ -861,7 +941,38 @@ function renderSessions() {
         </div>`;
         return;
     }
-    cont.innerHTML = `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:rgba(40,28,20,0.35);font-size:12px;text-align:center;">Сессий пока нет</div>`;
+    cont.innerHTML = `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:rgba(40,28,20,0.35);font-size:12px;text-align:center;">Загружаем...</div>`;
+
+    if (!window._fbLoadSessions) return;
+    window._fbLoadSessions(user.uid).then(sessions => {
+        if (!sessions.length) {
+            cont.innerHTML = `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:rgba(40,28,20,0.35);font-size:12px;text-align:center;">Сессий пока нет</div>`;
+            return;
+        }
+        cont.innerHTML = '';
+        sessions.forEach(s => {
+            const card = document.createElement('div');
+            card.style.cssText = 'background:rgba(40,28,20,0.08);border-radius:8px;padding:12px 14px;cursor:pointer;transition:background 0.15s;';
+            card.innerHTML = `
+                <div style="font-size:13px;font-weight:600;color:rgb(40,28,20);margin-bottom:4px;">${s.date || 'Сессия'}</div>
+                <div style="font-size:11px;color:rgba(40,28,20,0.5);">${s.msgCount || 0} сообщений · ${(s.modelsUsed||[]).map(k => models[k]?.name || k).join(', ') || '—'}</div>`;
+            card.addEventListener('mouseenter', () => card.style.background = 'rgba(40,28,20,0.13)');
+            card.addEventListener('mouseleave', () => card.style.background = 'rgba(40,28,20,0.08)');
+            card.addEventListener('click', () => continueSession(s));
+            cont.appendChild(card);
+        });
+    });
+}
+
+function continueSession(s) {
+    // Load session into chat
+    localStorage.setItem(KEY_CHAT, JSON.stringify({
+        ts: Date.now(),
+        msgs: s.messages || []
+    }));
+    if (s.survey) localStorage.setItem(KEY_SURVEY, JSON.stringify(s.survey));
+    currentSessionId = s.id;
+    goTo('screen2');
 }
 
 // Flip triggers
@@ -892,17 +1003,18 @@ document.querySelector('.s1b-face-back').addEventListener('click', e => {
 });
 
 // S1b auth buttons
+window._goToAfterAuth = () => goTo('screen1b');
 document.getElementById('googleBtn').addEventListener('click', () => {
-    localStorage.setItem(KEY_USER, JSON.stringify({p:'google',ts:Date.now()}));
-    goTo('screen1b');
+    if (window._fbSignIn) window._fbSignIn('google');
+    else { localStorage.setItem(KEY_USER, JSON.stringify({p:'google',ts:Date.now()})); goTo('screen1b'); }
 });
 document.getElementById('appleBtn').addEventListener('click', () => {
-    localStorage.setItem(KEY_USER, JSON.stringify({p:'apple',ts:Date.now()}));
-    goTo('screen1b');
+    if (window._fbSignIn) window._fbSignIn('apple');
+    else { localStorage.setItem(KEY_USER, JSON.stringify({p:'apple',ts:Date.now()})); goTo('screen1b'); }
 });
 document.getElementById('guestBtn').addEventListener('click', () => {
-    localStorage.setItem(KEY_USER, JSON.stringify({p:'guest',ts:Date.now()}));
-    goTo('screen1b');
+    if (window._fbSignIn) window._fbSignIn('guest');
+    else { localStorage.setItem(KEY_USER, JSON.stringify({p:'guest',ts:Date.now()})); goTo('screen1b'); }
 });
 
 // S1b
@@ -928,6 +1040,7 @@ const models = {
 // Chat history per session
 let chatHistory = [];
 let curModel = 'tara', isTyping = false;
+let currentSessionId = null; // Firestore session ID
 
 const modelBtn = document.getElementById('modelBtn');
 const dropdown = document.getElementById('dropdown');
@@ -1100,6 +1213,7 @@ document.getElementById('endNew').addEventListener('click', () => {
     endOverlay.classList.remove('show');
     localStorage.removeItem(KEY_CHAT);
     chatHistory = [];
+    currentSessionId = null;
     chatArea.innerHTML = '';
     showPlaceholder();
 });
@@ -1141,6 +1255,22 @@ function saveChat() {
         m: el.dataset.modelKey || null
     }));
     localStorage.setItem(KEY_CHAT, JSON.stringify({ts: Date.now(), msgs}));
+
+    // Save to Firestore for logged-in users
+    const userRaw = localStorage.getItem(KEY_USER);
+    const user = userRaw ? JSON.parse(userRaw) : null;
+    if (user && user.uid && user.p !== 'guest' && window._fbSaveSession) {
+        if (!currentSessionId) currentSessionId = 'session_' + Date.now();
+        const modelsUsed = [...new Set(msgs.filter(m => m.m).map(m => m.m))];
+        const surveyRaw = localStorage.getItem(KEY_SURVEY);
+        window._fbSaveSession(user.uid, currentSessionId, {
+            date: new Date().toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'}),
+            messages: msgs,
+            modelsUsed,
+            survey: surveyRaw ? JSON.parse(surveyRaw) : [],
+            msgCount: msgs.length
+        });
+    }
 }
 
 function addMsg(text, sender, animate, modelKey) {
