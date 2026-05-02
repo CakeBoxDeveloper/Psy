@@ -214,6 +214,21 @@ body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%)
 .bubble-sig{display:block;margin:8px -12px 0;padding:6px 12px 0;border-top:1px solid rgba(210,190,165,0.15);font-size:11px;color:rgba(210,190,165,0.35);text-align:center;font-style:normal;}
 .light .bubble-sig{color:rgba(40,28,20,0.65);border-top-color:rgba(40,28,20,0.2);}
 
+/* TTS button */
+.tts-btn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border:none;background:none;cursor:pointer;padding:0;border-radius:4px;opacity:0.4;transition:opacity 0.15s;vertical-align:middle;margin-left:6px;flex-shrink:0;}
+.tts-btn:hover{opacity:0.8;}
+.tts-btn.playing{opacity:1;}
+.tts-btn svg{width:14px;height:14px;}
+.tts-btn .tts-icon-play{display:block;}
+.tts-btn .tts-icon-stop{display:none;}
+.tts-btn.playing .tts-icon-play{display:none;}
+.tts-btn.playing .tts-icon-stop{display:block;}
+.bubble-footer{display:flex;align-items:center;justify-content:space-between;margin:6px -12px 0;padding:5px 12px 0;border-top:1px solid rgba(210,190,165,0.15);}
+.light .bubble-footer{border-top-color:rgba(40,28,20,0.2);}
+.bubble-footer .bubble-sig{margin:0;padding:0;border:none;flex:1;}
+.bubble-footer .tts-btn svg path,.bubble-footer .tts-btn svg rect{fill:rgba(210,190,165,0.6);}
+.light .bubble-footer .tts-btn svg path,.light .bubble-footer .tts-btn svg rect{fill:rgba(40,28,20,0.5);}
+
 /* Premium activated message */
 .premium-activated{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 16px;background:rgba(255,255,255,0.06);border-radius:12px;text-align:center;width:192px;}
 .premium-activated img{width:48px;height:48px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
@@ -1673,14 +1688,20 @@ function addMsg(text, sender, animate, modelKey) {
 
     if (sender === 'ai' && modelKey && models[modelKey]) {
         const m = models[modelKey];
-        // Strip signature only if model appended "— Name" at the very end (last line)
         const lines = text.trimEnd().split('\n');
         const lastLine = lines[lines.length - 1];
         const sigMatch = lastLine.match(/^[\s]*[—\-–]\s*\S/);
         const clean = sigMatch ? lines.slice(0, -1).join('\n').trimEnd() : text.trim();
         b.innerHTML =
             `<span class="bubble-body">${clean.replace(/\n/g,'<br>')}</span>` +
-            `<span class="bubble-sig">Для ответа была использована модель ${m.name}</span>`;
+            `<span class="bubble-footer">` +
+            `<span class="bubble-sig">Для ответа была использована модель ${m.name}</span>` +
+            `<button class="tts-btn" title="Воспроизвести" data-text="${clean.replace(/"/g,'&quot;')}">` +
+            `<svg class="tts-icon-play" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5z" fill="currentColor"/></svg>` +
+            `<svg class="tts-icon-stop" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>` +
+            `</button></span>`;
+    } else if (sender === 'ai') {
+        b.innerHTML = `<span class="bubble-body">${text.replace(/\n/g,'<br>')}</span>`;
     } else {
         b.textContent = text;
     }
@@ -2044,6 +2065,65 @@ voiceBtn.addEventListener('click', async () => {
         voiceBtn.classList.remove('recording');
     }
 });
+
+// ── TTS (Web Speech API) ──────────────────────────────────
+let ttsUtterance = null;
+let ttsActiveBtn = null;
+
+function ttsStop() {
+    window.speechSynthesis.cancel();
+    if (ttsActiveBtn) {
+        ttsActiveBtn.classList.remove('playing');
+        ttsActiveBtn = null;
+    }
+}
+
+function ttsSpeak(text, btn) {
+    ttsStop();
+    if (!window.speechSynthesis) return;
+
+    ttsUtterance = new SpeechSynthesisUtterance(text);
+    ttsUtterance.lang = 'ru-RU';
+    ttsUtterance.rate = 0.95;
+    ttsUtterance.pitch = 1;
+
+    // Try to find a Russian voice
+    const voices = window.speechSynthesis.getVoices();
+    const ruVoice = voices.find(v => v.lang.startsWith('ru'));
+    if (ruVoice) ttsUtterance.voice = ruVoice;
+
+    ttsUtterance.onend = () => {
+        if (ttsActiveBtn) ttsActiveBtn.classList.remove('playing');
+        ttsActiveBtn = null;
+    };
+    ttsUtterance.onerror = () => {
+        if (ttsActiveBtn) ttsActiveBtn.classList.remove('playing');
+        ttsActiveBtn = null;
+    };
+
+    btn.classList.add('playing');
+    ttsActiveBtn = btn;
+    window.speechSynthesis.speak(ttsUtterance);
+}
+
+// Delegate click on TTS buttons
+chatArea.addEventListener('click', e => {
+    const btn = e.target.closest('.tts-btn');
+    if (!btn) return;
+    e.stopPropagation();
+    if (btn.classList.contains('playing')) {
+        ttsStop();
+    } else {
+        const text = btn.dataset.text || btn.closest('.bubble')?.querySelector('.bubble-body')?.textContent || '';
+        if (text) ttsSpeak(text, btn);
+    }
+});
+
+// Stop TTS when leaving chat screen
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) ttsStop();
+});
+// ─────────────────────────────────────────────────────────
 
 // Loader
 const LOADER_QUOTES = [
