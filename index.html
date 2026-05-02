@@ -179,6 +179,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .ditem-star{width:14px;height:14px;flex-shrink:0;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);opacity:0.85;}
 .light .ditem-star{filter:invert(10%) sepia(10%) saturate(300%) brightness(15%);opacity:1;}
 .light .ditem.active .ditem-star{filter:invert(10%) sepia(10%) saturate(300%) brightness(15%);opacity:1;}
+body.is-premium .ditem-star{display:none !important;}
 
 /* Panacea Plus modal */
 .premium-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:600;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
@@ -1519,8 +1520,7 @@ function send() {
     if (text === '/plus') {
         isPremium = true;
         msgInput.value = '';
-        // Hide premium lock icons in dropdown
-        document.querySelectorAll('.ditem-star').forEach(el => el.style.display = 'none');
+        document.body.classList.add('is-premium');
         addMsg('✨ Премиум-доступ активирован до обновления страницы', 'ai', true);
         return;
     }
