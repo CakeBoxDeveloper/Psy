@@ -230,11 +230,10 @@ body.light .pf-marker{filter:invert(10%) sepia(10%) saturate(300%) brightness(15
 .voice-btn{width:36px;height:36px;background:rgba(255,255,255,0.06);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;position:relative;}
 .voice-btn:hover{background:rgba(255,255,255,0.1);}
 .voice-btn:active{transform:scale(0.95);}
-.voice-btn img{width:16px;height:16px;}
-.voice-btn img path, .voice-btn img circle, .voice-btn img rect, .voice-btn img line, .voice-btn img polyline, .voice-btn img polygon{stroke:#d2bea5 !important;fill:#d2bea5 !important;}
+.voice-btn img{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(60%);opacity:0.7;}
 .light .voice-btn{background:rgba(60,45,35,0.1);}
 .light .voice-btn:hover{background:rgba(60,45,35,0.18);}
-.light .voice-btn img path, .light .voice-btn img circle, .light .voice-btn img rect, .light .voice-btn img line, .light .voice-btn img polyline, .light .voice-btn img polygon{stroke:#281c14 !important;fill:#281c14 !important;}
+.light .voice-btn img{filter:invert(15%) sepia(15%) saturate(200%) brightness(30%);opacity:0.75;}
 
 /* Voice recording animation */
 .voice-btn.recording{background:rgba(210,190,165,0.15);}
@@ -1184,6 +1183,7 @@ const models = {
 let chatHistory = [];
 let curModel = 'tara', isTyping = false;
 let currentSessionId = null; // Firestore session ID
+let isPremium = false; // Premium status (activated by /plus command)
 
 const modelBtn = document.getElementById('modelBtn');
 const dropdown = document.getElementById('dropdown');
@@ -1212,13 +1212,13 @@ document.addEventListener('click', e => {
     if (!e.target.closest('.premium-modal') && !e.target.closest('.ditem-premium') && !e.target.closest('#endSummaryBtn')) premiumOverlay.classList.remove('show');
 });
 ditems.forEach(d => d.addEventListener('click', () => {
-    if (d.dataset.premium) {
+    if (d.dataset.premium && !isPremium) {
         dropdown.classList.remove('show');
         premiumOverlay.classList.add('show');
         return;
     }
-    curModel = d.dataset.model;
-    modelBtn.textContent = models[curModel].name;
+    curModel = d.dataset.model || d.dataset.premium;
+    modelBtn.textContent = d.dataset.premium === 'auto' ? 'Оракул' : d.dataset.premium === 'consilium' ? 'Консилиум' : models[curModel].name;
     ditems.forEach(i => i.classList.remove('active'));
     d.classList.add('active');
     dropdown.classList.remove('show');
@@ -1462,6 +1462,15 @@ function showTyping() {
 function send() {
     const text = msgInput.value.trim();
     if (!text || isTyping) return;
+    
+    // Check for /plus command
+    if (text === '/plus') {
+        isPremium = true;
+        msgInput.value = '';
+        addMsg('✨ Премиум-доступ активирован до обновления страницы', 'ai', true);
+        return;
+    }
+    
     msgInput.value = '';
     isTyping = true;
     const empty = chatArea.querySelector('.empty-state');
@@ -1476,6 +1485,20 @@ function send() {
     const wordCount = text.split(/\s+/).length;
     const thinkDelay = Math.min(1500 + wordCount * 80, 6000);
 
+    // Handle premium modes
+    if (curModel === 'auto') {
+        // Oracle mode - analyze and choose best model
+        handleOracleMode(text, t, thinkDelay);
+    } else if (curModel === 'consilium') {
+        // Consilium mode - all models respond
+        handleConsiliumMode(text, t, thinkDelay);
+    } else {
+        // Regular model
+        handleRegularMode(text, t, thinkDelay);
+    }
+}
+
+function handleRegularMode(text, typingIndicator, thinkDelay) {
     const model = models[curModel];
     setTimeout(() => {
     fetch(`${API_BASE}/api/chat`, {
@@ -1490,7 +1513,7 @@ function send() {
     })
     .then(r => r.json())
     .then(data => {
-        t.remove();
+        typingIndicator.remove();
         isTyping = false;
         let reply = data.choices?.[0]?.message?.content || 'Что-то пошло не так. Попробуй ещё раз.';
         // Fix truncated response — ensure it ends with sentence-ending punctuation
@@ -1503,12 +1526,130 @@ function send() {
         saveChat();
     })
     .catch(() => {
-        t.remove();
+        typingIndicator.remove();
         isTyping = false;
         const fallback = 'Связь прервалась. Попробуй ещё раз.';
         addMsg(fallback, 'ai', true);
     });
     }, thinkDelay);
+}
+
+async function handleOracleMode(text, typingIndicator, thinkDelay) {
+    // First, ask a meta-model to choose the best specialist
+    const analyzePrompt = `Проанализируй запрос пользователя и выбери ОДНУ наиболее подходящую модель из списка:
+
+- tara (таролог) - для вопросов о будущем, раскладах, символах
+- karma (кармолог) - для повторяющихся ситуаций, кармических узлов
+- astra (астролог) - для вопросов о планетах, натальной карте, циклах
+- eva (регрессолог) - для глубинной памяти, прошлых жизней
+- psyche (психолог) - для эмоций, отношений, внутренних конфликтов
+- gera (нумеролог) - для чисел, дат, имён
+
+Запрос: "${text}"
+
+Ответь ТОЛЬКО названием модели (одно слово: tara, karma, astra, eva, psyche или gera).`;
+
+    setTimeout(async () => {
+        try {
+            const analyzeResp = await fetch(`${API_BASE}/api/chat`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    modelKey: 'psyche',
+                    history: [{role: 'user', content: analyzePrompt}],
+                    max_tokens: 50,
+                    temperature: 0.3
+                })
+            });
+            const analyzeData = await analyzeResp.json();
+            const chosenModel = (analyzeData.choices?.[0]?.message?.content || 'tara').trim().toLowerCase();
+            
+            // Validate chosen model
+            const validModel = ['tara', 'karma', 'astra', 'eva', 'psyche', 'gera'].includes(chosenModel) ? chosenModel : 'tara';
+            
+            // Now get response from chosen model
+            const resp = await fetch(`${API_BASE}/api/chat`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    modelKey: validModel,
+                    history: chatHistory,
+                    max_tokens: 800,
+                    temperature: 0.85
+                })
+            });
+            const data = await resp.json();
+            
+            typingIndicator.remove();
+            isTyping = false;
+            
+            let reply = data.choices?.[0]?.message?.content || 'Что-то пошло не так. Попробуй ещё раз.';
+            const lastPunct = Math.max(reply.lastIndexOf('.'), reply.lastIndexOf('?'), reply.lastIndexOf('!'));
+            if (lastPunct > reply.length * 0.5) {
+                reply = reply.slice(0, lastPunct + 1);
+            }
+            
+            // Add signature showing which model was chosen
+            reply += `\n\n— ${models[validModel].name}`;
+            
+            chatHistory.push({role: 'assistant', content: reply});
+            addMsg(reply, 'ai', true, validModel);
+            saveChat();
+        } catch (err) {
+            typingIndicator.remove();
+            isTyping = false;
+            addMsg('Связь прервалась. Попробуй ещё раз.', 'ai', true);
+        }
+    }, thinkDelay);
+}
+
+async function handleConsiliumMode(text, typingIndicator, thinkDelay) {
+    setTimeout(async () => {
+        try {
+            // Request responses from all models in parallel
+            const modelKeys = ['tara', 'karma', 'astra', 'eva', 'psyche', 'gera'];
+            const promises = modelKeys.map(key => 
+                fetch(`${API_BASE}/api/chat`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        modelKey: key,
+                        history: chatHistory,
+                        max_tokens: 400,
+                        temperature: 0.85
+                    })
+                }).then(r => r.json())
+            );
+            
+            const results = await Promise.all(promises);
+            
+            typingIndicator.remove();
+            isTyping = false;
+            
+            // Combine all responses
+            let combinedReply = '';
+            modelKeys.forEach((key, i) => {
+                let reply = results[i].choices?.[0]?.message?.content || '';
+                if (reply) {
+                    const lastPunct = Math.max(reply.lastIndexOf('.'), reply.lastIndexOf('?'), reply.lastIndexOf('!'));
+                    if (lastPunct > reply.length * 0.5) {
+                        reply = reply.slice(0, lastPunct + 1);
+                    }
+                    combinedReply += `**${models[key].name}:**\n${reply}\n\n`;
+                }
+            });
+            
+            combinedReply += '— Для ответа были использованы все модели';
+            
+            chatHistory.push({role: 'assistant', content: combinedReply});
+            addMsg(combinedReply, 'ai', true, 'consilium');
+            saveChat();
+        } catch (err) {
+            typingIndicator.remove();
+            isTyping = false;
+            addMsg('Связь прервалась. Попробуй ещё раз.', 'ai', true);
+        }
+    }, thinkDelay * 1.5); // Longer delay for consilium
 }
 
 sendBtn.addEventListener('click', send);
@@ -1521,6 +1662,12 @@ let audioChunks = [];
 let isRecording = false;
 
 voiceBtn.addEventListener('click', async () => {
+    // Check premium access
+    if (!isPremium) {
+        premiumOverlay.classList.add('show');
+        return;
+    }
+    
     if (!isRecording) {
         // Start recording
         try {
