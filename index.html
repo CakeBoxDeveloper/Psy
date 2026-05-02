@@ -225,15 +225,19 @@ body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%)
 .light .premium-activated-desc{color:rgba(40,28,20,0.6);}
 
 /* Toast notification */
-@keyframes toastIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes toastIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 @keyframes toastOut{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(4px);}}
 .toast{display:flex;align-items:center;gap:10px;flex-shrink:0;
-    padding:10px 16px;
-    background:rgba(42,36,32,0.97);border-top:1px solid rgba(210,190,165,0.12);
+    margin:0 16px 8px;
+    padding:10px 14px;
+    background:rgba(42,36,32,0.97);
+    border:1px solid rgba(210,190,165,0.15);
+    border-radius:10px;
+    box-shadow:0 4px 16px rgba(0,0,0,0.3);
     animation:toastIn 0.25s ease-out forwards;
     cursor:default;}
 .toast.hiding{animation:toastOut 0.25s ease-in forwards;}
-.light .toast{background:rgba(215,200,180,0.97);border-top-color:rgba(60,45,35,0.15);}
+.light .toast{background:rgba(215,200,180,0.97);border-color:rgba(60,45,35,0.2);}
 .toast-icon{width:20px;height:20px;flex-shrink:0;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
 .light .toast-icon{filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);}
 .toast-text{font-size:12px;color:rgba(210,190,165,0.9);font-family:'Inter',sans-serif;cursor:pointer;}
@@ -1369,6 +1373,10 @@ function showToast(msg, { icon = null, onClick = null, duration = 5000 } = {}) {
 
     toastText.onclick = onClick || null;
 
+    // Guard against immediate close from the same click event
+    _toastClickGuard = true;
+    setTimeout(() => { _toastClickGuard = false; }, 100);
+
     // Auto-hide after duration
     toastTimer = setTimeout(() => hideToast(), duration);
 }
@@ -1382,8 +1390,10 @@ function hideToast() {
     }, 300);
 }
 
-// Close toast on outside tap — with delay to avoid closing on the same click that opened it
+// Close toast on outside tap — delayed to avoid closing on the same click that opened it
+let _toastClickGuard = false;
 document.addEventListener('click', e => {
+    if (_toastClickGuard) return;
     if (appToast.style.display !== 'none' && !e.target.closest('#appToast')) {
         hideToast();
     }
@@ -1720,8 +1730,9 @@ function send() {
         if (_u && _u.uid && _u.p !== 'guest' && window._fbSaveSession) {
             window._fbSaveSession(_u.uid, 'premium_status', { active: true, activatedAt: Date.now() });
         }
-        // Show card only if not already present
-        if (!chatArea.querySelector('.premium-activated')) {
+        // Show card only if not already present — use localStorage flag
+        if (!localStorage.getItem('soma_premium_card')) {
+            localStorage.setItem('soma_premium_card', '1');
             const premDiv = document.createElement('div');
             premDiv.className = 'message ai';
             premDiv.style.cssText = 'animation:msgIn 0.4s ease-out forwards;justify-content:center;';
@@ -1745,6 +1756,7 @@ function send() {
         msgInput.value = '';
         isPremium = false;
         localStorage.removeItem('soma_premium');
+        localStorage.removeItem('soma_premium_card');
         document.body.classList.remove('is-premium');
         document.querySelectorAll('.ditem-star').forEach(el => el.style.display = '');
         // Remove from Firestore if logged in
