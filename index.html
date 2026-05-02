@@ -240,9 +240,9 @@ body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%)
 .light .toast{background:rgba(215,200,180,0.97);border-color:rgba(60,45,35,0.2);}
 .toast-icon{width:20px;height:20px;flex-shrink:0;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
 .light .toast-icon{filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);}
-.toast-text{font-size:12px;color:rgba(210,190,165,0.9);font-family:'Inter',sans-serif;cursor:pointer;}
+.toast-text{font-size:12px;color:rgba(210,190,165,0.9);font-family:'Inter',sans-serif;cursor:pointer;flex:1;}
 .light .toast-text{color:rgba(40,28,20,0.85);}
-.toast-text:hover{text-decoration:underline;text-underline-offset:2px;}
+.toast{cursor:pointer;}
 .light .ditem-check{background:rgb(40,28,20) !important;}
 .typing-bubble{display:flex;align-items:center;gap:4px;padding:10px 14px;background:rgba(255,255,255,0.06);border-radius:8px;width:fit-content;}
 .typing-bubble span{width:5px;height:5px;background:#d2bea5;border-radius:50%;animation:typing 1.2s infinite;}
@@ -617,7 +617,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
                 <div class="s1b-title" style="color:rgb(40,28,20);">Мои сессии</div>
                 <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/11c4ba1a8f6ad668227bb0e60fdc43ba73de1c16/amphora.svg" style="width:18px;height:18px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.6;cursor:pointer;" alt="" id="flipBackTrigger">
             </div>
-            <div id="sessionsContent" style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;"></div>
+            <div id="sessionsContent" style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;padding-bottom:4px;"></div>
             <button id="signOutBtn" style="background:none;border:none;color:rgba(40,28,20,0.35);font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;padding:8px 0;text-align:center;width:100%;transition:color 0.15s;flex-shrink:0;">Выйти из учётной записи</button>
         </div>
 
@@ -1060,7 +1060,7 @@ function renderSessions(highlightId) {
         sessions.forEach(s => {
             const isHighlighted = highlightId && s.id === highlightId;
             const card = document.createElement('div');
-            card.style.cssText = `background:rgba(40,28,20,0.08);border-radius:8px;padding:12px 14px;cursor:pointer;transition:background 0.15s;display:flex;align-items:center;justify-content:space-between;gap:8px;position:relative;overflow:hidden;`;
+            card.style.cssText = `background:rgba(40,28,20,0.08);border-radius:8px;padding:12px 14px;cursor:pointer;transition:background 0.15s;display:flex;align-items:center;justify-content:space-between;gap:8px;position:relative;overflow:hidden;flex-shrink:0;`;
 
             // Shimmer for highlighted session
             if (isHighlighted) {
@@ -1362,7 +1362,7 @@ const toastText = document.getElementById('toastText');
 const toastIcon = document.getElementById('toastIcon');
 let toastTimer = null;
 
-function showToast(msg, { icon = null, onClick = null, duration = 5000 } = {}) {
+function showToast(msg, { icon = null, onClick = null, onClickToast = null, duration = 5000 } = {}) {
     if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
     appToast.classList.remove('hiding');
     toastText.textContent = msg;
@@ -1372,6 +1372,7 @@ function showToast(msg, { icon = null, onClick = null, duration = 5000 } = {}) {
     void appToast.offsetWidth;
 
     toastText.onclick = onClick || null;
+    appToast.onclick = onClickToast ? (e) => { if (!e.target.closest('.toast-text') || !onClick) onClickToast(); } : null;
 
     // Guard against immediate close from the same click event
     _toastClickGuard = true;
@@ -1402,7 +1403,7 @@ document.addEventListener('click', e => {
 function showPremiumToast() {
     showToast('Эта функция доступна с Panacea Plus', {
         icon: 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg',
-        onClick: () => { hideToast(); premiumOverlay.classList.add('show'); },
+        onClickToast: () => { hideToast(); premiumOverlay.classList.add('show'); },
         duration: 8000
     });
 }
@@ -1524,21 +1525,12 @@ ${msgs || 'Диалог пуст'}
 
 document.getElementById('endMenu').addEventListener('click', () => {
     endOverlay.classList.remove('show');
-    const userRaw = localStorage.getItem(KEY_USER);
-    const user = userRaw ? JSON.parse(userRaw) : null;
-    if (!user || user.p === 'guest') {
-        // Guest → login screen
-        [KEY_USER, KEY_CHAT, KEY_SURVEY].forEach(k => localStorage.removeItem(k));
-        goTo('screen1');
-    } else {
-        // Logged in → sessions list (back side of card)
-        goTo('screen1b');
-        setTimeout(() => {
-            s1bFlipped = true;
-            document.getElementById('s1bInner').classList.add('flipped');
-            renderSessions();
-        }, 600); // after transition
-    }
+    // Always go to survey screen (front side of card)
+    goTo('screen1b');
+    setTimeout(() => {
+        s1bFlipped = false;
+        document.getElementById('s1bInner').classList.remove('flipped');
+    }, 600);
 });
 document.getElementById('endNew').addEventListener('click', () => {
     endOverlay.classList.remove('show');
