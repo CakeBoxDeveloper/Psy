@@ -1,0 +1,9 @@
+{
+  "name": "panacea-api",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "groq-sdk": "^0.7.0",
+    "formidable": "^3.5.1"
+  }
+}
