@@ -191,8 +191,8 @@ body.light .premium-desc{background:rgba(60,45,35,0.08);color:rgba(40,28,20,0.7)
 .premium-features{display:flex;flex-direction:column;gap:8px;}
 .premium-feature{display:flex;align-items:flex-start;gap:10px;color:rgba(210,190,165,0.8);font-size:12px;line-height:1.5;}
 .premium-feature-icon{width:14px;height:14px;flex-shrink:0;margin-top:1px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
-.pf-marker{width:14px;height:14px;flex-shrink:0;margin-top:2px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);opacity:0.85;}
-body.light .pf-marker{filter:invert(10%) sepia(10%) saturate(300%) brightness(15%);opacity:1;}
+.pf-marker{width:14px;height:14px;flex-shrink:0;margin-top:2px;filter:brightness(0) saturate(100%) invert(82%) sepia(15%) saturate(300%) hue-rotate(340deg) brightness(103%);opacity:1;}
+body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);opacity:1;}
 .premium-btn{width:100%;height:42px;background:rgba(210,190,165,0.2);border:1px solid rgba(210,190,165,0.3);color:rgba(210,190,165,1);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
 .premium-btn:hover{background:rgba(210,190,165,0.3);}
 .premium-close{background:none;border:none;color:rgba(210,190,165,0.4);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;text-align:center;transition:all 0.15s;}
@@ -1731,6 +1731,9 @@ voiceBtn.addEventListener('click', () => {
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     console.log('[Voice] SpeechRecognition:', SpeechRecognition);
+    console.log('[Voice] window.SpeechRecognition:', window.SpeechRecognition);
+    console.log('[Voice] window.webkitSpeechRecognition:', window.webkitSpeechRecognition);
+    console.log('[Voice] isRecording:', isRecording);
     if (!SpeechRecognition) {
         alert('Ваш браузер не поддерживает голосовой ввод. Попробуйте Chrome.');
         return;
@@ -1738,33 +1741,40 @@ voiceBtn.addEventListener('click', () => {
 
     if (!isRecording) {
         console.log('[Voice] starting recognition...');
-        speechRecognition = new SpeechRecognition();
-        speechRecognition.lang = 'ru-RU';
-        speechRecognition.continuous = false;
-        speechRecognition.interimResults = false;
+        try {
+            speechRecognition = new SpeechRecognition();
+            speechRecognition.lang = 'ru-RU';
+            speechRecognition.continuous = false;
+            speechRecognition.interimResults = false;
 
-        speechRecognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            console.log('[Voice] result:', transcript);
-            msgInput.value = transcript;
-            msgInput.focus();
-        };
+            speechRecognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                console.log('[Voice] result:', transcript);
+                msgInput.value = transcript;
+                msgInput.focus();
+            };
 
-        speechRecognition.onerror = (e) => {
-            console.error('[Voice] error:', e.error);
+            speechRecognition.onerror = (e) => {
+                console.error('[Voice] error:', e.error);
+                isRecording = false;
+                voiceBtn.classList.remove('recording');
+            };
+
+            speechRecognition.onend = () => {
+                console.log('[Voice] ended');
+                isRecording = false;
+                voiceBtn.classList.remove('recording');
+            };
+
+            speechRecognition.start();
+            console.log('[Voice] start() called');
+            isRecording = true;
+            voiceBtn.classList.add('recording');
+        } catch(err) {
+            console.error('[Voice] start failed:', err);
             isRecording = false;
             voiceBtn.classList.remove('recording');
-        };
-
-        speechRecognition.onend = () => {
-            console.log('[Voice] ended');
-            isRecording = false;
-            voiceBtn.classList.remove('recording');
-        };
-
-        speechRecognition.start();
-        isRecording = true;
-        voiceBtn.classList.add('recording');
+        }
     } else {
         console.log('[Voice] stopping recognition');
         if (speechRecognition) speechRecognition.stop();
