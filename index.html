@@ -719,6 +719,17 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 </div>
 
 <!-- End session modal -->
+<!-- Delete session modal -->
+<div class="end-overlay" id="deleteSessionOverlay" style="z-index:700;">
+<div class="end-modal">
+    <div class="end-title">Удалить сессию?</div>
+    <div class="end-desc">Это действие нельзя отменить. Сессия будет удалена навсегда.</div>
+    <div class="end-btns">
+        <button class="end-btn end-btn-menu" id="deleteSessionNo">Отмена</button>
+        <button class="end-btn" id="deleteSessionYes" style="background:rgba(180,60,60,0.25);color:rgba(220,120,120,1);">Удалить</button>
+    </div>
+</div>
+</div>
 <div class="end-overlay" id="endOverlay">
 <div class="end-modal">
     <div class="end-title">Завершить сессию?</div>
@@ -739,7 +750,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 import { initializeApp }        from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, signInWithPopup, GoogleAuthProvider, OAuthProvider, signInAnonymously, onAuthStateChanged }
                                  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, collection, doc, setDoc, getDocs, getDoc, orderBy, query, serverTimestamp }
+import { getFirestore, collection, doc, setDoc, getDocs, getDoc, deleteDoc, orderBy, query, serverTimestamp }
                                  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const FB_CFG = {
@@ -797,6 +808,14 @@ window._fbLoadSession = async (uid, sessionId) => {
         const snap = await getDoc(doc(db, 'sessions', uid, 'list', sessionId));
         return snap.exists() ? { id: snap.id, ...snap.data() } : null;
     } catch(e) { return null; }
+};
+
+// Delete session
+window._fbDeleteSession = async (uid, sessionId) => {
+    if (!uid || uid === 'guest') return;
+    try {
+        await deleteDoc(doc(db, 'sessions', uid, 'list', sessionId));
+    } catch(e) { console.error('Delete session:', e); }
 };
 
 // ── Auth state ────────────────────────────────────────────
@@ -1021,10 +1040,28 @@ function renderSessions(highlightId) {
                     }).join(', ') || '—'}</div>
                 </div>
                 <button class="sess-pdf-btn" title="Скачать протокол" style="flex-shrink:0;width:28px;height:28px;background:rgba(40,28,20,0.08);border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;">
-                    <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" style="width:14px;height:14px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.6;" alt="">
+                    <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" style="width:14px;height:14px;filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);opacity:0.85;" alt="">
                 </button>`;
+
             card.addEventListener('mouseenter', () => card.style.background = 'rgba(40,28,20,0.13)');
             card.addEventListener('mouseleave', () => card.style.background = 'rgba(40,28,20,0.08)');
+
+            // Long press → delete modal
+            let pressTimer = null;
+            const startPress = () => {
+                pressTimer = setTimeout(() => {
+                    pressTimer = null;
+                    showDeleteSessionModal(s, highlightId);
+                }, 600);
+            };
+            const cancelPress = () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } };
+            card.addEventListener('mousedown', startPress);
+            card.addEventListener('touchstart', startPress, { passive: true });
+            card.addEventListener('mouseup', cancelPress);
+            card.addEventListener('mouseleave', cancelPress);
+            card.addEventListener('touchend', cancelPress);
+            card.addEventListener('touchcancel', cancelPress);
+
             card.addEventListener('click', e => {
                 if (e.target.closest('.sess-pdf-btn')) return;
                 continueSession(s);
@@ -1052,6 +1089,37 @@ function continueSession(s) {
     if (s.survey) localStorage.setItem(KEY_SURVEY, JSON.stringify(s.survey));
     currentSessionId = s.id;
     goTo('screen2');
+}
+
+function showDeleteSessionModal(s, highlightId) {
+    const overlay = document.getElementById('deleteSessionOverlay');
+    overlay.classList.add('show');
+
+    const yesBtn = document.getElementById('deleteSessionYes');
+    const noBtn  = document.getElementById('deleteSessionNo');
+
+    const close = () => overlay.classList.remove('show');
+
+    const onYes = async () => {
+        cleanup();
+        close();
+        const userRaw = localStorage.getItem(KEY_USER);
+        const user = userRaw ? JSON.parse(userRaw) : null;
+        if (user && user.uid && window._fbDeleteSession) {
+            await window._fbDeleteSession(user.uid, s.id);
+        }
+        renderSessions(); // refresh list
+    };
+
+    const onNo = () => { cleanup(); close(); };
+
+    const cleanup = () => {
+        yesBtn.removeEventListener('click', onYes);
+        noBtn.removeEventListener('click', onNo);
+    };
+
+    yesBtn.addEventListener('click', onYes);
+    noBtn.addEventListener('click', onNo);
 }
 
 async function generateSessionPDF(s) {
