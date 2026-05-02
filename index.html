@@ -200,7 +200,10 @@ body.light .pf-marker{filter:invert(10%) sepia(10%) saturate(300%) brightness(15
 .bulb-btn:hover{background:rgba(255,255,255,0.1);color:rgba(210,190,165,1);}
 .bulb-btn svg{width:16px;height:16px;}
 .chat-header-right{display:flex;gap:8px;align-items:center;}
-.chat-area{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 16px;display:flex;flex-direction:column;gap:10px;background:transparent;scrollbar-width:none;}
+.chat-area{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 16px;display:flex;flex-direction:column;gap:10px;background:transparent;scrollbar-width:none;-webkit-mask-image:linear-gradient(to bottom,transparent 0px,black 48px,black calc(100% - 32px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0px,black 48px,black calc(100% - 32px),transparent 100%);}
+.chat-area.at-top{-webkit-mask-image:linear-gradient(to bottom,black 0px,black calc(100% - 32px),transparent 100%);mask-image:linear-gradient(to bottom,black 0px,black calc(100% - 32px),transparent 100%);}
+.chat-area.at-bottom{-webkit-mask-image:linear-gradient(to bottom,transparent 0px,black 48px,black 100%);mask-image:linear-gradient(to bottom,transparent 0px,black 48px,black 100%);}
+.chat-area.at-top.at-bottom{-webkit-mask-image:none;mask-image:none;}
 .chat-area::-webkit-scrollbar{display:none;}
 .message{display:flex;animation:msgIn 0.4s ease-out forwards;}
 @keyframes msgIn{from{opacity:0;filter:blur(8px);transform:translateY(6px);}to{opacity:1;filter:blur(0);transform:translateY(0);}}
@@ -1010,7 +1013,11 @@ function renderSessions(highlightId) {
             card.innerHTML += `
                 <div style="flex:1;min-width:0;">
                     <div style="font-size:13px;font-weight:600;color:rgb(40,28,20);margin-bottom:3px;">${s.date || 'Сессия'}</div>
-                    <div style="font-size:11px;color:rgba(40,28,20,0.5);">${s.msgCount || 0} сообщений · ${(s.modelsUsed||[]).map(k => models[k]?.name || k).join(', ') || '—'}</div>
+                    <div style="font-size:11px;color:rgba(40,28,20,0.5);">${s.msgCount || 0} сообщений · ${(s.modelsUsed||[]).map(k => {
+                        if (k === 'consilium') return 'Консилиум';
+                        if (k === 'auto') return 'Оракул';
+                        return models[k]?.name || k;
+                    }).join(', ') || '—'}</div>
                 </div>
                 <button class="sess-pdf-btn" title="Скачать протокол" style="flex-shrink:0;width:28px;height:28px;background:rgba(40,28,20,0.08);border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;">
                     <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" style="width:14px;height:14px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.6;" alt="">
@@ -1384,6 +1391,20 @@ function initChat() {
             d.classList.toggle('active', d.dataset.model === curModel);
         });
     }
+
+    // Fade mask on scroll
+    function updateChatMask() {
+        const atTop = chatArea.scrollTop < 8;
+        const atBottom = chatArea.scrollHeight - chatArea.scrollTop - chatArea.clientHeight < 8;
+        chatArea.classList.toggle('at-top', atTop);
+        chatArea.classList.toggle('at-bottom', atBottom);
+    }
+    chatArea.addEventListener('scroll', updateChatMask, { passive: true });
+    // Re-check after messages added
+    const _origAppendChild = chatArea.appendChild.bind(chatArea);
+    chatArea._updateMask = updateChatMask;
+    updateChatMask();
+
     const raw = localStorage.getItem(KEY_CHAT);
     if (raw) {
         const data = JSON.parse(raw);
@@ -1392,11 +1413,13 @@ function initChat() {
                 addMsg(m.t, m.s, false, m.m || null);
                 chatHistory.push({role: m.s === 'user' ? 'user' : 'assistant', content: m.t});
             });
+            setTimeout(updateChatMask, 50);
             return;
         }
         localStorage.removeItem(KEY_CHAT);
     }
     showPlaceholder();
+    setTimeout(updateChatMask, 50);
 }
 
 function showPlaceholder() {
@@ -1457,6 +1480,7 @@ function addMsg(text, sender, animate, modelKey) {
     div.appendChild(b);
     chatArea.appendChild(div);
     chatArea.scrollTop = chatArea.scrollHeight;
+    if (chatArea._updateMask) chatArea._updateMask();
 }
 
 function addMsgHTML(html, sender, animate, modelKey) {
@@ -1470,6 +1494,7 @@ function addMsgHTML(html, sender, animate, modelKey) {
     div.appendChild(b);
     chatArea.appendChild(div);
     chatArea.scrollTop = chatArea.scrollHeight;
+    if (chatArea._updateMask) chatArea._updateMask();
 }
 
 function showTyping() {
