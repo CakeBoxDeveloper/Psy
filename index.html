@@ -506,8 +506,12 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
         <!-- Front: Анкета -->
         <div class="s1b-face s1b-face-front">
             <div class="s1b-header">
-                <div class="s1b-title">Расскажи о себе</div>
+                <div class="s1b-title">Новая сессия</div>
                 <img class="s1b-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/039080ffd25b01f8a0cc35ca478071d4c4b675ab/feather.svg" alt="" id="flipTrigger" style="cursor:pointer;">
+            </div>
+            <div style="background:rgba(255,255,255,0.05);border-radius:8px;padding:10px 14px;font-size:12px;color:rgba(210,190,165,0.55);line-height:1.6;flex-shrink:0;">
+                Расскажи немного о себе — это поможет нам выбрать проводника, который лучше всего услышит именно тебя
+            </div>
             </div>
             <div class="fields" style="overflow-y:auto;scrollbar-width:none;flex:1;">
                 <div><div class="flabel">Что тебя беспокоит?</div>
@@ -682,7 +686,47 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 </div>
 </div>
 
-<script>
+<script type="module">
+// ── Firebase ──────────────────────────────────────────────
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, signInWithPopup, GoogleAuthProvider, OAuthProvider, signInAnonymously, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+const firebaseConfig = {
+    apiKey: "AIzaSyB159uMZIDKGIl7f8tDgIyoCfKKsip3TkM",
+    authDomain: "panacea-c0edd.firebaseapp.com",
+    projectId: "panacea-c0edd",
+    storageBucket: "panacea-c0edd.firebasestorage.app",
+    messagingSenderId: "8005666614462",
+    appId: "1:8005666614462:web:4c6f3d84f74aa848e801ef"
+};
+
+const fbApp  = initializeApp(firebaseConfig);
+const auth   = getAuth(fbApp);
+const googleProvider = new GoogleAuthProvider();
+const appleProvider  = new OAuthProvider('apple.com');
+
+// Auth state — redirect if already signed in
+onAuthStateChanged(auth, user => {
+    if (user) {
+        const p = user.isAnonymous ? 'guest' : (user.providerData[0]?.providerId === 'apple.com' ? 'apple' : 'google');
+        localStorage.setItem(KEY_USER, JSON.stringify({uid: user.uid, p, ts: Date.now()}));
+        if (document.getElementById('screen1').classList.contains('active')) {
+            switchScreen('screen1b');
+        }
+    }
+});
+
+window._fbSignIn = async (provider) => {
+    try {
+        if (provider === 'google') await signInWithPopup(auth, googleProvider);
+        else if (provider === 'apple') await signInWithPopup(auth, appleProvider);
+        else await signInAnonymously(auth);
+    } catch(e) {
+        console.error('Auth error', e);
+    }
+};
+// ─────────────────────────────────────────────────────────
+
 const BG = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/BG/';
 const DOVE = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg';
 const HOURGLASS = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/hourglass.svg';
@@ -858,7 +902,7 @@ function renderSessions() {
         </div>`;
         return;
     }
-    cont.innerHTML = `<div style="color:rgba(40,28,20,0.35);font-size:12px;text-align:center;padding:40px 0;">Сессий пока нет</div>`;
+    cont.innerHTML = `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:rgba(40,28,20,0.35);font-size:12px;text-align:center;">Сессий пока нет</div>`;
 }
 
 // Flip triggers
@@ -889,18 +933,9 @@ document.querySelector('.s1b-face-back').addEventListener('click', e => {
 });
 
 // S1b auth buttons
-document.getElementById('googleBtn').addEventListener('click', () => {
-    localStorage.setItem(KEY_USER, JSON.stringify({p:'google',ts:Date.now()}));
-    goTo('screen1b');
-});
-document.getElementById('appleBtn').addEventListener('click', () => {
-    localStorage.setItem(KEY_USER, JSON.stringify({p:'apple',ts:Date.now()}));
-    goTo('screen1b');
-});
-document.getElementById('guestBtn').addEventListener('click', () => {
-    localStorage.setItem(KEY_USER, JSON.stringify({p:'guest',ts:Date.now()}));
-    goTo('screen1b');
-});
+document.getElementById('googleBtn').addEventListener('click', () => window._fbSignIn('google'));
+document.getElementById('appleBtn').addEventListener('click',  () => window._fbSignIn('apple'));
+document.getElementById('guestBtn').addEventListener('click',  () => window._fbSignIn('guest'));
 
 // S1b
 document.getElementById('submitBtn').addEventListener('click', () => {
