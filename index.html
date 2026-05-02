@@ -1282,7 +1282,10 @@ themeBtn.addEventListener('click', () => {
 });
 menuBtn.addEventListener('click', () => endOverlay.classList.toggle('show'));
 
-modelBtn.addEventListener('click', () => dropdown.classList.toggle('show'));
+modelBtn.addEventListener('click', () => {
+    if (isTyping) return; // block while model is responding
+    dropdown.classList.toggle('show');
+});
 document.addEventListener('click', e => {
     if (!e.target.closest('.chat-header-left')) dropdown.classList.remove('show');
     if (!e.target.closest('.end-modal') && !e.target.closest('#menuBtn')) endOverlay.classList.remove('show');
@@ -1299,7 +1302,10 @@ ditems.forEach(d => d.addEventListener('click', () => {
     ditems.forEach(i => i.classList.remove('active'));
     d.classList.add('active');
     dropdown.classList.remove('show');
-    localStorage.setItem('soma_model', curModel);
+    // Only save regular models to localStorage, not premium modes
+    if (!d.dataset.premium) {
+        localStorage.setItem('soma_model', curModel);
+    }
 }));
 
 document.getElementById('premiumClose').addEventListener('click', () => premiumOverlay.classList.remove('show'));
@@ -1451,7 +1457,7 @@ function initChat() {
     chatHistory = [];
     // Generate session ID once per session (not reset on re-init)
     if (!currentSessionId) currentSessionId = 'session_' + Date.now();
-    // Restore saved model
+    // Restore saved model — only regular models, not premium modes
     const savedModel = localStorage.getItem('soma_model');
     if (savedModel && models[savedModel]) {
         curModel = savedModel;
@@ -1459,6 +1465,14 @@ function initChat() {
         ditems.forEach(d => {
             d.classList.toggle('active', d.dataset.model === curModel);
         });
+    } else {
+        // Reset to default if saved model was a premium mode
+        curModel = 'tara';
+        modelBtn.textContent = models['tara'].name;
+        ditems.forEach(d => {
+            d.classList.toggle('active', d.dataset.model === 'tara');
+        });
+        localStorage.setItem('soma_model', 'tara');
     }
 
     // Fade mask on scroll
@@ -1557,14 +1571,14 @@ function addMsg(text, sender, animate, modelKey) {
     if (chatArea._updateMask) chatArea._updateMask();
 }
 
-function addMsgHTML(html, sender, animate, modelKey) {
+function addMsgHTML(html, sender, animate, modelKey, sig) {
     const div = document.createElement('div');
     div.className = `message ${sender}`;
     if (modelKey) div.dataset.modelKey = modelKey;
     if (!animate) div.style.animation = 'none';
     const b = document.createElement('div');
     b.className = 'bubble';
-    b.innerHTML = html + `<span class="bubble-sig">Для ответа были использованы все модели</span>`;
+    b.innerHTML = html + `<span class="bubble-sig">${sig || 'Для этого ответа были использованы все модели'}</span>`;
     div.appendChild(b);
     chatArea.appendChild(div);
     chatArea.scrollTop = chatArea.scrollHeight;
@@ -1711,11 +1725,19 @@ async function handleOracleMode(text, typingIndicator, thinkDelay) {
                 reply = reply.slice(0, lastPunct + 1);
             }
             
-            // Add signature showing which model was chosen
-            reply += `\n\n— ${models[validModel].name}`;
-            
             chatHistory.push({role: 'assistant', content: reply});
-            addMsg(reply, 'ai', true, validModel);
+            // Custom sig: "Оракул выбрал для ответа модель X"
+            const oracleSig = `Оракул выбрал для ответа модель ${models[validModel].name}`;
+            const div = document.createElement('div');
+            div.className = 'message ai';
+            div.dataset.modelKey = validModel;
+            const b = document.createElement('div');
+            b.className = 'bubble';
+            b.innerHTML = `<span class="bubble-body">${reply.replace(/\n/g,'<br>')}</span><span class="bubble-sig">${oracleSig}</span>`;
+            div.appendChild(b);
+            chatArea.appendChild(div);
+            chatArea.scrollTop = chatArea.scrollHeight;
+            if (chatArea._updateMask) chatArea._updateMask();
             saveChat();
         } catch (err) {
             typingIndicator.remove();
@@ -1768,7 +1790,7 @@ async function handleConsiliumMode(text, typingIndicator, thinkDelay) {
             
             const plainText = plainParts.join('\n\n');
             chatHistory.push({ role: 'assistant', content: plainText });
-            addMsgHTML(combinedHTML, 'ai', true, 'consilium');
+            addMsgHTML(combinedHTML, 'ai', true, 'consilium', 'Для этого ответа были использованы все модели');
             saveChat();
         } catch (err) {
             typingIndicator.remove();
