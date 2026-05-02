@@ -929,7 +929,7 @@ function s1bReset() {
     document.getElementById('s1bInner').classList.remove('flipped');
 }
 
-function renderSessions() {
+function renderSessions(highlightId) {
     const cont = document.getElementById('sessionsContent');
     const userRaw = localStorage.getItem(KEY_USER);
     const user = userRaw ? JSON.parse(userRaw) : null;
@@ -950,9 +950,18 @@ function renderSessions() {
         }
         cont.innerHTML = '';
         sessions.forEach(s => {
+            const isHighlighted = highlightId && s.id === highlightId;
             const card = document.createElement('div');
-            card.style.cssText = 'background:rgba(40,28,20,0.08);border-radius:8px;padding:12px 14px;cursor:pointer;transition:background 0.15s;display:flex;align-items:center;justify-content:space-between;gap:8px;';
-            card.innerHTML = `
+            card.style.cssText = `background:rgba(40,28,20,0.08);border-radius:8px;padding:12px 14px;cursor:pointer;transition:background 0.15s;display:flex;align-items:center;justify-content:space-between;gap:8px;position:relative;overflow:hidden;`;
+
+            // Shimmer for highlighted session
+            if (isHighlighted) {
+                const shimmer = document.createElement('div');
+                shimmer.style.cssText = 'position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(40,28,20,0.08) 50%,transparent 80%);animation:shimmer 2s ease-in-out 3;pointer-events:none;';
+                card.appendChild(shimmer);
+            }
+
+            card.innerHTML += `
                 <div style="flex:1;min-width:0;">
                     <div style="font-size:13px;font-weight:600;color:rgb(40,28,20);margin-bottom:3px;">${s.date || 'Сессия'}</div>
                     <div style="font-size:11px;color:rgba(40,28,20,0.5);">${s.msgCount || 0} сообщений · ${(s.modelsUsed||[]).map(k => models[k]?.name || k).join(', ') || '—'}</div>
@@ -962,20 +971,20 @@ function renderSessions() {
                 </button>`;
             card.addEventListener('mouseenter', () => card.style.background = 'rgba(40,28,20,0.13)');
             card.addEventListener('mouseleave', () => card.style.background = 'rgba(40,28,20,0.08)');
-
-            // Click on card → continue session
             card.addEventListener('click', e => {
                 if (e.target.closest('.sess-pdf-btn')) return;
                 continueSession(s);
             });
-
-            // Click on scroll icon → generate PDF from session messages
             card.querySelector('.sess-pdf-btn').addEventListener('click', e => {
                 e.stopPropagation();
                 generateSessionPDF(s);
             });
-
             cont.appendChild(card);
+
+            // Scroll highlighted card into view
+            if (isHighlighted) {
+                setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+            }
         });
     });
 }
@@ -1253,6 +1262,19 @@ ${msgs || 'Диалог пуст'}
 
         // Generate PDF via pdfmake (client-side, no server needed)
         await generatePDFDoc({ sessionDate, secInterlude: secInterlude || surveyText || 'Анкета не заполнена', secContent, secConclusion, modelsUsed, msgCount: chatHistory.length });
+
+        // After download — go to sessions list and highlight the saved session
+        const userRaw2 = localStorage.getItem(KEY_USER);
+        const user2 = userRaw2 ? JSON.parse(userRaw2) : null;
+        if (user2 && user2.p !== 'guest') {
+            const savedId = currentSessionId;
+            goTo('screen1b');
+            setTimeout(() => {
+                s1bFlipped = true;
+                document.getElementById('s1bInner').classList.add('flipped');
+                renderSessions(savedId); // pass id to highlight
+            }, 600);
+        }
 
     } catch(e) {
         alert('Не удалось создать протокол. Попробуй позже.');
