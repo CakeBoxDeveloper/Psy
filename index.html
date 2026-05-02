@@ -1718,19 +1718,26 @@ const voiceBtn = document.getElementById('voiceBtn');
 let isRecording = false;
 let speechRecognition = null;
 
+console.log('[Voice] voiceBtn element:', voiceBtn);
+console.log('[Voice] premiumOverlay element:', premiumOverlay);
+
 voiceBtn.addEventListener('click', () => {
+    console.log('[Voice] click fired, isPremium:', isPremium);
     if (!isPremium) {
+        console.log('[Voice] no premium → showing overlay');
         premiumOverlay.classList.add('show');
         return;
     }
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    console.log('[Voice] SpeechRecognition:', SpeechRecognition);
     if (!SpeechRecognition) {
         alert('Ваш браузер не поддерживает голосовой ввод. Попробуйте Chrome.');
         return;
     }
 
     if (!isRecording) {
+        console.log('[Voice] starting recognition...');
         speechRecognition = new SpeechRecognition();
         speechRecognition.lang = 'ru-RU';
         speechRecognition.continuous = false;
@@ -1738,16 +1745,19 @@ voiceBtn.addEventListener('click', () => {
 
         speechRecognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript;
+            console.log('[Voice] result:', transcript);
             msgInput.value = transcript;
             msgInput.focus();
         };
 
-        speechRecognition.onerror = () => {
+        speechRecognition.onerror = (e) => {
+            console.error('[Voice] error:', e.error);
             isRecording = false;
             voiceBtn.classList.remove('recording');
         };
 
         speechRecognition.onend = () => {
+            console.log('[Voice] ended');
             isRecording = false;
             voiceBtn.classList.remove('recording');
         };
@@ -1756,6 +1766,7 @@ voiceBtn.addEventListener('click', () => {
         isRecording = true;
         voiceBtn.classList.add('recording');
     } else {
+        console.log('[Voice] stopping recognition');
         if (speechRecognition) speechRecognition.stop();
         isRecording = false;
         voiceBtn.classList.remove('recording');
