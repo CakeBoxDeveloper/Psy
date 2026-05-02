@@ -1531,11 +1531,12 @@ ${msgs || 'Диалог пуст'}
 
 document.getElementById('endMenu').addEventListener('click', () => {
     endOverlay.classList.remove('show');
-    // Always go to survey screen (front side of card)
+    // Go to sessions list (back side of card)
     goTo('screen1b');
     setTimeout(() => {
-        s1bFlipped = false;
-        document.getElementById('s1bInner').classList.remove('flipped');
+        s1bFlipped = true;
+        document.getElementById('s1bInner').classList.add('flipped');
+        renderSessions();
     }, 600);
 });
 document.getElementById('endNew').addEventListener('click', () => {
@@ -1545,6 +1546,12 @@ document.getElementById('endNew').addEventListener('click', () => {
     currentSessionId = null;
     chatArea.innerHTML = '';
     showPlaceholder();
+    // Go to survey screen (front side of card)
+    goTo('screen1b');
+    setTimeout(() => {
+        s1bFlipped = false;
+        document.getElementById('s1bInner').classList.remove('flipped');
+    }, 600);
 });
 
 function initChat() {
