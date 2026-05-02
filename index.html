@@ -1713,56 +1713,54 @@ async function handleConsiliumMode(text, typingIndicator, thinkDelay) {
 sendBtn.addEventListener('click', send);
 msgInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); send(); } });
 
-// Voice input — Web Speech API (works in browser, no server needed)
+// Voice input — Web Speech API
 const voiceBtn = document.getElementById('voiceBtn');
 let isRecording = false;
 let speechRecognition = null;
 
-if (voiceBtn) {
-    voiceBtn.addEventListener('click', () => {
-        if (!isPremium) {
-            premiumOverlay.classList.add('show');
-            return;
-        }
+voiceBtn.addEventListener('click', () => {
+    if (!isPremium) {
+        premiumOverlay.classList.add('show');
+        return;
+    }
 
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) {
-            alert('Ваш браузер не поддерживает голосовой ввод. Попробуйте Chrome.');
-            return;
-        }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        alert('Ваш браузер не поддерживает голосовой ввод. Попробуйте Chrome.');
+        return;
+    }
 
-        if (!isRecording) {
-            speechRecognition = new SpeechRecognition();
-            speechRecognition.lang = 'ru-RU';
-            speechRecognition.continuous = false;
-            speechRecognition.interimResults = false;
+    if (!isRecording) {
+        speechRecognition = new SpeechRecognition();
+        speechRecognition.lang = 'ru-RU';
+        speechRecognition.continuous = false;
+        speechRecognition.interimResults = false;
 
-            speechRecognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                msgInput.value = transcript;
-                msgInput.focus();
-            };
+        speechRecognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            msgInput.value = transcript;
+            msgInput.focus();
+        };
 
-            speechRecognition.onerror = () => {
-                isRecording = false;
-                voiceBtn.classList.remove('recording');
-            };
-
-            speechRecognition.onend = () => {
-                isRecording = false;
-                voiceBtn.classList.remove('recording');
-            };
-
-            speechRecognition.start();
-            isRecording = true;
-            voiceBtn.classList.add('recording');
-        } else {
-            if (speechRecognition) speechRecognition.stop();
+        speechRecognition.onerror = () => {
             isRecording = false;
             voiceBtn.classList.remove('recording');
-        }
-    });
-}
+        };
+
+        speechRecognition.onend = () => {
+            isRecording = false;
+            voiceBtn.classList.remove('recording');
+        };
+
+        speechRecognition.start();
+        isRecording = true;
+        voiceBtn.classList.add('recording');
+    } else {
+        if (speechRecognition) speechRecognition.stop();
+        isRecording = false;
+        voiceBtn.classList.remove('recording');
+    }
+});
 
 // Loader
 const LOADER_QUOTES = [
