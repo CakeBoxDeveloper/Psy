@@ -1218,7 +1218,7 @@ modelBtn.addEventListener('click', () => dropdown.classList.toggle('show'));
 document.addEventListener('click', e => {
     if (!e.target.closest('.chat-header-left')) dropdown.classList.remove('show');
     if (!e.target.closest('.end-modal') && !e.target.closest('#menuBtn')) endOverlay.classList.remove('show');
-    if (!e.target.closest('.premium-modal') && !e.target.closest('.ditem-premium') && !e.target.closest('#endSummaryBtn')) premiumOverlay.classList.remove('show');
+    if (!e.target.closest('.premium-modal') && !e.target.closest('.ditem-premium') && !e.target.closest('#endSummaryBtn') && !e.target.closest('#voiceBtn')) premiumOverlay.classList.remove('show');
 });
 ditems.forEach(d => d.addEventListener('click', () => {
     if (d.dataset.premium && !isPremium) {
