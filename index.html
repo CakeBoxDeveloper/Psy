@@ -1713,15 +1713,11 @@ async function handleConsiliumMode(text, typingIndicator, thinkDelay) {
 sendBtn.addEventListener('click', send);
 msgInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); send(); } });
 
-// Voice input — Web Speech API
+// Voice input — MediaRecorder + Groq Whisper
 const voiceBtn = document.getElementById('voiceBtn');
 let isRecording = false;
-let speechRecognition = null;
 
-console.log('[Voice] voiceBtn element:', voiceBtn);
-console.log('[Voice] premiumOverlay element:', premiumOverlay);
-
-voiceBtn.addEventListener('click', () => {
+voiceBtn.addEventListener('click', async () => {
     console.log('[Voice] click fired, isPremium:', isPremium);
     if (!isPremium) {
         console.log('[Voice] no premium → showing overlay');
@@ -1740,69 +1736,74 @@ voiceBtn.addEventListener('click', () => {
     }
 
     if (!isRecording) {
-        console.log('[Voice] starting recognition...');
+        console.log('[Voice] starting MediaRecorder...');
         try {
-            speechRecognition = new SpeechRecognition();
-            speechRecognition.lang = 'ru-RU';
-            speechRecognition.continuous = false;
-            speechRecognition.interimResults = false;
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            console.log('[Voice] microphone granted');
+            const mediaRecorder = new MediaRecorder(stream);
+            const chunks = [];
 
-            speechRecognition.onresult = async (event) => {
-                const raw = event.results[0][0].transcript;
-                console.log('[Voice] raw result:', raw);
+            mediaRecorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
 
-                // Format via API — fix grammar and punctuation
-                let formatted = raw;
+            mediaRecorder.onstop = async () => {
+                console.log('[Voice] recording stopped, sending to Whisper...');
+                stream.getTracks().forEach(t => t.stop());
+                const blob = new Blob(chunks, { type: 'audio/webm' });
+                const formData = new FormData();
+                formData.append('file', blob, 'voice.webm');
+                formData.append('model', 'whisper-large-v3');
+                formData.append('language', 'ru');
                 try {
-                    const resp = await fetch(`${API_BASE}/api/chat`, {
+                    const resp = await fetch(`${API_BASE}/api/transcribe`, {
                         method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            modelKey: 'tara',
-                            history: [{
-                                role: 'user',
-                                content: `Исправь орфографию и пунктуацию в тексте по правилам русского языка. Верни ТОЛЬКО исправленный текст, без пояснений и кавычек:\n\n${raw}`
-                            }],
-                            max_tokens: 300,
-                            temperature: 0.1
-                        })
+                        body: formData
                     });
                     const data = await resp.json();
-                    formatted = data.choices?.[0]?.message?.content?.trim() || raw;
-                    console.log('[Voice] formatted:', formatted);
+                    const raw = data.text?.trim();
+                    console.log('[Voice] transcribed:', raw);
+                    if (raw) {
+                        // Format and send
+                        let formatted = raw;
+                        try {
+                            const fResp = await fetch(`${API_BASE}/api/chat`, {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({
+                                    modelKey: 'tara',
+                                    history: [{ role: 'user', content: `Исправь орфографию и пунктуацию по правилам русского языка. Верни ТОЛЬКО исправленный текст без пояснений:\n\n${raw}` }],
+                                    max_tokens: 300,
+                                    temperature: 0.1
+                                })
+                            });
+                            const fData = await fResp.json();
+                            formatted = fData.choices?.[0]?.message?.content?.trim() || raw;
+                        } catch(e) { console.warn('[Voice] format failed:', e); }
+                        msgInput.value = formatted;
+                        send();
+                    }
                 } catch(e) {
-                    console.warn('[Voice] format failed, using raw:', e);
+                    console.error('[Voice] transcribe failed:', e);
+                    alert('Не удалось распознать речь.');
                 }
-
-                // Send as user message immediately
-                msgInput.value = formatted;
-                send();
-            };
-
-            speechRecognition.onerror = (e) => {
-                console.error('[Voice] error:', e.error);
                 isRecording = false;
                 voiceBtn.classList.remove('recording');
             };
 
-            speechRecognition.onend = () => {
-                console.log('[Voice] ended');
-                isRecording = false;
-                voiceBtn.classList.remove('recording');
-            };
-
-            speechRecognition.start();
-            console.log('[Voice] start() called');
+            mediaRecorder.start();
             isRecording = true;
             voiceBtn.classList.add('recording');
+            voiceBtn._recorder = mediaRecorder;
         } catch(err) {
-            console.error('[Voice] start failed:', err);
+            console.error('[Voice] microphone error:', err);
+            alert('Нет доступа к микрофону. Разрешите доступ в настройках браузера.');
             isRecording = false;
             voiceBtn.classList.remove('recording');
         }
     } else {
-        console.log('[Voice] stopping recognition');
-        if (speechRecognition) speechRecognition.stop();
+        console.log('[Voice] stopping MediaRecorder');
+        if (voiceBtn._recorder && voiceBtn._recorder.state === 'recording') {
+            voiceBtn._recorder.stop();
+        }
         isRecording = false;
         voiceBtn.classList.remove('recording');
     }
