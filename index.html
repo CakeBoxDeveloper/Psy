@@ -213,6 +213,16 @@ body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%)
 .bubble-body{display:block;}
 .bubble-sig{display:block;margin:8px -12px 0;padding:6px 12px 0;border-top:1px solid rgba(210,190,165,0.15);font-size:11px;color:rgba(210,190,165,0.35);text-align:center;font-style:normal;}
 .light .bubble-sig{color:rgba(40,28,20,0.65);border-top-color:rgba(40,28,20,0.2);}
+
+/* Premium activated message */
+.premium-activated{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 16px;background:rgba(255,255,255,0.06);border-radius:8px;text-align:center;max-width:80%;}
+.premium-activated img{width:48px;height:48px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
+.light .premium-activated{background:rgba(60,45,35,0.1);}
+.light .premium-activated img{filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);}
+.premium-activated-title{font-family:'TiemposHeadline',serif;font-weight:900;font-size:16px;color:rgba(210,190,165,1);}
+.light .premium-activated-title{color:rgb(40,28,20);}
+.premium-activated-desc{font-size:12px;color:rgba(210,190,165,0.6);line-height:1.5;}
+.light .premium-activated-desc{color:rgba(40,28,20,0.6);}
 .light .ditem-check{background:rgb(40,28,20) !important;}
 .typing-bubble{display:flex;align-items:center;gap:4px;padding:10px 14px;background:rgba(255,255,255,0.06);border-radius:8px;width:fit-content;}
 .typing-bubble span{width:5px;height:5px;background:#d2bea5;border-radius:50%;animation:typing 1.2s infinite;}
@@ -1607,7 +1617,20 @@ function send() {
         isPremium = true;
         msgInput.value = '';
         document.body.classList.add('is-premium');
-        addMsg('✨ Премиум-доступ активирован до обновления страницы', 'ai', true);
+        // Show premium activated card in chat
+        const premDiv = document.createElement('div');
+        premDiv.className = 'message ai';
+        premDiv.style.animation = 'msgIn 0.4s ease-out forwards';
+        premDiv.innerHTML = `<div class="premium-activated">
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/262b24a9c9491357e5ed7cb47c65211906c8b244/treasure.svg" alt="">
+            <div>
+                <div class="premium-activated-title">Panacea Plus</div>
+                <div class="premium-activated-desc">Теперь все эксклюзивные функции доступны!</div>
+            </div>
+        </div>`;
+        chatArea.appendChild(premDiv);
+        chatArea.scrollTop = chatArea.scrollHeight;
+        if (chatArea._updateMask) chatArea._updateMask();
         return;
     }
     
