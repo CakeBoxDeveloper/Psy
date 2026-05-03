@@ -231,33 +231,33 @@ body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%)
 */
 
 /* Premium activated message */
-.premium-activated{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px 16px;background:rgba(255,255,255,0.06);border-radius:12px;text-align:center;width:192px;cursor:pointer;}
+.premium-activated{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 16px;background:rgba(255,255,255,0.06);border-radius:12px;text-align:center;width:192px;}
 .premium-activated img{width:48px;height:48px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
 .light .premium-activated{background:rgba(60,45,35,0.1);}
 .light .premium-activated img{filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);}
 .premium-activated-title{font-family:'TiemposHeadline',serif;font-weight:900;font-size:16px;color:rgba(210,190,165,1);}
 .light .premium-activated-title{color:rgb(40,28,20);}
-.premium-activated-desc{font-size:11px;color:rgba(210,190,165,0.6);line-height:1.5;margin-top:4px;}
+.premium-activated-desc{font-size:11px;color:rgba(210,190,165,0.6);line-height:1.5;}
 .light .premium-activated-desc{color:rgba(40,28,20,0.6);}
 
 /* Toast notification */
-@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(8px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
-@keyframes toastOut{from{opacity:1;transform:translateX(-50%) translateY(0);}to{opacity:0;transform:translateX(-50%) translateY(4px);}}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;
-    display:flex;align-items:center;gap:10px;
+@keyframes toastIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+@keyframes toastOut{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(4px);}}
+.toast{display:flex;align-items:center;gap:10px;flex-shrink:0;
+    margin:0 16px 8px;
     padding:10px 14px;
     background:rgba(42,36,32,0.97);
     border:1px solid rgba(210,190,165,0.15);
     border-radius:10px;
-    width:calc(100% - 32px);max-width:420px;
     animation:toastIn 0.25s ease-out forwards;
     cursor:pointer;}
 .toast.hiding{animation:toastOut 0.25s ease-in forwards;}
 .light .toast{background:rgba(215,200,180,0.97);border-color:rgba(60,45,35,0.2);}
 .toast-icon{width:20px;height:20px;flex-shrink:0;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
 .light .toast-icon{filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);}
-.toast-text{font-size:12px;color:rgba(210,190,165,0.9);font-family:'Inter',sans-serif;flex:1;}
+.toast-text{font-size:12px;color:rgba(210,190,165,0.9);font-family:'Inter',sans-serif;cursor:pointer;flex:1;}
 .light .toast-text{color:rgba(40,28,20,0.85);}
+.toast{cursor:pointer;}
 .light .ditem-check{background:rgb(40,28,20) !important;}
 .typing-bubble{display:flex;align-items:center;gap:4px;padding:10px 14px;background:rgba(255,255,255,0.06);border-radius:8px;width:fit-content;}
 .typing-bubble span{width:5px;height:5px;background:#d2bea5;border-radius:50%;animation:typing 1.2s infinite;}
@@ -713,6 +713,9 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
         </div>
     </div>
     <div class="chat-area" id="chatArea"></div>
+    <div class="toast" id="appToast" style="display:none;">
+        <img class="toast-icon" id="toastIcon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" alt="">
+        <span class="toast-text" id="toastText">Эта функция доступна с Panacea Plus</span>
     </div>
     <div class="input-area">
         <input type="text" class="input-field" id="msgInput" placeholder="Задай свой вопрос..." autocomplete="off">
@@ -772,11 +775,6 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 </div>
 
 <!-- End session modal -->
-<!-- Toast — fixed, above everything -->
-<div class="toast" id="appToast" style="display:none;">
-    <img class="toast-icon" id="toastIcon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" alt="">
-    <span class="toast-text" id="toastText">Эта функция доступна с Panacea Plus</span>
-</div>
 <!-- Delete session modal -->
 <div class="end-overlay" id="deleteSessionOverlay" style="z-index:700;">
 <div class="end-modal">
@@ -1644,11 +1642,11 @@ function initChat() {
                     const premDiv = document.createElement('div');
                     premDiv.className = 'message ai';
                     premDiv.style.cssText = 'justify-content:center;';
-                    premDiv.innerHTML = `<div class="premium-activated" onclick="window.location.href='subscription.html'">
+                    premDiv.innerHTML = `<div class="premium-activated">
                         <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/262b24a9c9491357e5ed7cb47c65211906c8b244/treasure.svg" alt="">
                         <div>
                             <div class="premium-activated-title">Panacea Plus</div>
-                            <div class="premium-activated-desc">Ave! Теперь тебе доступны все эксклюзивные функции!</div>
+                            <div class="premium-activated-desc">Теперь тебе доступны все эксклюзивные функции!</div>
                         </div>
                     </div>`;
                     chatArea.appendChild(premDiv);
@@ -1788,11 +1786,11 @@ function send() {
             const premDiv = document.createElement('div');
             premDiv.className = 'message ai';
             premDiv.style.cssText = 'animation:msgIn 0.4s ease-out forwards;justify-content:center;';
-            premDiv.innerHTML = `<div class="premium-activated" onclick="window.location.href='subscription.html'">
+            premDiv.innerHTML = `<div class="premium-activated">
                 <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/262b24a9c9491357e5ed7cb47c65211906c8b244/treasure.svg" alt="">
                 <div>
                     <div class="premium-activated-title">Panacea Plus</div>
-                    <div class="premium-activated-desc">Ave! Теперь тебе доступны все эксклюзивные функции!</div>
+                    <div class="premium-activated-desc">Теперь тебе доступны все эксклюзивные функции!</div>
                 </div>
             </div>`;
             chatArea.appendChild(premDiv);
