@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Подписки</title>
+<title>Мои подписки</title>
 <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg">
 <style>
 @font-face{font-family:'TiemposHeadline';src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Black.woff') format('woff');font-weight:900;}
@@ -11,6 +11,11 @@
 input{-webkit-user-select:text;user-select:text;}
 html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;display:flex;justify-content:center;align-items:center;}
 @keyframes shimmer{0%{left:-120%;}65%,100%{left:180%;}}
+@keyframes sway{
+    0%   {transform:translateY(0);}
+    50%  {transform:translateY(-40px);}
+    100% {transform:translateY(0);}
+}
 
 .card{width:90%;max-width:420px;height:min(90vh,90dvh);background:rgb(42,36,32);border-radius:12px;display:flex;flex-direction:column;padding:28px 24px 24px;overflow:hidden;}
 
@@ -20,11 +25,16 @@ html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-a
 .card-icon{width:18px;height:18px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);opacity:0.7;}
 
 /* Hero */
-.hero{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 12px 16px;background:rgba(255,255,255,0.04);border-radius:10px;text-align:center;flex-shrink:0;margin-bottom:8px;}
+.hero{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 12px 0;background:rgba(255,255,255,0.04);border-radius:10px 10px 0 0;text-align:center;flex-shrink:0;margin-bottom:0;}
 .hero img{width:44px;height:44px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
 .hero-title{font-family:'TiemposHeadline',serif;font-weight:900;font-size:18px;color:rgba(210,190,165,1);}
-.hero-desc{font-size:11px;color:rgba(210,190,165,0.5);line-height:1.6;width:100%;}
-.hero-status{font-size:11px;margin-top:4px;width:100%;}
+.hero-desc{font-size:11px;color:rgba(210,190,165,0.5);line-height:1.6;width:100%;padding:0 4px;}
+
+/* Divider */
+.hero-divider{width:100%;height:1px;background:rgba(210,190,165,0.1);margin-top:12px;flex-shrink:0;}
+
+/* Status row */
+.hero-status{font-size:11px;width:100%;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:0 0 10px 10px;margin-bottom:8px;flex-shrink:0;}
 .hero-status.active{display:flex;justify-content:space-between;align-items:center;color:rgba(210,190,165,0.75);}
 .hero-status.inactive{display:flex;justify-content:space-between;align-items:center;}
 .hero-connect{
@@ -39,21 +49,36 @@ html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-a
 .hero-connect:hover{background:rgba(210,190,165,0.25);}
 
 /* Gift */
-.gift-wrap{flex-shrink:0;margin-bottom:8px;}
-.gift-btn{width:100%;padding:12px 14px;background:rgba(255,255,255,0.04);border:none;border-radius:10px;font-size:13px;font-weight:500;color:rgba(210,190,165,0.8);font-family:'Inter',sans-serif;cursor:pointer;text-align:center;transition:background 0.15s;position:relative;overflow:hidden;}
+.gift-wrap{flex-shrink:0;margin-bottom:8px;position:relative;height:44px;}
+.gift-btn{
+    position:absolute;inset:0;
+    width:100%;height:44px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(210,190,165,0.15);
+    border-radius:10px;
+    font-size:13px;font-weight:500;color:rgba(210,190,165,0.8);
+    font-family:'Inter',sans-serif;cursor:pointer;text-align:center;
+    transition:opacity 0.35s, filter 0.35s;
+    overflow:hidden;
+}
 .gift-btn::after{content:'';position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.08) 50%,transparent 80%);animation:shimmer 3s ease-in-out infinite;}
 .gift-btn:hover{background:rgba(255,255,255,0.07);}
+.gift-btn.hiding{opacity:0;filter:blur(4px);pointer-events:none;}
 
-/* Gift input row — input + button inside */
-.gift-input-row{display:none;position:relative;}
-.gift-input-row.show{display:block;}
+.gift-input-row{
+    position:absolute;inset:0;
+    opacity:0;filter:blur(4px);
+    pointer-events:none;
+    transition:opacity 0.35s, filter 0.35s;
+}
+.gift-input-row.show{opacity:1;filter:blur(0px);pointer-events:all;}
 .gift-input{
     width:100%;height:44px;
     background:rgba(255,255,255,0.06);
     border:1px solid rgba(210,190,165,0.15);
     border-radius:10px;
     padding:0 12px;
-    padding-right:110px;
+    padding-right:100px;
     font-size:13px;color:rgba(210,190,165,0.9);
     font-family:'Inter',sans-serif;outline:none;
     transition:border-color 0.15s;
@@ -62,11 +87,11 @@ html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-a
 .gift-input:focus{border-color:rgba(210,190,165,0.3);}
 .gift-submit{
     position:absolute;right:4px;top:50%;transform:translateY(-50%);
-    height:28px;
+    height:calc(44px - 8px);
     padding:0 10px;
     background:rgba(210,190,165,0.15);
-    border:1px solid rgba(210,190,165,0.2);
-    border-radius:6px;
+    border:1px solid rgba(210,190,165,0.25);
+    border-radius:7px;
     font-size:11px;font-weight:600;color:rgba(210,190,165,1);
     font-family:'Inter',sans-serif;cursor:pointer;
     transition:all 0.15s;
@@ -75,18 +100,19 @@ html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-a
 .gift-submit.show{display:block;}
 .gift-submit:hover{background:rgba(210,190,165,0.25);}
 
-/* Features with dynamic fade */
+/* Features with sway + fade */
 .feats-outer{flex:1;min-height:0;position:relative;}
-.feats-scroll{height:100%;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:4px;padding:2px 0;}
+.feats-scroll{height:100%;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:4px;padding:40px 0 2px;}
 .feats-scroll::-webkit-scrollbar{display:none;}
+.feats-inner{display:flex;flex-direction:column;gap:4px;animation:sway 8s ease-in-out infinite;}
+.feats-inner.paused{animation-play-state:paused;}
 
-/* Fade overlays — shown/hidden via JS */
 .fade-top,.fade-bottom{position:absolute;left:0;right:0;height:28px;pointer-events:none;z-index:1;transition:opacity 0.2s;}
 .fade-top{top:0;background:linear-gradient(to bottom,rgb(42,36,32),transparent);}
 .fade-bottom{bottom:0;background:linear-gradient(to top,rgb(42,36,32),transparent);}
 .fade-top.hidden,.fade-bottom.hidden{opacity:0;}
 
-.feat{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:8px;}
+.feat{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:8px;flex-shrink:0;}
 .feat-icon{width:14px;height:14px;flex-shrink:0;margin-top:2px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);opacity:0.6;}
 .feat-text{font-size:12px;color:rgba(210,190,165,0.65);line-height:1.5;}
 .feat-text strong{color:rgba(210,190,165,0.9);font-weight:600;display:block;margin-bottom:1px;}
@@ -100,20 +126,22 @@ html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-a
 <div class="card">
 
     <div class="card-header">
-        <div class="card-title">Подписки</div>
+        <div class="card-title">Мои подписки</div>
         <img class="card-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/262b24a9c9491357e5ed7cb47c65211906c8b244/treasure.svg" alt="">
     </div>
 
     <div class="hero">
         <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/262b24a9c9491357e5ed7cb47c65211906c8b244/treasure.svg" alt="">
         <div class="hero-title">Panacea Plus</div>
-        <div class="hero-desc">Полный доступ к возможностям всех моделей и эксклюзивным режимам.</div>
-        <div class="hero-status" id="heroStatus"></div>
+        <div class="hero-desc">Модели живут на серверах — это дорого. Подписка покрывает инфраструктуру и позволяет проекту существовать. Без неё Panacea просто не выживет.</div>
+        <div class="hero-divider"></div>
     </div>
+
+    <div class="hero-status" id="heroStatus"></div>
 
     <div class="gift-wrap">
         <button class="gift-btn" id="giftBtn" onclick="openGift()">Купить подписку в подарок</button>
-        <div class="gift-input-row" id="giftRow">
+        <div class="gift-input-row" id="giftRow" style="position:absolute;inset:0;">
             <input class="gift-input" id="giftEmail" type="email" placeholder="Введите email" oninput="onGiftInput(this.value)" onkeydown="if(event.key==='Enter')sendGift()">
             <button class="gift-submit" id="giftSubmit" onclick="sendGift()">Продолжить</button>
         </div>
@@ -123,29 +151,31 @@ html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-a
         <div class="fade-top hidden" id="fadeTop"></div>
         <div class="fade-bottom hidden" id="fadeBottom"></div>
         <div class="feats-scroll" id="featsScroll">
-            <div class="feat">
-                <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/infinity-svgrepo-com.svg" alt="">
-                <div class="feat-text"><strong>Без ограничений</strong>Неограниченное количество сессий</div>
-            </div>
-            <div class="feat">
-                <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/history-3-svgrepo-com.svg" alt="">
-                <div class="feat-text"><strong>История навсегда</strong>Можно отключить очистку истории через 24 часа</div>
-            </div>
-            <div class="feat">
-                <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" alt="">
-                <div class="feat-text"><strong>Протоколы сессий</strong>Скачать PDF-протокол каждой сессии</div>
-            </div>
-            <div class="feat">
-                <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/eye-scan-svgrepo-com.svg" alt="">
-                <div class="feat-text"><strong>Оракул</strong>Система сама выбирает наиболее подходящую модель</div>
-            </div>
-            <div class="feat">
-                <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/discussion-square-svgrepo-com.svg" alt="">
-                <div class="feat-text"><strong>Консилиум</strong>Ответ содержит мнения всех шести моделей одновременно</div>
-            </div>
-            <div class="feat">
-                <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/voice-recognition-frame-svgrepo-com.svg" alt="">
-                <div class="feat-text"><strong>Голосовой режим</strong>Общайся с моделями голосом</div>
+            <div class="feats-inner" id="featsInner">
+                <div class="feat">
+                    <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/infinity-svgrepo-com.svg" alt="">
+                    <div class="feat-text"><strong>Без ограничений</strong>Неограниченное количество сессий</div>
+                </div>
+                <div class="feat">
+                    <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/history-3-svgrepo-com.svg" alt="">
+                    <div class="feat-text"><strong>История навсегда</strong>Можно отключить очистку истории через 24 часа</div>
+                </div>
+                <div class="feat">
+                    <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" alt="">
+                    <div class="feat-text"><strong>Протоколы сессий</strong>Скачать PDF-протокол каждой сессии</div>
+                </div>
+                <div class="feat">
+                    <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/eye-scan-svgrepo-com.svg" alt="">
+                    <div class="feat-text"><strong>Оракул</strong>Система сама выбирает наиболее подходящую модель</div>
+                </div>
+                <div class="feat">
+                    <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/discussion-square-svgrepo-com.svg" alt="">
+                    <div class="feat-text"><strong>Консилиум</strong>Ответ содержит мнения всех шести моделей одновременно</div>
+                </div>
+                <div class="feat">
+                    <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/voice-recognition-frame-svgrepo-com.svg" alt="">
+                    <div class="feat-text"><strong>Голосовой режим</strong>Общайся с моделями голосом</div>
+                </div>
             </div>
         </div>
     </div>
@@ -168,11 +198,10 @@ if (isPremium) {
     el.innerHTML = '<span style="color:rgba(210,190,165,0.5)">Подписка не активна</span><button class="hero-connect" onclick="window.location.href=\'payment.html\'">Подключить</button>';
 }
 
-// Dynamic fade for features list
+// Dynamic fade
 const scroll = document.getElementById('featsScroll');
 const fadeTop = document.getElementById('fadeTop');
 const fadeBottom = document.getElementById('fadeBottom');
-
 function updateFade() {
     const atTop = scroll.scrollTop < 4;
     const atBottom = scroll.scrollHeight - scroll.scrollTop - scroll.clientHeight < 4;
@@ -180,29 +209,60 @@ function updateFade() {
     fadeBottom.classList.toggle('hidden', atBottom);
 }
 scroll.addEventListener('scroll', updateFade, {passive:true});
-// Check after layout
-requestAnimationFrame(() => { requestAnimationFrame(updateFade); });
+requestAnimationFrame(() => requestAnimationFrame(updateFade));
+
+// Sway animation — stop on touch/click
+const inner = document.getElementById('featsInner');
+function stopSway() {
+    inner.classList.add('paused');
+    scroll.removeEventListener('touchstart', stopSway);
+    scroll.removeEventListener('mousedown', stopSway);
+}
+scroll.addEventListener('touchstart', stopSway, {passive:true});
+scroll.addEventListener('mousedown', stopSway);
 
 // Gift
 function openGift() {
-    document.getElementById('giftBtn').style.display = 'none';
-    document.getElementById('giftRow').classList.add('show');
-    setTimeout(() => document.getElementById('giftEmail').focus(), 50);
+    const btn = document.getElementById('giftBtn');
+    const row = document.getElementById('giftRow');
+    btn.classList.add('hiding');
+    row.classList.add('show');
+    setTimeout(() => {
+        btn.style.display = 'none';
+        document.getElementById('giftEmail').focus();
+    }, 250);
 }
+
+function closeGift() {
+    const btn = document.getElementById('giftBtn');
+    const row = document.getElementById('giftRow');
+    btn.style.display = '';
+    row.classList.remove('show');
+    setTimeout(() => btn.classList.remove('hiding'), 10);
+    document.getElementById('giftEmail').value = '';
+    document.getElementById('giftSubmit').classList.remove('show');
+}
+
 function onGiftInput(val) {
     const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
     document.getElementById('giftSubmit').classList.toggle('show', valid);
 }
+
 function sendGift() {
     const email = document.getElementById('giftEmail').value.trim();
     if (!email) return;
     // TODO: save to Firestore gifts/{email}
     alert('Подарок отправлен на ' + email);
-    document.getElementById('giftRow').classList.remove('show');
-    document.getElementById('giftBtn').style.display = '';
-    document.getElementById('giftEmail').value = '';
-    document.getElementById('giftSubmit').classList.remove('show');
+    closeGift();
 }
+
+// Close gift on outside click
+document.addEventListener('click', e => {
+    const row = document.getElementById('giftRow');
+    if (row.classList.contains('show') && !e.target.closest('.gift-wrap')) {
+        closeGift();
+    }
+});
 </script>
 </body>
 </html>
