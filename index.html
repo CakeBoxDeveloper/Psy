@@ -1565,14 +1565,11 @@ function openSupportChat() {
 }
 
 function closeSupportChat() {
-    // Switch to screen1b and flip to sessions list — no fade, just like subscription.html
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('screen1b').classList.add('active');
-    bgEl.style.display = 'none';
-    bgFrame.style.display = 'none';
-    overlayEl.classList.remove('on');
-    doFlip(true);
-    renderSessions(null);
+    goTo('screen1b');
+    setTimeout(() => {
+        doFlip(true);
+        renderSessions(null);
+    }, 600);
 }
 
 // Support flip back button
