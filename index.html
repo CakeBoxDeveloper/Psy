@@ -149,7 +149,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 
 /* S2 Chat */
 .s2-wrap{width:100%;height:100vh;background:rgb(18,14,12);display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.s2-inner{width:90%;max-width:420px;height:90vh;display:flex;flex-direction:column;background:rgb(32,26,22);border-radius:12px;overflow:hidden;}
+.s2-inner{width:90%;max-width:420px;height:90vh;display:flex;flex-direction:column;background:rgb(32,26,22);border-radius:12px;overflow:hidden;position:relative;}
 @media(max-width:599px){
     .s2-wrap{background:rgb(32,26,22);}
     .s2-inner{width:100%;max-width:100%;height:100vh;height:100dvh;border-radius:0;}
@@ -244,16 +244,22 @@ body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%)
 /* Toast notification */
 @keyframes toastIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 @keyframes toastOut{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(4px);}}
-.toast{display:flex;align-items:center;gap:10px;flex-shrink:0;
-    margin:0 16px 8px;
+.toast{
+    position:absolute;bottom:60px;left:16px;right:16px;
+    display:flex;align-items:center;gap:10px;
     padding:10px 14px;
     background:rgba(42,36,32,0.97);
     border:1px solid rgba(210,190,165,0.15);
     border-radius:10px;
     animation:toastIn 0.25s ease-out forwards;
-    cursor:pointer;}
+    cursor:pointer;
+    z-index:50;
+    overflow:hidden;
+}
+.toast::after{content:'';position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.07) 50%,transparent 80%);animation:shimmer 3s ease-in-out infinite;}
 .toast.hiding{animation:toastOut 0.25s ease-in forwards;}
 .light .toast{background:rgba(215,200,180,0.97);border-color:rgba(60,45,35,0.2);}
+.light .toast::after{background:linear-gradient(105deg,transparent 20%,rgba(60,45,35,0.07) 50%,transparent 80%);}
 .toast-icon{width:20px;height:20px;flex-shrink:0;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
 .light .toast-icon{filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);}
 .toast-text{font-size:12px;color:rgba(210,190,165,0.9);font-family:'Inter',sans-serif;cursor:pointer;flex:1;}
@@ -440,7 +446,10 @@ body.light span[style*="width:5px;height:5px;background:#d2bea5"]{background:#28
     font-size:12px;color:rgba(210,190,165,0.85);font-family:'Inter',sans-serif;
     opacity:0;filter:blur(6px);pointer-events:none;
     transition:opacity 0.35s,filter 0.35s;
+    overflow:hidden;
+    cursor:pointer;
 }
+.end-inline-notice::after{content:'';position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.08) 50%,transparent 80%);animation:shimmer 3s ease-in-out infinite;}
 .end-inline-notice.show{opacity:1;filter:blur(0);pointer-events:all;}
 .end-inline-notice img{width:16px;height:16px;flex-shrink:0;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
 body.light .end-inline-notice{background:rgba(215,200,180,0.97);border-color:rgba(60,45,35,0.2);color:rgba(40,28,20,0.85);}
