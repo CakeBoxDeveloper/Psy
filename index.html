@@ -418,8 +418,33 @@ body.light span[style*="width:5px;height:5px;background:#d2bea5"]{background:#28
 .end-btn-delete{background:rgba(255,255,255,0.08);color:rgba(210,190,165,0.8);}
 .end-btn-delete:hover{background:rgba(255,255,255,0.12);}
 /* End summary button — more prominent */
-.end-summary-btn{width:100%;height:42px;background:rgba(210,190,165,0.18);border:1px solid rgba(210,190,165,0.35);color:rgba(210,190,165,0.9);border-radius:8px;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all 0.15s;}
+.end-summary-wrap{position:relative;width:100%;height:42px;flex-shrink:0;}
+.end-summary-btn{
+    position:absolute;inset:0;
+    width:100%;height:42px;
+    background:rgba(210,190,165,0.18);border:1px solid rgba(210,190,165,0.35);
+    color:rgba(210,190,165,0.9);border-radius:8px;
+    font-size:12px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:7px;
+    transition:opacity 0.35s,filter 0.35s;
+}
 .end-summary-btn:hover{background:rgba(210,190,165,0.28);color:rgba(210,190,165,1);}
+.end-summary-btn.blurred{opacity:0;filter:blur(6px);pointer-events:none;}
+/* Inline premium notice — same size, overlays button */
+.end-inline-notice{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    background:rgba(42,36,32,0.97);
+    border:1px solid rgba(210,190,165,0.15);
+    border-radius:8px;
+    font-size:12px;color:rgba(210,190,165,0.85);font-family:'Inter',sans-serif;
+    opacity:0;filter:blur(6px);pointer-events:none;
+    transition:opacity 0.35s,filter 0.35s;
+}
+.end-inline-notice.show{opacity:1;filter:blur(0);pointer-events:all;}
+.end-inline-notice img{width:16px;height:16px;flex-shrink:0;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
+body.light .end-inline-notice{background:rgba(215,200,180,0.97);border-color:rgba(60,45,35,0.2);color:rgba(40,28,20,0.85);}
+body.light .end-inline-notice img{filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);}
 /* Scroll icon — matches button text color */
 .end-summary-icon{width:15px;height:15px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(90%);opacity:0.9;}
 body.light .end-summary-icon{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%) !important;opacity:0.8 !important;}
@@ -791,10 +816,16 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 <div class="end-modal">
     <div class="end-title">Завершить сессию?</div>
     <div class="end-desc">Вы можете начать новую сессию с чистого листа или вернуться в главное меню.</div>
-    <button class="end-summary-btn" id="endSummaryBtn">
-        <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" class="end-summary-icon" alt="">
-        Завершить и сохранить протокол
-    </button>
+    <div class="end-summary-wrap">
+        <button class="end-summary-btn" id="endSummaryBtn">
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" class="end-summary-icon" alt="">
+            Завершить и сохранить протокол
+        </button>
+        <div class="end-inline-notice" id="endInlineNotice">
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" alt="">
+            Эта функция доступна с Panacea Plus
+        </div>
+    </div>
     <div class="end-btns">
         <button class="end-btn end-btn-menu" id="endMenu">В меню</button>
         <button class="end-btn end-btn-new" id="endNew">Новая сессия</button>
@@ -1466,8 +1497,15 @@ function showPremiumToast() {
 
 document.getElementById('endSummaryBtn').addEventListener('click', async () => {
     if (!isPremium) {
-        endOverlay.classList.remove('show');
-        showPremiumToast();
+        const btn = document.getElementById('endSummaryBtn');
+        const notice = document.getElementById('endInlineNotice');
+        btn.classList.add('blurred');
+        notice.classList.add('show');
+        clearTimeout(notice._t);
+        notice._t = setTimeout(() => {
+            notice.classList.remove('show');
+            btn.classList.remove('blurred');
+        }, 3500);
         return;
     }
     endOverlay.classList.remove('show');
