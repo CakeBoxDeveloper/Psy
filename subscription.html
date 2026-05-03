@@ -8,11 +8,18 @@
 <style>
 @font-face{font-family:'TiemposHeadline';src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Black.woff') format('woff');font-weight:900;}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;}
-input{-webkit-user-select:text;user-select:text;}
+input,select{-webkit-user-select:text;user-select:text;}
 html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;display:flex;justify-content:center;align-items:center;}
 @keyframes shimmer{0%{left:-120%;}65%,100%{left:180%;}}
 
-.card{width:90%;max-width:420px;height:min(90vh,90dvh);background:rgb(42,36,32);border-radius:12px;display:flex;flex-direction:column;padding:28px 24px 24px;overflow:hidden;}
+/* ── Flip scene ── */
+.scene{width:90%;max-width:420px;height:min(90vh,90dvh);perspective:1200px;}
+.flipper{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.65s cubic-bezier(0.4,0,0.2,1);}
+.flipper.flipped{transform:rotateY(180deg);}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;overflow:hidden;}
+
+/* ── FRONT ── */
+.face-front{background:rgb(42,36,32);display:flex;flex-direction:column;padding:28px 24px 24px;}
 
 /* Header */
 .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-shrink:0;}
@@ -24,8 +31,6 @@ html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-a
 .hero img{width:44px;height:44px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
 .hero-title{font-family:'TiemposHeadline',serif;font-weight:900;font-size:18px;color:rgba(210,190,165,1);}
 .hero-desc{font-size:11px;color:rgba(210,190,165,0.5);line-height:1.6;width:100%;padding:0 4px;}
-
-/* Divider */
 .hero-divider{width:100%;height:1px;background:rgba(210,190,165,0.1);margin-top:12px;flex-shrink:0;}
 
 /* Status row */
@@ -33,12 +38,9 @@ html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-a
 .hero-status.active{display:flex;justify-content:space-between;align-items:center;color:rgba(210,190,165,0.75);}
 .hero-status.inactive{display:flex;justify-content:space-between;align-items:center;}
 .hero-connect{
-    font-size:11px;font-weight:600;
-    color:rgba(210,190,165,1);
-    background:rgba(210,190,165,0.15);
-    border:1px solid rgba(210,190,165,0.25);
-    border-radius:6px;padding:4px 10px;
-    cursor:pointer;transition:all 0.15s;
+    font-size:11px;font-weight:600;color:rgba(210,190,165,1);
+    background:rgba(210,190,165,0.15);border:1px solid rgba(210,190,165,0.25);
+    border-radius:6px;padding:4px 10px;cursor:pointer;transition:all 0.15s;
     font-family:'Inter',sans-serif;white-space:nowrap;
 }
 .hero-connect:hover{background:rgba(210,190,165,0.25);}
@@ -46,66 +48,46 @@ html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-a
 /* Gift */
 .gift-wrap{flex-shrink:0;margin-bottom:8px;position:relative;height:44px;}
 .gift-btn{
-    position:absolute;inset:0;
-    width:100%;height:44px;
-    background:rgba(255,255,255,0.04);
-    border:1px solid rgba(210,190,165,0.15);
-    border-radius:10px;
-    font-size:13px;font-weight:500;color:rgba(210,190,165,0.8);
+    position:absolute;inset:0;width:100%;height:44px;
+    background:rgba(255,255,255,0.04);border:1px solid rgba(210,190,165,0.15);
+    border-radius:10px;font-size:13px;font-weight:500;color:rgba(210,190,165,0.8);
     font-family:'Inter',sans-serif;cursor:pointer;text-align:center;
-    transition:opacity 0.35s, filter 0.35s;
-    overflow:hidden;
+    transition:opacity 0.35s,filter 0.35s;overflow:hidden;
 }
 .gift-btn::after{content:'';position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.08) 50%,transparent 80%);animation:shimmer 3s ease-in-out infinite;}
 .gift-btn:hover{background:rgba(255,255,255,0.07);}
 .gift-btn.hiding{opacity:0;filter:blur(4px);pointer-events:none;}
-
-.gift-input-row{
-    position:absolute;inset:0;
-    opacity:0;filter:blur(4px);
-    pointer-events:none;
-    transition:opacity 0.35s, filter 0.35s;
-}
+.gift-input-row{position:absolute;inset:0;opacity:0;filter:blur(4px);pointer-events:none;transition:opacity 0.35s,filter 0.35s;}
 .gift-input-row.show{opacity:1;filter:blur(0px);pointer-events:all;}
 .gift-input{
-    width:100%;height:44px;
-    background:rgba(255,255,255,0.06);
-    border:1px solid rgba(210,190,165,0.15);
-    border-radius:10px;
-    padding:0 12px;
-    padding-right:100px;
-    font-size:13px;color:rgba(210,190,165,0.9);
-    font-family:'Inter',sans-serif;outline:none;
+    width:100%;height:44px;background:rgba(255,255,255,0.06);
+    border:1px solid rgba(210,190,165,0.15);border-radius:10px;
+    padding:0 12px;padding-right:100px;
+    font-size:13px;color:rgba(210,190,165,0.9);font-family:'Inter',sans-serif;outline:none;
     transition:border-color 0.15s;
 }
 .gift-input::placeholder{color:rgba(210,190,165,0.3);}
 .gift-input:focus{border-color:rgba(210,190,165,0.3);}
 .gift-submit{
     position:absolute;right:4px;top:50%;transform:translateY(-50%);
-    height:calc(44px - 8px);
-    padding:0 10px;
-    background:rgba(210,190,165,0.15);
-    border:1px solid rgba(210,190,165,0.25);
-    border-radius:7px;
-    font-size:11px;font-weight:600;color:rgba(210,190,165,1);
-    font-family:'Inter',sans-serif;cursor:pointer;
-    transition:all 0.15s;
+    height:calc(44px - 8px);padding:0 10px;
+    background:rgba(210,190,165,0.15);border:1px solid rgba(210,190,165,0.25);
+    border-radius:7px;font-size:11px;font-weight:600;color:rgba(210,190,165,1);
+    font-family:'Inter',sans-serif;cursor:pointer;transition:all 0.15s;
     display:none;white-space:nowrap;
 }
 .gift-submit.show{display:block;}
 .gift-submit:hover{background:rgba(210,190,165,0.25);}
 
-/* Features with sway + fade */
+/* Features */
 .feats-outer{flex:1;min-height:0;position:relative;}
 .feats-scroll{height:100%;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:4px;padding:2px 0;}
 .feats-scroll::-webkit-scrollbar{display:none;}
 .feats-inner{display:flex;flex-direction:column;gap:4px;}
-
 .fade-top,.fade-bottom{position:absolute;left:0;right:0;height:28px;pointer-events:none;z-index:1;transition:opacity 0.2s;}
 .fade-top{top:0;background:linear-gradient(to bottom,rgb(42,36,32),transparent);}
 .fade-bottom{bottom:0;background:linear-gradient(to top,rgb(42,36,32),transparent);}
 .fade-top.hidden,.fade-bottom.hidden{opacity:0;}
-
 .feat{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:8px;flex-shrink:0;}
 .feat-icon{width:14px;height:14px;flex-shrink:0;margin-top:2px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);opacity:0.6;}
 .feat-text{font-size:12px;color:rgba(210,190,165,0.65);line-height:1.5;}
@@ -114,71 +96,231 @@ html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-a
 /* Back */
 .back-btn{background:none;border:none;color:rgba(210,190,165,0.35);font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;padding:8px 0;text-align:center;width:100%;transition:color 0.15s;flex-shrink:0;margin-top:4px;}
 .back-btn:hover{color:rgba(210,190,165,0.6);}
+
+/* ── BACK (payment) ── */
+.face-back{
+    background:rgb(235,225,210);
+    transform:rotateY(180deg);
+    display:flex;flex-direction:column;padding:28px 24px 24px;
+}
+
+/* Back header row */
+.pay-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-shrink:0;}
+.pay-product{font-family:'TiemposHeadline',serif;font-weight:900;font-size:17px;color:rgb(60,45,30);}
+.pay-period{font-size:12px;font-weight:600;color:rgba(60,45,30,0.55);letter-spacing:0.02em;}
+
+/* Divider */
+.pay-divider{width:100%;height:1px;background:rgba(60,45,30,0.12);margin-bottom:16px;flex-shrink:0;}
+
+/* Dropdown */
+.pay-label{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:rgba(60,45,30,0.45);margin-bottom:6px;flex-shrink:0;}
+.pay-select-wrap{position:relative;flex-shrink:0;margin-bottom:16px;}
+.pay-select{
+    width:100%;height:44px;
+    background:rgba(60,45,30,0.07);
+    border:1px solid rgba(60,45,30,0.18);
+    border-radius:10px;
+    padding:0 36px 0 12px;
+    font-size:13px;font-weight:500;color:rgb(60,45,30);
+    font-family:'Inter',sans-serif;
+    appearance:none;-webkit-appearance:none;
+    cursor:pointer;outline:none;
+    transition:border-color 0.15s;
+}
+.pay-select:focus{border-color:rgba(60,45,30,0.35);}
+.pay-select-arrow{
+    position:absolute;right:12px;top:50%;transform:translateY(-50%);
+    width:14px;height:14px;pointer-events:none;
+    opacity:0.4;
+}
+
+/* QR area */
+.pay-qr-wrap{
+    flex:1;min-height:0;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:12px;
+}
+.pay-qr-box{
+    width:160px;height:160px;
+    background:white;
+    border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 16px rgba(60,45,30,0.12);
+    overflow:hidden;
+    flex-shrink:0;
+}
+.pay-qr-box img{width:140px;height:140px;}
+.pay-qr-hint{font-size:10px;color:rgba(60,45,30,0.45);text-align:center;line-height:1.5;max-width:220px;}
+.pay-address{
+    font-size:10px;font-family:'SF Mono','Fira Mono',monospace;
+    color:rgba(60,45,30,0.55);
+    word-break:break-all;text-align:center;
+    max-width:280px;
+    background:rgba(60,45,30,0.06);
+    border-radius:6px;padding:6px 10px;
+    cursor:pointer;transition:background 0.15s;
+    flex-shrink:0;
+}
+.pay-address:hover{background:rgba(60,45,30,0.12);}
+.pay-address.copied{color:rgb(80,140,80);}
+
+/* Back link */
+.pay-back{
+    background:none;border:none;
+    color:rgba(60,45,30,0.35);font-size:11px;
+    font-family:'Inter',sans-serif;cursor:pointer;
+    padding:8px 0;text-align:center;width:100%;
+    transition:color 0.15s;flex-shrink:0;margin-top:4px;
+}
+.pay-back:hover{color:rgba(60,45,30,0.6);}
 </style>
 </head>
 <body>
-<div class="card">
 
-    <div class="card-header">
+<div class="scene">
+  <div class="flipper" id="flipper">
+
+    <!-- ══ FRONT ══ -->
+    <div class="face face-front">
+
+      <div class="card-header">
         <div class="card-title">Мои подписки</div>
         <img class="card-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/262b24a9c9491357e5ed7cb47c65211906c8b244/treasure.svg" alt="">
-    </div>
+      </div>
 
-    <div class="hero">
+      <div class="hero">
         <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/262b24a9c9491357e5ed7cb47c65211906c8b244/treasure.svg" alt="">
         <div class="hero-title">Panacea Plus</div>
         <div class="hero-desc">Panacea работает и без подписки. Но именно она позволяет моделям развиваться, обучаться на новых данных и становиться лучше — для всех.</div>
         <div class="hero-divider"></div>
-    </div>
+      </div>
 
-    <div class="hero-status" id="heroStatus"></div>
+      <div class="hero-status" id="heroStatus"></div>
 
-    <div class="gift-wrap">
+      <div class="gift-wrap">
         <button class="gift-btn" id="giftBtn" onclick="openGift()">Купить подписку в подарок</button>
         <div class="gift-input-row" id="giftRow" style="position:absolute;inset:0;">
-            <input class="gift-input" id="giftEmail" type="email" placeholder="Введите email" oninput="onGiftInput(this.value)" onkeydown="if(event.key==='Enter')sendGift()">
-            <button class="gift-submit" id="giftSubmit" onclick="sendGift()">Продолжить</button>
+          <input class="gift-input" id="giftEmail" type="email" placeholder="Введите email" oninput="onGiftInput(this.value)" onkeydown="if(event.key==='Enter')sendGift()">
+          <button class="gift-submit" id="giftSubmit" onclick="sendGift()">Продолжить</button>
         </div>
-    </div>
+      </div>
 
-    <div class="feats-outer">
+      <div class="feats-outer">
         <div class="fade-top hidden" id="fadeTop"></div>
         <div class="fade-bottom hidden" id="fadeBottom"></div>
         <div class="feats-scroll" id="featsScroll">
-            <div class="feats-inner" id="featsInner">
-                <div class="feat">
-                    <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/infinity-svgrepo-com.svg" alt="">
-                    <div class="feat-text"><strong>Без ограничений</strong>Неограниченное количество сессий</div>
-                </div>
-                <div class="feat">
-                    <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/history-3-svgrepo-com.svg" alt="">
-                    <div class="feat-text"><strong>История навсегда</strong>Можно отключить очистку истории через 24 часа</div>
-                </div>
-                <div class="feat">
-                    <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" alt="">
-                    <div class="feat-text"><strong>Протоколы сессий</strong>Скачать PDF-протокол каждой сессии</div>
-                </div>
-                <div class="feat">
-                    <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/eye-scan-svgrepo-com.svg" alt="">
-                    <div class="feat-text"><strong>Оракул</strong>Система сама выбирает наиболее подходящую модель</div>
-                </div>
-                <div class="feat">
-                    <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/discussion-square-svgrepo-com.svg" alt="">
-                    <div class="feat-text"><strong>Консилиум</strong>Ответ содержит мнения всех шести моделей одновременно</div>
-                </div>
-                <div class="feat">
-                    <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/voice-recognition-frame-svgrepo-com.svg" alt="">
-                    <div class="feat-text"><strong>Голосовой режим</strong>Общайся с моделями голосом</div>
-                </div>
+          <div class="feats-inner">
+            <div class="feat">
+              <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/infinity-svgrepo-com.svg" alt="">
+              <div class="feat-text"><strong>Без ограничений</strong>Неограниченное количество сессий</div>
             </div>
+            <div class="feat">
+              <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/history-3-svgrepo-com.svg" alt="">
+              <div class="feat-text"><strong>История навсегда</strong>Можно отключить очистку истории через 24 часа</div>
+            </div>
+            <div class="feat">
+              <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" alt="">
+              <div class="feat-text"><strong>Протоколы сессий</strong>Скачать PDF-протокол каждой сессии</div>
+            </div>
+            <div class="feat">
+              <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/eye-scan-svgrepo-com.svg" alt="">
+              <div class="feat-text"><strong>Оракул</strong>Система сама выбирает наиболее подходящую модель</div>
+            </div>
+            <div class="feat">
+              <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/discussion-square-svgrepo-com.svg" alt="">
+              <div class="feat-text"><strong>Консилиум</strong>Ответ содержит мнения всех шести моделей одновременно</div>
+            </div>
+            <div class="feat">
+              <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/voice-recognition-frame-svgrepo-com.svg" alt="">
+              <div class="feat-text"><strong>Голосовой режим</strong>Общайся с моделями голосом</div>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <button class="back-btn" onclick="history.back()">Вернуться назад</button>
+      <button class="back-btn" onclick="history.back()">Вернуться назад</button>
 
-</div>
+    </div><!-- /face-front -->
+
+    <!-- ══ BACK ══ -->
+    <div class="face face-back">
+
+      <div class="pay-header">
+        <div class="pay-product">Panacea Plus</div>
+        <div class="pay-period">1 месяц</div>
+      </div>
+
+      <div class="pay-divider"></div>
+
+      <div class="pay-label">Способ оплаты</div>
+      <div class="pay-select-wrap">
+        <select class="pay-select" id="paySelect" onchange="onCoinChange()">
+          <optgroup label="USDT">
+            <option value="USDT_TRC20">USDT — TRC-20 (Tron)</option>
+            <option value="USDT_ERC20">USDT — ERC-20 (Ethereum)</option>
+            <option value="USDT_BEP20">USDT — BEP-20 (BSC)</option>
+            <option value="USDT_SOL">USDT — Solana (SPL)</option>
+            <option value="USDT_TON">USDT — TON</option>
+            <option value="USDT_ARB">USDT — Arbitrum</option>
+            <option value="USDT_OP">USDT — Optimism</option>
+            <option value="USDT_POLY">USDT — Polygon</option>
+          </optgroup>
+          <optgroup label="Другие монеты">
+            <option value="BTC">BTC — Bitcoin</option>
+            <option value="ETH">ETH — Ethereum</option>
+            <option value="SOL">SOL — Solana</option>
+            <option value="BNB">BNB — BNB Chain</option>
+            <option value="TON">TON — The Open Network</option>
+            <option value="TRX">TRX — Tron</option>
+            <option value="LTC">LTC — Litecoin</option>
+            <option value="XRP">XRP — Ripple</option>
+            <option value="DOGE">DOGE — Dogecoin</option>
+          </optgroup>
+        </select>
+        <!-- arrow icon -->
+        <svg class="pay-select-arrow" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 6l4 4 4-4" stroke="rgb(60,45,30)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="pay-qr-wrap">
+        <div class="pay-qr-box">
+          <img id="qrImg" src="" alt="QR">
+        </div>
+        <div class="pay-address" id="payAddress" onclick="copyAddress()"></div>
+        <div class="pay-qr-hint">Отправьте точную сумму на указанный адрес.<br>После подтверждения транзакции подписка активируется.</div>
+      </div>
+
+      <button class="pay-back" onclick="flipBack()">← Назад</button>
+
+    </div><!-- /face-back -->
+
+  </div><!-- /flipper -->
+</div><!-- /scene -->
+
 <script>
-// Status
+/* ── Wallet addresses (replace with real ones) ── */
+const WALLETS = {
+    USDT_TRC20: 'TXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx01',
+    USDT_ERC20: '0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+    USDT_BEP20: '0xBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+    USDT_SOL:   'SoLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+    USDT_TON:   'UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxx',
+    USDT_ARB:   '0xCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC',
+    USDT_OP:    '0xDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD',
+    USDT_POLY:  '0xEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE',
+    BTC:        'bc1qxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    ETH:        '0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF',
+    SOL:        'SoLBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+    BNB:        '0x1111111111111111111111111111111111111111',
+    TON:        'UQBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBxx',
+    TRX:        'TYxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx02',
+    LTC:        'ltc1qxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    XRP:        'rXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    DOGE:       'DXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx',
+};
+
+/* ── Status (front) ── */
 const isPremium = localStorage.getItem('soma_premium') === '1';
 const el = document.getElementById('heroStatus');
 if (isPremium) {
@@ -189,10 +331,11 @@ if (isPremium) {
     el.innerHTML = '<span>Подписка активна</span><span>до ' + str + '</span>';
 } else {
     el.classList.add('inactive');
-    el.innerHTML = '<span style="color:rgba(210,190,165,0.5)">Подписка не активна</span><button class="hero-connect" onclick="window.location.href=\'payment.html\'">Подключить</button>';
+    el.innerHTML = '<span style="color:rgba(210,190,165,0.5)">Подписка не активна</span>'
+        + '<button class="hero-connect" onclick="flipToPayment()">Подключить</button>';
 }
 
-// Dynamic fade
+/* ── Fade (front) ── */
 const scroll = document.getElementById('featsScroll');
 const fadeTop = document.getElementById('fadeTop');
 const fadeBottom = document.getElementById('fadeBottom');
@@ -205,46 +348,49 @@ function updateFade() {
 scroll.addEventListener('scroll', updateFade, {passive:true});
 requestAnimationFrame(() => requestAnimationFrame(updateFade));
 
-// Sway animation — stop on touch/click
-const inner = document.getElementById('featsInner');
-let swayRaf = null;
-let swayStart = null;
-let swayActive = true;
-const SWAY_AMP = 40;   // px
-const SWAY_PERIOD = 8000; // ms
-
-function swayTick(ts) {
-    if (!swayActive) return;
-    if (!swayStart) swayStart = ts;
-    const t = (ts - swayStart) / SWAY_PERIOD;
-    // sine wave 0→peak→0, starts at 0
-    const pos = SWAY_AMP * 0.5 * (1 - Math.cos(2 * Math.PI * t));
-    scroll.scrollTop = pos;
-    swayRaf = requestAnimationFrame(swayTick);
+/* ── Flip ── */
+function flipToPayment() {
+    document.getElementById('flipper').classList.add('flipped');
+    onCoinChange(); // init QR
 }
-swayRaf = requestAnimationFrame(swayTick);
-
-function stopSway() {
-    swayActive = false;
-    if (swayRaf) cancelAnimationFrame(swayRaf);
-    scroll.removeEventListener('touchstart', stopSway);
-    scroll.removeEventListener('mousedown', stopSway);
+function flipBack() {
+    document.getElementById('flipper').classList.remove('flipped');
 }
-scroll.addEventListener('touchstart', stopSway, {passive:true});
-scroll.addEventListener('mousedown', stopSway);
 
-// Gift
+/* ── QR ── */
+function onCoinChange() {
+    const coin = document.getElementById('paySelect').value;
+    const addr = WALLETS[coin] || '';
+    document.getElementById('payAddress').textContent = addr;
+    document.getElementById('payAddress').classList.remove('copied');
+    // QR via public API (no key needed)
+    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=0&data=' + encodeURIComponent(addr);
+    document.getElementById('qrImg').src = qrUrl;
+}
+
+/* ── Copy address ── */
+function copyAddress() {
+    const el = document.getElementById('payAddress');
+    const text = el.textContent;
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+        el.classList.add('copied');
+        el.textContent = 'Скопировано ✓';
+        setTimeout(() => {
+            el.classList.remove('copied');
+            el.textContent = text;
+        }, 1800);
+    });
+}
+
+/* ── Gift (front) ── */
 function openGift() {
     const btn = document.getElementById('giftBtn');
     const row = document.getElementById('giftRow');
     btn.classList.add('hiding');
     row.classList.add('show');
-    setTimeout(() => {
-        btn.style.display = 'none';
-        document.getElementById('giftEmail').focus();
-    }, 250);
+    setTimeout(() => { btn.style.display='none'; document.getElementById('giftEmail').focus(); }, 350);
 }
-
 function closeGift() {
     const btn = document.getElementById('giftBtn');
     const row = document.getElementById('giftRow');
@@ -254,26 +400,19 @@ function closeGift() {
     document.getElementById('giftEmail').value = '';
     document.getElementById('giftSubmit').classList.remove('show');
 }
-
 function onGiftInput(val) {
     const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
     document.getElementById('giftSubmit').classList.toggle('show', valid);
 }
-
 function sendGift() {
     const email = document.getElementById('giftEmail').value.trim();
     if (!email) return;
-    // TODO: save to Firestore gifts/{email}
     alert('Подарок отправлен на ' + email);
     closeGift();
 }
-
-// Close gift on outside click
 document.addEventListener('click', e => {
     const row = document.getElementById('giftRow');
-    if (row.classList.contains('show') && !e.target.closest('.gift-wrap')) {
-        closeGift();
-    }
+    if (row.classList.contains('show') && !e.target.closest('.gift-wrap')) closeGift();
 });
 </script>
 </body>
