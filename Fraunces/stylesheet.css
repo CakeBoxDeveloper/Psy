@@ -1,0 +1,26 @@
+@font-face {
+    font-family: 'Fraunces';
+    src: url('Fraunces-9ptBlackItalic.eot');
+    src: local('Fraunces 9pt Black Italic'), local('Fraunces-9ptBlackItalic'),
+        url('Fraunces-9ptBlackItalic.eot?#iefix') format('embedded-opentype'),
+        url('Fraunces-9ptBlackItalic.woff2') format('woff2'),
+        url('Fraunces-9ptBlackItalic.woff') format('woff'),
+        url('Fraunces-9ptBlackItalic.ttf') format('truetype');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Fraunces';
+    src: url('Fraunces-9ptBlack.eot');
+    src: local('Fraunces 9pt Black'), local('Fraunces-9ptBlack'),
+        url('Fraunces-9ptBlack.eot?#iefix') format('embedded-opentype'),
+        url('Fraunces-9ptBlack.woff2') format('woff2'),
+        url('Fraunces-9ptBlack.woff') format('woff'),
+        url('Fraunces-9ptBlack.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
