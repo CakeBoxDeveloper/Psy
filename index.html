@@ -359,7 +359,7 @@ body.light .end-modal{background:rgb(235,220,200);}
 body.light .end-title{color:rgb(40,28,20);}
 body.light .end-desc{color:rgba(40,28,20,0.6);}
 body.light .end-btn-menu{background:rgba(60,45,35,0.12);color:rgb(40,28,20);}
-body.light .end-btn-new{background:rgba(60,45,35,0.2);color:rgb(40,28,20);}
+body.light .end-btn-new{background:rgba(60,45,35,0.12);color:rgb(40,28,20);}
 body.light .premium-modal{background:rgb(235,220,200);}
 body.light .premium-title{color:rgb(40,28,20);}
 body.light .premium-desc{background:rgba(60,45,35,0.08);color:rgb(40,28,20);}
@@ -413,8 +413,8 @@ body.light span[style*="width:5px;height:5px;background:#d2bea5"]{background:#28
 .end-btn{flex:1;height:38px;border:none;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
 .end-btn-menu{background:rgba(255,255,255,0.08);color:rgba(210,190,165,0.8);}
 .end-btn-menu:hover{background:rgba(255,255,255,0.12);}
-.end-btn-new{background:rgba(210,190,165,0.15);color:rgba(210,190,165,1);}
-.end-btn-new:hover{background:rgba(210,190,165,0.22);}
+.end-btn-new{background:rgba(255,255,255,0.08);color:rgba(210,190,165,0.8);}
+.end-btn-new:hover{background:rgba(255,255,255,0.12);}
 .end-btn-delete{background:rgba(255,255,255,0.08);color:rgba(210,190,165,0.8);}
 .end-btn-delete:hover{background:rgba(255,255,255,0.12);}
 /* End summary button — more prominent */
@@ -821,7 +821,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
             <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" class="end-summary-icon" alt="">
             Завершить и сохранить протокол
         </button>
-        <div class="end-inline-notice" id="endInlineNotice">
+        <div class="end-inline-notice" id="endInlineNotice" onclick="goToSubscription()">
             <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg" alt="">
             Эта функция доступна с Panacea Plus
         </div>
@@ -1505,7 +1505,7 @@ document.getElementById('endSummaryBtn').addEventListener('click', async () => {
         notice._t = setTimeout(() => {
             notice.classList.remove('show');
             btn.classList.remove('blurred');
-        }, 3500);
+        }, 6000);
         return;
     }
     endOverlay.classList.remove('show');
