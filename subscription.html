@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Panacea Plus</title>
+<link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg">
+<style>
+@font-face{font-family:'TiemposHeadline';src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Font/TiemposHeadline-Black.woff') format('woff');font-weight:900;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;}
+html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;display:flex;justify-content:center;align-items:center;}
+
+/* Exact same sizing as s1bFlip */
+.card{
+    width:90%;max-width:420px;
+    height:min(90vh,90dvh);
+    background:rgb(42,36,32);
+    border-radius:12px;
+    display:flex;flex-direction:column;
+    padding:28px 24px 24px;
+    overflow:hidden;
+}
+
+/* Header row — same as s1b-header */
+.card-header{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:20px;
+    flex-shrink:0;
+}
+.card-title{
+    font-family:'TiemposHeadline',serif;font-weight:900;font-size:20px;
+    color:rgba(210,190,165,1);
+}
+.card-icon{
+    width:18px;height:18px;
+    filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);
+    opacity:0.7;
+}
+
+/* Scrollable middle */
+.card-scroll{
+    flex:1;min-height:0;
+    overflow-y:auto;scrollbar-width:none;
+    display:flex;flex-direction:column;
+    gap:8px;
+}
+.card-scroll::-webkit-scrollbar{display:none;}
+
+/* Hero block */
+.hero{
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    padding:20px 12px 16px;
+    background:rgba(255,255,255,0.04);
+    border-radius:10px;
+    text-align:center;
+    flex-shrink:0;
+}
+.hero img{width:44px;height:44px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
+.hero-title{font-family:'TiemposHeadline',serif;font-weight:900;font-size:18px;color:rgba(210,190,165,1);}
+.hero-desc{font-size:11px;color:rgba(210,190,165,0.5);line-height:1.6;max-width:220px;}
+.hero-status{font-size:11px;color:rgba(210,190,165,0.55);margin-top:2px;}
+.hero-status.active{color:rgba(210,190,165,0.75);}
+.hero-connect{
+    display:inline-block;margin-top:6px;
+    font-size:12px;font-weight:600;
+    color:rgba(210,190,165,1);
+    background:rgba(210,190,165,0.15);
+    border:1px solid rgba(210,190,165,0.25);
+    border-radius:8px;padding:6px 14px;
+    cursor:pointer;transition:all 0.15s;
+    font-family:'Inter',sans-serif;
+}
+.hero-connect:hover{background:rgba(210,190,165,0.25);}
+
+/* Toggle row */
+.toggle-row{
+    display:flex;align-items:center;
+    padding:12px 14px;
+    background:rgba(255,255,255,0.04);
+    border-radius:10px;
+    cursor:pointer;transition:background 0.15s;
+    flex-shrink:0;
+}
+.toggle-row:hover{background:rgba(255,255,255,0.07);}
+.toggle-row span{font-size:13px;font-weight:500;color:rgba(210,190,165,0.8);}
+
+/* Features */
+.features{display:none;flex-direction:column;gap:4px;}
+.features.open{display:flex;}
+.feat{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:8px;}
+.feat-icon{width:14px;height:14px;flex-shrink:0;margin-top:2px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);opacity:0.6;}
+.feat-text{font-size:12px;color:rgba(210,190,165,0.65);line-height:1.5;}
+.feat-text strong{color:rgba(210,190,165,0.9);font-weight:600;display:block;margin-bottom:1px;}
+
+/* Back button — same as signOutBtn */
+.back-btn{
+    background:none;border:none;
+    color:rgba(210,190,165,0.35);font-size:11px;
+    font-family:'Inter',sans-serif;cursor:pointer;
+    padding:8px 0;text-align:center;width:100%;
+    transition:color 0.15s;flex-shrink:0;
+    margin-top:4px;
+}
+.back-btn:hover{color:rgba(210,190,165,0.6);}
+</style>
+</head>
+<body>
+<div class="card">
+
+    <div class="card-header">
+        <div class="card-title">Panacea Plus</div>
+        <img class="card-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/262b24a9c9491357e5ed7cb47c65211906c8b244/treasure.svg" alt="">
+    </div>
+
+    <div class="card-scroll">
+
+        <div class="hero">
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/262b24a9c9491357e5ed7cb47c65211906c8b244/treasure.svg" alt="">
+            <div class="hero-title">Panacea Plus</div>
+            <div class="hero-desc">Полный доступ к возможностям всех моделей и эксклюзивным режимам.</div>
+            <div class="hero-status" id="heroStatus"></div>
+        </div>
+
+        <div class="toggle-row" onclick="document.getElementById('feats').classList.toggle('open')">
+            <span>Преимущества</span>
+        </div>
+
+        <div class="features" id="feats">
+            <div class="feat">
+                <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/infinity-svgrepo-com.svg" alt="">
+                <div class="feat-text"><strong>Без ограничений</strong>Неограниченное количество сессий</div>
+            </div>
+            <div class="feat">
+                <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/history-3-svgrepo-com.svg" alt="">
+                <div class="feat-text"><strong>История навсегда</strong>Можно отключить очистку истории через 24 часа</div>
+            </div>
+            <div class="feat">
+                <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" alt="">
+                <div class="feat-text"><strong>Протоколы сессий</strong>Скачать PDF-протокол каждой сессии</div>
+            </div>
+            <div class="feat">
+                <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/eye-scan-svgrepo-com.svg" alt="">
+                <div class="feat-text"><strong>Оракул</strong>Система сама выбирает наиболее подходящую модель</div>
+            </div>
+            <div class="feat">
+                <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/discussion-square-svgrepo-com.svg" alt="">
+                <div class="feat-text"><strong>Консилиум</strong>Ответ содержит мнения всех шести моделей одновременно</div>
+            </div>
+            <div class="feat">
+                <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/voice-recognition-frame-svgrepo-com.svg" alt="">
+                <div class="feat-text"><strong>Голосовой режим</strong>Общайся с моделями голосом</div>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="back-btn" onclick="history.back()">Вернуться назад</button>
+
+</div>
+<script>
+const isPremium = localStorage.getItem('soma_premium') === '1';
+const el = document.getElementById('heroStatus');
+if (isPremium) {
+    const d = localStorage.getItem('soma_premium_date');
+    const expiry = new Date((d ? parseInt(d) : Date.now()) + 30*24*60*60*1000);
+    const str = expiry.toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
+    el.classList.add('active');
+    el.textContent = 'Подписка активна до ' + str;
+} else {
+    el.innerHTML = '<span>Подписка не активна</span><br><button class="hero-connect" onclick="history.back()">Подключить Panacea Plus</button>';
+}
+</script>
+</body>
+</html>
