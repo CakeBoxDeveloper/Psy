@@ -579,7 +579,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
                         <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>Приоритетная обработка запросов</div>
                         <div style="color:rgba(210,190,165,0.65);font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start;"><span style="width:5px;height:5px;background:#d2bea5;border-radius:1px;flex-shrink:0;margin-top:4px;"></span>PDF-саммари каждой сессии с ключевыми инсайтами</div>
                     </div>
-                    <button class="premium-btn" style="position:relative;z-index:1;overflow:hidden;" onclick="document.getElementById('premiumOverlay').classList.add('show')">
+                    <button class="premium-btn" style="position:relative;z-index:1;overflow:hidden;" onclick="goToSubscription()">
                         <div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,0.3) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;pointer-events:none;"></div>
                         Подключить Panacea Plus
                     </button>
@@ -766,7 +766,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
             <span>Голосовой режим — можно общаться с моделями голосом и слышать их голосовые ответы</span>
         </div>
     </div>
-    <button class="premium-btn" style="position:relative;overflow:hidden;">
+    <button class="premium-btn" style="position:relative;overflow:hidden;" onclick="goToSubscription()">
         <div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.18) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;pointer-events:none;"></div>
         Подключить Panacea Plus
     </button>
@@ -1037,6 +1037,13 @@ function switchScreen(id) {
 
 // Init — check if already logged in — вызывается в конце скрипта
 function init() {
+    // If redirected from subscription page for login
+    if (window.location.hash === '#login') {
+        history.replaceState(null, '', window.location.pathname);
+        switchScreen('screen1');
+        // Carousel is already on slide 0 (login) by default
+        return;
+    }
     if (localStorage.getItem(KEY_USER)) {
         switchScreen('screen2');
     } else if (localStorage.getItem('soma_invite')) {
@@ -1443,10 +1450,14 @@ document.addEventListener('click', e => {
     }
 });
 
+function goToSubscription() {
+    window.location.href = 'subscription.html';
+}
+
 function showPremiumToast() {
     showToast('Эта функция доступна с Panacea Plus', {
         icon: 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/ea2696868cff6ba9b99ee5665a3571e74139a5f4/e_AzA-1.svg',
-        onClickToast: () => { hideToast(); premiumOverlay.classList.add('show'); },
+        onClickToast: () => { hideToast(); goToSubscription(); },
         duration: 8000
     });
 }
