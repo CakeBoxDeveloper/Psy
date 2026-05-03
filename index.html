@@ -665,7 +665,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
         <div class="s1b-face s1b-face-back">
             <div class="s1b-header">
                 <div class="s1b-title" style="color:rgb(40,28,20);">Мои сессии</div>
-                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a37d30f04ddf3ec51d7e23c0f99227132c45bff0/color-switch-svgrepo-com.svg" style="width:18px;height:18px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.6;cursor:pointer;transform:scaleY(-1);" alt="" id="flipBackTrigger">
+                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a37d30f04ddf3ec51d7e23c0f99227132c45bff0/color-switch-svgrepo-com.svg" style="width:18px;height:18px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.6;cursor:pointer;transform:scale(-1,-1);" alt="" id="flipBackTrigger">
             </div>
 
             <!-- Pinned: Поддержка -->
@@ -863,7 +863,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
             <div class="model-btn" style="cursor:default;pointer-events:none;">Оракул</div>
         </div>
         <div class="chat-header-right">
-            <svg id="supportFlipBtn" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;fill:rgba(210,190,165,0.6);cursor:pointer;flex-shrink:0;transform:scaleY(-1);"><path d="M26,4H6A2.0025,2.0025,0,0,0,4,6V26a2.0025,2.0025,0,0,0,2,2H26a2.0025,2.0025,0,0,0,2-2V6A2.0025,2.0025,0,0,0,26,4ZM6,26V6L26,26Z"/></svg>
+            <svg id="supportFlipBtn" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;fill:rgba(210,190,165,0.6);cursor:pointer;flex-shrink:0;transform:scale(-1,-1);"><path d="M26,4H6A2.0025,2.0025,0,0,0,4,6V26a2.0025,2.0025,0,0,0,2,2H26a2.0025,2.0025,0,0,0,2-2V6A2.0025,2.0025,0,0,0,26,4ZM6,26V6L26,26Z"/></svg>
         </div>
     </div>
     <div class="chat-area" id="supportChatArea"></div>
@@ -970,7 +970,7 @@ onAuthStateChanged(auth, user => {
 </script>
 
 <script>
-const BG = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/BG/';
+const BG = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Webps/';
 const DOVE = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg';
 const HOURGLASS = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/hourglass.svg';
 const KEY_USER = 'soma_user';
@@ -991,17 +991,17 @@ const KEY_SURVEY = 'soma_survey';
 // Random BG
 const bgEl = document.getElementById('bg');
 const bgFrame = document.getElementById('bgFrame');
-const imgUrl = `${BG}${Math.ceil(Math.random()*11)}.jpeg`;
+const imgUrl = `${BG}${Math.ceil(Math.random()*23)}.webp`;
 bgEl.style.backgroundImage = `url('${imgUrl}')`;
 bgFrame.style.backgroundImage = `url('${imgUrl}')`;
 
 // Carousel — 5 static DOM slides
-const allImgs = Array.from({length:11},(_,i)=>i+1).sort(()=>Math.random()-0.5);
+const allImgs = Array.from({length:23},(_,i)=>i+1).sort(()=>Math.random()-0.5);
 const N_SLIDES = 5;
 // Assign unique random bg to each slide
 const slideImgs = allImgs.slice(0, N_SLIDES);
 for(let i=0;i<N_SLIDES;i++){
-    document.getElementById('slide'+i).style.backgroundImage=`url('${BG}${slideImgs[i]}.jpeg')`;
+    document.getElementById('slide'+i).style.backgroundImage=`url('${BG}${slideImgs[i]}.webp')`;
 }
 
 let curSlide = 0; // which slide is currently center
@@ -1555,9 +1555,19 @@ function openSupportChat() {
         area._inited = true;
         area.innerHTML = `<div class="empty-state">
             <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/0f0c70b94b16782ce6176d572ee3ed78e447254e/medicine-symbol-1-svgrepo-com.svg" style="width:32px;height:32px;margin-bottom:8px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);opacity:0.4;">
-            <div>Поддержка Panacea</div>
-            <div style="font-size:11px;margin-top:4px;opacity:0.6;">Задай любой вопрос — мы ответим</div>
+            <div>Оракул</div>
+            <div style="font-size:11px;margin-top:6px;opacity:0.55;line-height:1.6;max-width:220px;">Оракул отвечает на вопросы в порядке очереди. Наберитесь терпения — ответ придёт. Не дублируйте вопросы: повторные обращения отодвигают вас в конец очереди.</div>
         </div>`;
+        // Dynamic fade mask
+        function updateSupportMask() {
+            const atTop = area.scrollTop < 4;
+            const atBottom = area.scrollHeight - area.scrollTop - area.clientHeight < 4;
+            area.classList.toggle('at-top', atTop);
+            area.classList.toggle('at-bottom', atBottom);
+        }
+        area.addEventListener('scroll', updateSupportMask, {passive: true});
+        area._updateMask = updateSupportMask;
+        requestAnimationFrame(updateSupportMask);
     }
     // Open like any other chat — with fade transition
     goTo('screenSupport');
@@ -2348,13 +2358,13 @@ function startLoader() {
 
     const LC_N = 5;
     // Assign random images and quotes to each slide
-    const lcImgs   = Array.from({length:11},(_,i)=>i+1).sort(()=>Math.random()-0.5).slice(0,LC_N);
+    const lcImgs   = Array.from({length:23},(_,i)=>i+1).sort(()=>Math.random()-0.5).slice(0,LC_N);
     const lcQuotes = [...LOADER_QUOTES].sort(()=>Math.random()-0.5).slice(0,LC_N);
 
     // Build slide contents
     for(let i=0;i<LC_N;i++){
         const el = document.getElementById('lc'+i);
-        el.style.backgroundImage = `url('${BG}${lcImgs[i]}.jpeg')`;
+        el.style.backgroundImage = `url('${BG}${lcImgs[i]}.webp')`;
         const q = lcQuotes[i];
         el.innerHTML = `<div class="lc-mask"></div><div class="lc-quote"><span class="lc-quote-text"><span style="font-family:'TiemposHeadline',serif;font-weight:300;">\u201c</span>${q.text}<span style="font-family:'TiemposHeadline',serif;font-weight:300;">\u201d</span></span><span class="lc-quote-author">${q.author}</span></div>`;
     }
