@@ -13,7 +13,7 @@ html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-a
 @keyframes shimmer{0%{left:-120%;}65%,100%{left:180%;}}
 
 /* ── Flip scene ── */
-.scene{width:90%;max-width:420px;height:min(90vh,90dvh);perspective:1200px;}
+.scene{width:90%;max-width:420px;height:min(90vh,90dvh);perspective:1200px;overflow:hidden;}
 .flipper{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.65s cubic-bezier(0.4,0,0.2,1);}
 .flipper.flipped{transform:rotateY(180deg);}
 .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;overflow:hidden;}
@@ -117,10 +117,10 @@ html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-a
     margin-bottom:12px;flex-shrink:0;
 }
 .pay-order-name{font-size:13px;font-weight:600;color:rgb(55,38,22);}
-.pay-order-period{font-size:12px;color:rgba(55,38,22,0.45);}
+.pay-order-period{font-size:12px;font-weight:600;color:rgb(55,38,22);}
 
 /* Dropdown label */
-.pay-label{font-size:11px;color:rgba(55,38,22,0.45);margin-bottom:6px;flex-shrink:0;}
+.pay-label{font-size:11px;font-weight:600;color:rgb(55,38,22);margin-bottom:6px;flex-shrink:0;}
 
 /* Custom select */
 .pay-select-wrap{position:relative;flex-shrink:0;margin-bottom:12px;}
@@ -154,26 +154,49 @@ html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-a
     width:164px;height:164px;
     background:transparent;
     display:flex;align-items:center;justify-content:center;
-    overflow:hidden;flex-shrink:0;
+    flex-shrink:0;
 }
-/* target color rgb(55,38,22) — dark warm brown, same as pay-title */
-.pay-qr-box img{
-    width:164px;height:164px;
-    filter:invert(1) sepia(1) saturate(3) hue-rotate(345deg) brightness(0.28) contrast(1.6);
-}
-.pay-address{
-    font-size:10px;font-family:'SF Mono','Fira Mono',monospace;
-    color:rgba(55,38,22,0.5);
-    word-break:break-all;text-align:center;
-    max-width:100%;
+#qrCanvas{width:164px;height:164px;display:block;}
+
+/* Address + amount row */
+.pay-fields{display:flex;gap:6px;width:100%;flex-shrink:0;}
+.pay-field{
+    flex:1;
     background:rgba(80,50,25,0.07);
     border:1px solid rgba(80,50,25,0.12);
-    border-radius:8px;padding:7px 12px;
+    border-radius:8px;padding:7px 10px;
     cursor:pointer;transition:background 0.15s,color 0.15s;
-    flex-shrink:0;width:100%;
+    min-width:0;
 }
-.pay-address:hover{background:rgba(80,50,25,0.13);}
-.pay-address.copied{color:rgb(60,130,60);}
+.pay-field-label{font-size:9px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(55,38,22,0.35);margin-bottom:2px;}
+.pay-field-value{
+    font-size:10px;font-family:'SF Mono','Fira Mono',monospace;
+    color:rgba(55,38,22,0.6);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.pay-field:hover{background:rgba(80,50,25,0.13);}
+.pay-field.copied .pay-field-value{color:rgb(60,130,60);}
+.pay-amount-loading{opacity:0.4;font-style:italic;}
+
+/* Instruction block */
+.pay-instruction{
+    width:100%;flex-shrink:0;
+    background:rgba(80,50,25,0.07);
+    border:1px solid rgba(80,50,25,0.1);
+    border-radius:10px;
+    padding:10px 12px;
+    display:flex;flex-direction:column;gap:5px;
+}
+.pay-instruction-step{
+    font-size:11px;color:rgba(55,38,22,0.6);line-height:1.5;
+    display:flex;gap:7px;align-items:flex-start;
+}
+.pay-instruction-step b{color:rgba(55,38,22,0.35);font-weight:600;flex-shrink:0;}
+.pay-instruction-note{
+    font-size:10px;color:rgba(55,38,22,0.4);line-height:1.5;
+    margin-top:4px;padding-top:6px;
+    border-top:1px solid rgba(80,50,25,0.1);
+}
 
 /* Back link */
 .pay-back{
@@ -298,9 +321,24 @@ html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-a
 
       <div class="pay-qr-wrap">
         <div class="pay-qr-box">
-          <img id="qrImg" src="" alt="QR">
+          <canvas id="qrCanvas" width="164" height="164"></canvas>
         </div>
-        <div class="pay-address" id="payAddress" onclick="copyAddress()"></div>
+        <div class="pay-fields">
+          <div class="pay-field" id="fieldAddr" onclick="copyField('addr')">
+            <div class="pay-field-label">Адрес</div>
+            <div class="pay-field-value" id="fieldAddrVal">—</div>
+          </div>
+          <div class="pay-field" id="fieldAmt" onclick="copyField('amt')">
+            <div class="pay-field-label">Сумма</div>
+            <div class="pay-field-value" id="fieldAmtVal">—</div>
+          </div>
+        </div>
+        <div class="pay-instruction">
+          <div class="pay-instruction-step"><b>1.</b>Выбери удобную сеть и скопируй адрес кошелька.</div>
+          <div class="pay-instruction-step"><b>2.</b>Переведи точную сумму — она уникальна и нужна для идентификации платежа.</div>
+          <div class="pay-instruction-step"><b>3.</b>Отправь транзакцию и подожди подтверждения сети.</div>
+          <div class="pay-instruction-note">Как только платёж пройдёт, подписка автоматически появится на твоём аккаунте.</div>
+        </div>
       </div>
 
       <button class="pay-back" onclick="flipBack()">Вернуться назад</button>
@@ -367,7 +405,7 @@ let giftTarget = null;
 function flipToPayment(forGift) {
     giftTarget = forGift || null;
     const nameEl = document.getElementById('payOrderName');
-    nameEl.textContent = giftTarget ? 'Подарок → ' + giftTarget : 'Panacea Plus';
+    nameEl.textContent = giftTarget ? 'Panacea Plus в подарок' : 'Panacea Plus';
     document.getElementById('flipper').classList.add('flipped');
     onCoinChange();
 }
@@ -375,28 +413,134 @@ function flipBack() {
     document.getElementById('flipper').classList.remove('flipped');
 }
 
-/* ── QR ── */
-function onCoinChange() {
-    const coin = document.getElementById('paySelect').value;
-    const addr = WALLETS[coin] || '';
-    document.getElementById('payAddress').textContent = addr;
-    document.getElementById('payAddress').classList.remove('copied');
-    // QR via public API (no key needed)
-    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=0&data=' + encodeURIComponent(addr);
-    document.getElementById('qrImg').src = qrUrl;
+/* ── QR via qrcode-generator (MIT, no external request) ── */
+// Inline minimal QR lib — we load it from CDN
+const QR_SCRIPT = document.createElement('script');
+QR_SCRIPT.src = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js';
+document.head.appendChild(QR_SCRIPT);
+
+const QR_COLOR  = 'rgb(55,38,22)';   // same as pay-title
+const QR_BG     = 'rgba(0,0,0,0)';   // transparent
+const PRICE_USD = 5;                  // subscription price in USD
+
+// CoinGecko IDs for each coin key
+const GECKO_IDS = {
+    USDT_TRC20:'tether', USDT_ERC20:'tether', USDT_BEP20:'tether',
+    USDT_SOL:'tether',   USDT_TON:'tether',   USDT_ARB:'tether',
+    USDT_OP:'tether',    USDT_POLY:'tether',
+    BTC:'bitcoin', ETH:'ethereum', SOL:'solana', BNB:'binancecoin',
+    TON:'the-open-network', TRX:'tron', LTC:'litecoin',
+    XRP:'ripple', DOGE:'dogecoin',
+};
+
+// Decimal places per coin
+const DECIMALS = {
+    USDT_TRC20:2, USDT_ERC20:2, USDT_BEP20:2, USDT_SOL:2,
+    USDT_TON:2,   USDT_ARB:2,   USDT_OP:2,    USDT_POLY:2,
+    BTC:6, ETH:5, SOL:3, BNB:4, TON:3, TRX:1, LTC:4, XRP:2, DOGE:1,
+};
+
+// Unique fingerprint: small random offset stored per session
+// Range: 0.001–0.009 of base amount (sub-cent, invisible to user)
+function getFingerprint(coin) {
+    const key = 'fp_' + coin;
+    let fp = sessionStorage.getItem(key);
+    if (!fp) {
+        fp = (Math.random() * 0.008 + 0.001).toFixed(6);
+        sessionStorage.setItem(key, fp);
+    }
+    return parseFloat(fp);
 }
 
-/* ── Copy address ── */
-function copyAddress() {
-    const el = document.getElementById('payAddress');
-    const text = el.textContent;
-    if (!text) return;
+let priceCache = {};  // coin → price in USD
+
+async function fetchPrice(geckoId) {
+    if (priceCache[geckoId]) return priceCache[geckoId];
+    try {
+        const r = await fetch(
+            'https://api.coingecko.com/api/v3/simple/price?ids=' + geckoId + '&vs_currencies=usd',
+            {signal: AbortSignal.timeout(5000)}
+        );
+        const j = await r.json();
+        const p = j[geckoId]?.usd;
+        if (p) priceCache[geckoId] = p;
+        return p || null;
+    } catch { return null; }
+}
+
+function drawQR(text) {
+    const canvas = document.getElementById('qrCanvas');
+    if (!canvas || typeof qrcode === 'undefined') {
+        // lib not loaded yet — retry
+        setTimeout(() => drawQR(text), 200);
+        return;
+    }
+    const qr = qrcode(0, 'M');
+    qr.addData(text);
+    qr.make();
+    const ctx = canvas.getContext('2d');
+    const size = canvas.width;
+    const modules = qr.getModuleCount();
+    const cell = size / modules;
+    ctx.clearRect(0, 0, size, size);
+    ctx.fillStyle = QR_COLOR;
+    for (let r = 0; r < modules; r++) {
+        for (let c = 0; c < modules; c++) {
+            if (qr.isDark(r, c)) {
+                ctx.fillRect(Math.floor(c * cell), Math.floor(r * cell),
+                             Math.ceil(cell), Math.ceil(cell));
+            }
+        }
+    }
+}
+
+async function onCoinChange() {
+    const coin = document.getElementById('paySelect').value;
+    const addr = WALLETS[coin] || '';
+
+    // address field
+    document.getElementById('fieldAddrVal').textContent = addr || '—';
+    document.getElementById('fieldAddr').classList.remove('copied');
+
+    // amount field — show loading
+    const amtEl = document.getElementById('fieldAmtVal');
+    amtEl.textContent = '…';
+    amtEl.classList.add('pay-amount-loading');
+    document.getElementById('fieldAmt').classList.remove('copied');
+
+    // draw QR with address for now
+    if (addr) drawQR(addr);
+
+    // fetch price
+    const geckoId = GECKO_IDS[coin];
+    const price = await fetchPrice(geckoId);
+    amtEl.classList.remove('pay-amount-loading');
+
+    let amtStr;
+    if (price) {
+        const dec = DECIMALS[coin] ?? 4;
+        const base = PRICE_USD / price;
+        const fp = getFingerprint(coin) * base;
+        const total = base + fp;
+        amtStr = total.toFixed(dec);
+    } else {
+        amtStr = '≈ $' + PRICE_USD;
+    }
+    amtEl.textContent = amtStr;
+}
+
+function copyField(which) {
+    const fieldEl = document.getElementById(which === 'addr' ? 'fieldAddr' : 'fieldAmt');
+    const valEl   = document.getElementById(which === 'addr' ? 'fieldAddrVal' : 'fieldAmtVal');
+    const text = valEl.textContent;
+    if (!text || text === '—' || text === '…') return;
+    const orig = text;
     navigator.clipboard.writeText(text).then(() => {
-        el.classList.add('copied');
-        el.textContent = 'Скопировано ✓';
+        fieldEl.classList.add('copied');
+        valEl.textContent = 'Скопировано ✓';
         setTimeout(() => {
-            el.classList.remove('copied');
-            el.textContent = text;
+            fieldEl.classList.remove('copied');
+            valEl.textContent = orig;
         }, 1800);
     });
 }
