@@ -670,11 +670,10 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 
             <!-- Pinned: Поддержка -->
             <div id="supportCard" style="background:rgba(40,28,20,0.08);border-radius:8px;padding:12px 14px;cursor:pointer;transition:background 0.15s;display:flex;align-items:center;gap:10px;flex-shrink:0;margin-bottom:4px;" onclick="openSupportChat()">
+                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/0f0c70b94b16782ce6176d572ee3ed78e447254e/medicine-symbol-1-svgrepo-com.svg" style="width:16px;height:16px;flex-shrink:0;filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);opacity:0.6;" alt="">
                 <div style="flex:1;min-width:0;">
-                    <div style="font-size:13px;font-weight:600;color:rgb(40,28,20);margin-bottom:2px;">Поддержка</div>
-                    <div style="font-size:11px;color:rgba(40,28,20,0.45);">Оракул · всегда доступно</div>
+                    <div style="font-size:13px;font-weight:600;color:rgb(40,28,20);">Поддержка</div>
                 </div>
-                <div style="width:6px;height:6px;border-radius:50%;background:rgba(80,160,80,0.7);flex-shrink:0;"></div>
             </div>
 
             <div id="sessionsWrapper" style="flex:1;min-height:0;position:relative;">
@@ -866,10 +865,8 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
             <button class="bulb-btn" id="supportThemeBtn" title="Сменить тему">
                 <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/11c4ba1a8f6ad668227bb0e60fdc43ba73de1c16/sun_1.svg" class="icon-dove" alt="">
             </button>
-            <!-- Flip back icon -->
-            <button class="bulb-btn" id="supportFlipBtn" title="Назад к сессиям">
-                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;fill:rgba(210,190,165,0.6);"><path d="M26,4H6A2.0025,2.0025,0,0,0,4,6V26a2.0025,2.0025,0,0,0,2,2H26a2.0025,2.0025,0,0,0,2-2V6A2.0025,2.0025,0,0,0,26,4ZM6,26V6L26,26Z"/></svg>
-            </button>
+            <!-- Flip back icon — no background -->
+            <svg id="supportFlipBtn" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;fill:rgba(210,190,165,0.6);cursor:pointer;flex-shrink:0;transform:scaleY(-1);"><path d="M26,4H6A2.0025,2.0025,0,0,0,4,6V26a2.0025,2.0025,0,0,0,2,2H26a2.0025,2.0025,0,0,0,2-2V6A2.0025,2.0025,0,0,0,26,4ZM6,26V6L26,26Z"/></svg>
         </div>
     </div>
     <div class="chat-area" id="supportChatArea"></div>
@@ -1555,34 +1552,30 @@ function goToSubscription() {
 
 /* ── Support chat ── */
 function openSupportChat() {
-    // Switch to support screen
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('screenSupport').classList.add('active');
-    document.getElementById('bgEl') && (bgEl.style.display = 'none');
-    bgEl.style.display = 'none';
-    bgFrame.style.display = 'none';
-    overlayEl.classList.remove('on');
-
     // Init empty state if first open
     const area = document.getElementById('supportChatArea');
     if (!area._inited) {
         area._inited = true;
         area.innerHTML = `<div class="empty-state">
-            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" style="width:32px;height:32px;margin-bottom:8px;">
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/0f0c70b94b16782ce6176d572ee3ed78e447254e/medicine-symbol-1-svgrepo-com.svg" style="width:32px;height:32px;margin-bottom:8px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);opacity:0.4;">
             <div>Поддержка Panacea</div>
             <div style="font-size:11px;margin-top:4px;opacity:0.6;">Задай любой вопрос — мы ответим</div>
         </div>`;
     }
-    document.getElementById('supportInput').focus();
+    // Open like any other chat — with fade transition
+    goTo('screenSupport');
+    setTimeout(() => document.getElementById('supportInput').focus(), 550);
 }
 
 function closeSupportChat() {
-    goTo('screen1b');
-    setTimeout(() => {
-        s1bFlipped = true;
-        document.getElementById('s1bInner').classList.add('flipped');
-        renderSessions(null);
-    }, 600);
+    // Switch to screen1b and flip to sessions list — no fade, just like subscription.html
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen1b').classList.add('active');
+    bgEl.style.display = 'none';
+    bgFrame.style.display = 'none';
+    overlayEl.classList.remove('on');
+    doFlip(true);
+    renderSessions(null);
 }
 
 // Support theme button — reuse main theme toggle
