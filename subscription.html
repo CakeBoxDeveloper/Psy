@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Мои подписки</title>
+<title>Panacea Plus</title>
 <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg">
+<style>/* favicon color override via JS */</style>
 <style>
 @font-face{font-family:'Fraunces';src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Fraunces/Fraunces-9ptBlack.woff2') format('woff2'),url('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Fraunces/Fraunces-9ptBlack.woff') format('woff');font-weight:900;font-style:normal;}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;}
@@ -33,11 +34,13 @@ body.flipping{overflow:hidden;}
 .card-icon{width:18px;height:18px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);opacity:0.7;}
 
 /* Hero */
-.hero{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 0 0;background:rgba(255,255,255,0.04);border-radius:10px 10px 0 0;text-align:center;flex-shrink:0;margin-bottom:0;}
-.hero img{width:44px;height:44px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
-.hero-title{font-family:'Fraunces',serif;font-weight:900;font-size:18px;color:rgba(210,190,165,1);padding:0 12px;}
-.hero-desc{font-size:11px;color:rgba(210,190,165,0.5);line-height:1.6;width:100%;padding:0 16px;}
-.hero-divider{width:100%;height:1px;background:rgba(210,190,165,0.1);margin-top:12px;flex-shrink:0;}
+.hero{display:flex;flex-direction:column;gap:0;padding:20px 0 0;background:rgba(255,255,255,0.04);border-radius:10px 10px 0 0;flex-shrink:0;margin-bottom:0;}
+.hero-content{display:flex;align-items:center;gap:14px;margin-bottom:12px;padding:0 16px;}
+.hero img{width:74px;height:74px;flex-shrink:0;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
+.hero-text{flex:1;display:flex;flex-direction:column;gap:4px;}
+.hero-title{font-family:'Fraunces',serif;font-weight:900;font-size:18px;color:rgba(210,190,165,1);}
+.hero-desc{font-size:12.5px;color:rgba(210,190,165,0.5);line-height:1.6;text-align:left;}
+.hero-divider{width:100%;height:1px;background:rgba(210,190,165,0.1);flex-shrink:0;}
 
 /* Status row */
 .hero-status{font-size:11px;width:100%;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:0 0 10px 10px;margin-bottom:8px;flex-shrink:0;}
@@ -230,7 +233,7 @@ body.flipping{overflow:hidden;}
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .pay-field:hover{background:rgba(80,50,25,0.13);}
-.pay-field.copied .pay-field-value{color:rgb(60,130,60);}
+.pay-field.copied .pay-field-value{color:rgb(55,38,22);text-align:center;}
 .pay-amount-loading{opacity:0.4;font-style:italic;}
 
 /* Instruction block */
@@ -285,9 +288,13 @@ body.flipping{overflow:hidden;}
       </div>
 
       <div class="hero">
-        <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKeyGift.svg" alt="">
-        <div class="hero-title" style="display:none;">Panacea Plus</div>
-        <div class="hero-desc">Panacea работает и без подписки. Но именно она позволяет моделям развиваться, обучаться на новых данных и становиться лучше — для всех.</div>
+        <div class="hero-content">
+          <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKeyGift.svg" alt="">
+          <div class="hero-text">
+            <div class="hero-title" style="display:none;">Panacea Plus</div>
+            <div class="hero-desc">Panacea работает и без подписки. Но именно твоя помощь позволяет им развиваться, обучаться и становиться лучше для всех.</div>
+          </div>
+        </div>
         <div class="hero-divider"></div>
       </div>
 
@@ -308,27 +315,39 @@ body.flipping{overflow:hidden;}
           <div class="feats-inner">
             <div class="feat">
               <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/infinity-svgrepo-com.svg" alt="">
-              <div class="feat-text"><strong>Без ограничений</strong>Неограниченное количество сессий</div>
+              <div class="feat-text"><strong>Без ограничений</strong>Неограниченное количество сеансов, безлимитный доступ. Заходи с любого устройства в удобном месте.</div>
             </div>
             <div class="feat">
               <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/history-3-svgrepo-com.svg" alt="">
-              <div class="feat-text"><strong>История навсегда</strong>Можно отключить очистку истории через 24 часа</div>
+              <div class="feat-text"><strong>История навсегда</strong>Можно отключить очистку истории через 24 часа. Тогда модели запомнят тебя настолько, насколько позволяет их архитектура.</div>
             </div>
             <div class="feat">
               <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/14cb39a066a6acb2086a4696d504567fbbb8188e/scroll.svg" alt="">
-              <div class="feat-text"><strong>Протоколы сеансов</strong>Скачать PDF-протокол каждого сеанса</div>
+              <div class="feat-text"><strong>Протоколы сеансов</strong>Скачай краткую выжимку сеанса в PDF, чтобы отслеживать прогресс в решении своих вопросов.</div>
             </div>
             <div class="feat">
               <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/eye-scan-svgrepo-com.svg" alt="">
-              <div class="feat-text"><strong>Оракул</strong>Система сама выбирает наиболее подходящую модель</div>
+              <div class="feat-text"><strong>Оракул</strong>Новейший алгоритм, который анализирует 16 разных параметров, чтобы подобрать лучшую модель под твой запрос.</div>
             </div>
             <div class="feat">
               <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/discussion-square-svgrepo-com.svg" alt="">
-              <div class="feat-text"><strong>Консилиум</strong>Ответ содержит мнения всех шести моделей одновременно</div>
+              <div class="feat-text"><strong>Консилиум</strong>Ответ содержит мнения всех шести моделей одновременно — это позволяет рассмотреть вопрос с разных точек зрения.</div>
             </div>
             <div class="feat">
               <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/10976f34a645c35ee64f77d7f410fff17a10cb1d/voice-recognition-frame-svgrepo-com.svg" alt="">
-              <div class="feat-text"><strong>Голосовой режим</strong>Общайся с моделями голосом</div>
+              <div class="feat-text"><strong>Голосовой режим</strong>Общайся голосом и слушай голосовые ответы. У всех моделей разные голоса и интонации.</div>
+            </div>
+            <div class="feat">
+              <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/test-exam-svgrepo-com.svg" alt="">
+              <div class="feat-text"><strong>Проективные тесты</strong>Тесты из области психологии и ментальной терапии. Эта практика доказала эффективность временем и позволяет лучше понять себя.</div>
+            </div>
+            <div class="feat">
+              <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/library-svgrepo-com.svg" alt="">
+              <div class="feat-text"><strong>Электронная библиотека</strong>Доступ к эксклюзивным материалам, которые больше нигде не найти.</div>
+            </div>
+            <div class="feat">
+              <img class="feat-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/event-svgrepo-com.svg" alt="">
+              <div class="feat-text"><strong>Ранний доступ</strong>Бесплатный доступ к новым функциям раньше всех. Оформив подписку один раз, ты фиксируешь цену навсегда.</div>
             </div>
           </div>
         </div>
@@ -365,16 +384,13 @@ body.flipping{overflow:hidden;}
           <div class="pay-option" data-value="USDT_ERC20">USDT — ERC-20 (Ethereum)</div>
           <div class="pay-option" data-value="USDT_BEP20">USDT — BEP-20 (BSC)</div>
           <div class="pay-option" data-value="USDT_SOL">USDT — Solana (SPL)</div>
-          <div class="pay-option" data-value="USDT_TON">USDT — TON</div>
           <div class="pay-option" data-value="USDT_ARB">USDT — Arbitrum</div>
-          <div class="pay-option" data-value="USDT_OP">USDT — Optimism</div>
           <div class="pay-option" data-value="USDT_POLY">USDT — Polygon</div>
           <div class="pay-optgroup-label">Другие монеты</div>
           <div class="pay-option" data-value="BTC">BTC — Bitcoin</div>
           <div class="pay-option" data-value="ETH">ETH — Ethereum</div>
           <div class="pay-option" data-value="SOL">SOL — Solana</div>
           <div class="pay-option" data-value="BNB">BNB — BNB Chain</div>
-          <div class="pay-option" data-value="TON">TON — The Open Network</div>
           <div class="pay-option" data-value="TRX">TRX — Tron</div>
           <div class="pay-option" data-value="LTC">LTC — Litecoin</div>
           <div class="pay-option" data-value="XRP">XRP — Ripple</div>
@@ -434,23 +450,20 @@ function flipBack() {
     setTimeout(() => document.body.classList.remove('flipping'), 700);
 }
 const WALLETS = {
-    USDT_TRC20: 'TXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx01',
-    USDT_ERC20: '0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-    USDT_BEP20: '0xBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
-    USDT_SOL:   'SoLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-    USDT_TON:   'UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxx',
-    USDT_ARB:   '0xCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC',
-    USDT_OP:    '0xDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD',
-    USDT_POLY:  '0xEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE',
-    BTC:        'bc1qxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-    ETH:        '0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF',
-    SOL:        'SoLBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
-    BNB:        '0x1111111111111111111111111111111111111111',
-    TON:        'UQBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBxx',
-    TRX:        'TYxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx02',
-    LTC:        'ltc1qxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-    XRP:        'rXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-    DOGE:       'DXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx',
+    USDT_TRC20: 'TMfDJhbJXc89oZgXnEm6qC9MAnDc97f2GJ',
+    USDT_ERC20: '0xe2a8d72b870e59E5eC18F4942419274CB032c1fc',
+    USDT_BEP20: '0xe2a8d72b870e59E5eC18F4942419274CB032c1fc',
+    USDT_SOL:   'GUYHm1YAfW51YaN4DmMtA4ooCrifSAzNwAYXEmvQayXM',
+    USDT_ARB:   '0xe2a8d72b870e59E5eC18F4942419274CB032c1fc',
+    USDT_POLY:  '0xe2a8d72b870e59E5eC18F4942419274CB032c1fc',
+    BTC:        'bc1qkty786fgzgu2q4976x9uk75y53k76a8j6vgpjk',
+    ETH:        '0xe2a8d72b870e59E5eC18F4942419274CB032c1fc',
+    SOL:        'GUYHm1YAfW51YaN4DmMtA4ooCrifSAzNwAYXEmvQayXM',
+    BNB:        '0xe2a8d72b870e59E5eC18F4942419274CB032c1fc',
+    TRX:        'TMfDJhbJXc89oZgXnEm6qC9MAnDc97f2GJ',
+    LTC:        'ltc1qaj6l4hdk2zpf4d96k3gftv4a6lmu9nn9xe3ymw',
+    XRP:        'rLHZei6UASAyekNZSwuGKDq1LYcykxxPRX',
+    DOGE:       'DGHrdqJfeWAk2VkTDWhx8y6o1WHtJMqn19',
 };
 
 /* ── Status (front) ── */
@@ -545,18 +558,16 @@ const PRICE_USD = 5;                  // subscription price in USD
 // CoinGecko IDs for each coin key
 const GECKO_IDS = {
     USDT_TRC20:'tether', USDT_ERC20:'tether', USDT_BEP20:'tether',
-    USDT_SOL:'tether',   USDT_TON:'tether',   USDT_ARB:'tether',
-    USDT_OP:'tether',    USDT_POLY:'tether',
+    USDT_SOL:'tether',   USDT_ARB:'tether',   USDT_POLY:'tether',
     BTC:'bitcoin', ETH:'ethereum', SOL:'solana', BNB:'binancecoin',
-    TON:'the-open-network', TRX:'tron', LTC:'litecoin',
-    XRP:'ripple', DOGE:'dogecoin',
+    TRX:'tron', LTC:'litecoin', XRP:'ripple', DOGE:'dogecoin',
 };
 
 // Decimal places per coin
 const DECIMALS = {
     USDT_TRC20:2, USDT_ERC20:2, USDT_BEP20:2, USDT_SOL:2,
-    USDT_TON:2,   USDT_ARB:2,   USDT_OP:2,    USDT_POLY:2,
-    BTC:6, ETH:5, SOL:3, BNB:4, TON:3, TRX:1, LTC:4, XRP:2, DOGE:1,
+    USDT_ARB:2,   USDT_POLY:2,
+    BTC:6, ETH:5, SOL:3, BNB:4, TRX:1, LTC:4, XRP:2, DOGE:1,
 };
 
 // Unique fingerprint: small random offset stored per session
@@ -656,7 +667,7 @@ function copyField(which) {
     const orig = text;
     navigator.clipboard.writeText(text).then(() => {
         fieldEl.classList.add('copied');
-        valEl.textContent = 'Скопировано ✓';
+        valEl.textContent = 'Скопировано';
         setTimeout(() => {
             fieldEl.classList.remove('copied');
             valEl.textContent = orig;
@@ -695,6 +706,17 @@ document.addEventListener('click', e => {
     const row = document.getElementById('giftRow');
     if (row.classList.contains('show') && !e.target.closest('.gift-wrap')) closeGift();
 });
+
+// Beige favicon
+fetch('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg')
+    .then(r => r.text()).then(svg => {
+        const colored = svg.replace(/fill="[^"]*"/g, 'fill="#D2BEA5"').replace(/stroke="[^"]*"/g, 'stroke="#D2BEA5"');
+        const blob = new Blob([colored], {type:'image/svg+xml'});
+        const url = URL.createObjectURL(blob);
+        const link = document.querySelector('link[rel="icon"]') || document.createElement('link');
+        link.rel = 'icon'; link.type = 'image/svg+xml'; link.href = url;
+        document.head.appendChild(link);
+    }).catch(()=>{});
 </script>
 </body>
 </html>
