@@ -142,6 +142,19 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .fselect{width:100%;background:rgb(55,46,40);border:none;color:rgb(210,190,165);padding:10px 32px 10px 12px;border-radius:8px;font-size:12px;outline:none;font-family:'Inter',sans-serif;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(210,190,165,0.6)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:background 0.15s;}
 .fselect:focus{background-color:rgb(65,54,47);}
 .fselect option{background:rgb(42,36,32);color:rgb(210,190,165);}
+/* Custom dropdown for survey */
+.fcustom-wrap{position:relative;width:100%;}
+.fcustom-trigger{width:100%;background:rgb(55,46,40);border:none;color:rgba(210,190,165,0.6);padding:10px 32px 10px 12px;border-radius:8px;font-size:12px;outline:none;font-family:'Inter',sans-serif;cursor:pointer;text-align:left;transition:background 0.15s,border-radius 0.15s;position:relative;display:flex;align-items:center;justify-content:space-between;}
+.fcustom-trigger.open{border-radius:8px 8px 0 0;background:rgb(60,50,44);}
+.fcustom-trigger.selected{color:rgb(210,190,165);}
+.fcustom-arrow{width:10px;height:6px;flex-shrink:0;transition:transform 0.2s;opacity:0.6;}
+.fcustom-trigger.open .fcustom-arrow{transform:rotate(180deg);}
+.fcustom-dropdown{position:absolute;top:100%;left:0;right:0;background:rgb(50,42,37);border-radius:0 0 8px 8px;overflow-y:auto;max-height:200px;z-index:100;display:none;scrollbar-width:none;}
+.fcustom-dropdown::-webkit-scrollbar{display:none;}
+.fcustom-dropdown.open{display:block;}
+.fcustom-option{padding:9px 12px;font-size:12px;color:rgba(210,190,165,0.85);cursor:pointer;transition:background 0.1s;}
+.fcustom-option:hover{background:rgba(255,255,255,0.06);}
+.fcustom-option.selected{background:rgba(255,255,255,0.08);color:rgba(210,190,165,1);}
 .submit-btn{width:100%;height:42px;background:rgb(55,46,40);border:none;color:rgb(210,190,165);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-family:'Inter',sans-serif;transition:all 0.15s;margin-top:auto;}
 .submit-btn:hover{background:rgb(65,54,47);}
 .submit-btn:active{transform:scale(0.98);}
@@ -645,15 +658,35 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
             </div>
             <div class="fields" style="overflow-y:auto;scrollbar-width:none;flex:1;">
                 <div><div class="flabel">Что тебя беспокоит?</div>
-                <select class="fselect"><option value="" disabled selected>Выбери тему</option><option>Отношения и любовь</option><option>Карьера и деньги</option><option>Здоровье и энергия</option><option>Смысл и предназначение</option><option>Тревога и страхи</option><option>Семья и близкие</option><option>Одиночество</option><option>Другое</option></select></div>
+                <div class="fcustom-wrap" data-name="topic">
+                  <button type="button" class="fcustom-trigger" data-placeholder="Выбери тему">Выбери тему<svg class="fcustom-arrow" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="rgba(210,190,165,0.6)" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></button>
+                  <div class="fcustom-dropdown"><div class="fcustom-option" data-value="Отношения и любовь">Отношения и любовь</div><div class="fcustom-option" data-value="Карьера и деньги">Карьера и деньги</div><div class="fcustom-option" data-value="Здоровье и энергия">Здоровье и энергия</div><div class="fcustom-option" data-value="Смысл и предназначение">Смысл и предназначение</div><div class="fcustom-option" data-value="Тревога и страхи">Тревога и страхи</div><div class="fcustom-option" data-value="Семья и близкие">Семья и близкие</div><div class="fcustom-option" data-value="Одиночество">Одиночество</div><div class="fcustom-option" data-value="Другое">Другое</div></div>
+                  <input type="hidden" class="fselect" value="">
+                </div></div>
                 <div><div class="flabel">Как ты себя чувствуешь сейчас?</div>
-                <select class="fselect"><option value="" disabled selected>Выбери состояние</option><option>Потерян и не знаю куда идти</option><option>Тревожно и неспокойно</option><option>Устал и нет сил</option><option>Ищу ответы на вопросы</option><option>Хочу перемен</option><option>В целом хорошо, но есть вопросы</option><option>Чувствую внутренний конфликт</option></select></div>
+                <div class="fcustom-wrap" data-name="state">
+                  <button type="button" class="fcustom-trigger" data-placeholder="Выбери состояние">Выбери состояние<svg class="fcustom-arrow" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="rgba(210,190,165,0.6)" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></button>
+                  <div class="fcustom-dropdown"><div class="fcustom-option" data-value="Потерян и не знаю куда идти">Потерян и не знаю куда идти</div><div class="fcustom-option" data-value="Тревожно и неспокойно">Тревожно и неспокойно</div><div class="fcustom-option" data-value="Устал и нет сил">Устал и нет сил</div><div class="fcustom-option" data-value="Ищу ответы на вопросы">Ищу ответы на вопросы</div><div class="fcustom-option" data-value="Хочу перемен">Хочу перемен</div><div class="fcustom-option" data-value="В целом хорошо, но есть вопросы">В целом хорошо, но есть вопросы</div><div class="fcustom-option" data-value="Чувствую внутренний конфликт">Чувствую внутренний конфликт</div></div>
+                  <input type="hidden" class="fselect" value="">
+                </div></div>
                 <div><div class="flabel">Как часто обращаешься за советом?</div>
-                <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Впервые пробую</option><option>Иногда, в трудные моменты</option><option>Регулярно, это часть жизни</option><option>Скептически, но интересно</option></select></div>
+                <div class="fcustom-wrap" data-name="freq">
+                  <button type="button" class="fcustom-trigger" data-placeholder="Выбери вариант">Выбери вариант<svg class="fcustom-arrow" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="rgba(210,190,165,0.6)" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></button>
+                  <div class="fcustom-dropdown"><div class="fcustom-option" data-value="Впервые пробую">Впервые пробую</div><div class="fcustom-option" data-value="Иногда, в трудные моменты">Иногда, в трудные моменты</div><div class="fcustom-option" data-value="Регулярно, это часть жизни">Регулярно, это часть жизни</div><div class="fcustom-option" data-value="Скептически, но интересно">Скептически, но интересно</div></div>
+                  <input type="hidden" class="fselect" value="">
+                </div></div>
                 <div><div class="flabel">Чего ожидаешь от сессии?</div>
-                <select class="fselect"><option value="" disabled selected>Выбери цель</option><option>Получить ясность и направление</option><option>Выговориться и быть услышанным</option><option>Узнать что-то о своей судьбе</option><option>Найти решение конкретной ситуации</option><option>Просто попробовать</option></select></div>
+                <div class="fcustom-wrap" data-name="goal">
+                  <button type="button" class="fcustom-trigger" data-placeholder="Выбери цель">Выбери цель<svg class="fcustom-arrow" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="rgba(210,190,165,0.6)" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></button>
+                  <div class="fcustom-dropdown"><div class="fcustom-option" data-value="Получить ясность и направление">Получить ясность и направление</div><div class="fcustom-option" data-value="Выговориться и быть услышанным">Выговориться и быть услышанным</div><div class="fcustom-option" data-value="Узнать что-то о своей судьбе">Узнать что-то о своей судьбе</div><div class="fcustom-option" data-value="Найти решение конкретной ситуации">Найти решение конкретной ситуации</div><div class="fcustom-option" data-value="Просто попробовать">Просто попробовать</div></div>
+                  <input type="hidden" class="fselect" value="">
+                </div></div>
                 <div><div class="flabel">Есть ли у тебя конкретный вопрос?</div>
-                <select class="fselect"><option value="" disabled selected>Выбери вариант</option><option>Да, есть чёткий вопрос</option><option>Скорее ощущение, чем вопрос</option><option>Хочу просто поговорить</option><option>Не знаю с чего начать</option></select></div>
+                <div class="fcustom-wrap" data-name="question">
+                  <button type="button" class="fcustom-trigger" data-placeholder="Выбери вариант">Выбери вариант<svg class="fcustom-arrow" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="rgba(210,190,165,0.6)" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></button>
+                  <div class="fcustom-dropdown"><div class="fcustom-option" data-value="Да, есть чёткий вопрос">Да, есть чёткий вопрос</div><div class="fcustom-option" data-value="Скорее ощущение, чем вопрос">Скорее ощущение, чем вопрос</div><div class="fcustom-option" data-value="Хочу просто поговорить">Хочу просто поговорить</div><div class="fcustom-option" data-value="Не знаю с чего начать">Не знаю с чего начать</div></div>
+                  <input type="hidden" class="fselect" value="">
+                </div></div>
             </div>
             <button class="submit-btn" id="submitBtn">
                 <span>Начать сессию</span>
@@ -680,6 +713,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
             <div id="sessionsWrapper" style="flex:1;min-height:0;position:relative;">
                 <div id="sessionsContent" style="height:100%;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;padding:4px 0;"></div>
             </div>
+            <div style="width:calc(100% + 48px);height:1px;background:rgba(40,28,20,0.12);flex-shrink:0;margin:8px -24px 0;"></div>
             <button id="signOutBtn" style="background:none;border:none;color:rgba(40,28,20,0.35);font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;padding:8px 0;text-align:center;width:100%;transition:color 0.15s;flex-shrink:0;">Выйти из учётной записи</button>
             <button id="signInBtn" style="display:none;background:none;border:none;color:rgba(40,28,20,0.45);font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;padding:8px 0;text-align:center;width:100%;transition:color 0.15s;flex-shrink:0;" onclick="window.location.href='index.html'">Войти в аккаунт</button>
         </div>
@@ -857,10 +891,10 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
 <div class="screen" id="screenSupport">
 <div class="s2-wrap">
 <div class="s2-inner">
-    <div class="chat-header">
+    <div class="chat-header" id="supportHeader" style="cursor:pointer;">
         <div class="chat-header-left">
             <!-- Static model label, not clickable -->
-            <div class="model-btn" style="cursor:default;pointer-events:none;">Оракул</div>
+            <div class="model-btn" style="cursor:pointer;pointer-events:none;">Оракул</div>
         </div>
         <div class="chat-header-right">
             <svg id="supportFlipBtn" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;fill:rgba(210,190,165,0.6);cursor:pointer;flex-shrink:0;transform:scale(-1,-1);"><path d="M26,4H6A2.0025,2.0025,0,0,0,4,6V26a2.0025,2.0025,0,0,0,2,2H26a2.0025,2.0025,0,0,0,2-2V6A2.0025,2.0025,0,0,0,26,4ZM6,26V6L26,26Z"/></svg>
@@ -1136,14 +1170,13 @@ function init() {
             switchScreen('screen2');
 
         } else if (savedScreen === 'screenSupport') {
-            // Restore support chat
-            switchScreen('screen1b');
-            // Flip to sessions first (no animation on reload)
+            // Restore support chat — init empty state then go directly
+            openSupportChat._restoring = true;
+            openSupportChat();
+            // Also prepare sessions list in background
             s1bFlipped = true;
             document.getElementById('s1bInner').classList.add('flipped');
             renderSessions();
-            // Then open support chat directly
-            openSupportChat();
 
         } else if (savedScreen === 'screen1b') {
             switchScreen('screen1b');
@@ -1425,7 +1458,50 @@ document.getElementById('signOutBtn').addEventListener('click', e => {
     goTo('screen1');
 });
 
-// Click anywhere on card body (except fields/buttons) triggers flip
+// ── Custom dropdowns for survey form ──
+document.querySelectorAll('.fcustom-wrap').forEach(wrap => {
+    const trigger = wrap.querySelector('.fcustom-trigger');
+    const dropdown = wrap.querySelector('.fcustom-dropdown');
+    const hidden = wrap.querySelector('.fselect');
+    const placeholder = trigger.dataset.placeholder;
+
+    trigger.addEventListener('click', e => {
+        e.stopPropagation();
+        const isOpen = dropdown.classList.contains('open');
+        // Close all others
+        document.querySelectorAll('.fcustom-dropdown.open').forEach(d => {
+            d.classList.remove('open');
+            d.closest('.fcustom-wrap').querySelector('.fcustom-trigger').classList.remove('open');
+        });
+        if (!isOpen) {
+            dropdown.classList.add('open');
+            trigger.classList.add('open');
+        }
+    });
+
+    dropdown.querySelectorAll('.fcustom-option').forEach(opt => {
+        opt.addEventListener('click', e => {
+            e.stopPropagation();
+            dropdown.querySelectorAll('.fcustom-option').forEach(o => o.classList.remove('selected'));
+            opt.classList.add('selected');
+            hidden.value = opt.dataset.value;
+            // Update trigger text (keep arrow)
+            trigger.childNodes[0].textContent = opt.dataset.value;
+            trigger.classList.add('selected');
+            trigger.classList.remove('open');
+            dropdown.classList.remove('open');
+        });
+    });
+});
+
+document.addEventListener('click', () => {
+    document.querySelectorAll('.fcustom-dropdown.open').forEach(d => {
+        d.classList.remove('open');
+        d.closest('.fcustom-wrap').querySelector('.fcustom-trigger').classList.remove('open');
+    });
+});
+
+// ── End custom dropdowns ──
 document.querySelector('.s1b-face-front').addEventListener('click', e => {
     if (e.target.closest('select') || e.target.closest('button') || e.target.closest('.fields')) return;
     doFlip(true);
@@ -1591,7 +1667,6 @@ function openSupportChat() {
             <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/9ada1e087395447e7255335bcc515b652e524b03/temple-structure-svgrepo-com.svg" style="width:32px;height:32px;margin-bottom:8px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);opacity:0.4;">
             <div style="font-size:11px;margin-top:6px;opacity:0.55;line-height:1.6;max-width:220px;">Оракул отвечает на вопросы в порядке очереди. Наберитесь терпения — ответ придёт. Не дублируйте вопросы: повторные обращения отодвигают вас в конец очереди.</div>
         </div>`;
-        // Dynamic fade mask
         function updateSupportMask() {
             const atTop = area.scrollTop < 4;
             const atBottom = area.scrollHeight - area.scrollTop - area.clientHeight < 4;
@@ -1602,7 +1677,13 @@ function openSupportChat() {
         area._updateMask = updateSupportMask;
         requestAnimationFrame(updateSupportMask);
     }
-    // Open like any other chat — with fade transition
+    // If restoring after reload — no animation
+    if (openSupportChat._restoring) {
+        openSupportChat._restoring = false;
+        switchScreen('screenSupport');
+        return;
+    }
+    // Normal open — with fade transition
     goTo('screenSupport');
     setTimeout(() => document.getElementById('supportInput').focus(), 550);
 }
@@ -1617,6 +1698,9 @@ function closeSupportChat() {
 
 // Support flip back button
 document.getElementById('supportFlipBtn').addEventListener('click', e => { e.stopPropagation(); closeSupportChat(); });
+
+// Click on header → close support chat
+document.getElementById('supportHeader').addEventListener('click', () => closeSupportChat());
 
 // Click outside input/buttons → flip back
 document.getElementById('screenSupport').addEventListener('click', e => {
