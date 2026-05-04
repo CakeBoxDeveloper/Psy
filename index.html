@@ -275,7 +275,7 @@ body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%)
 .light .toast::after{background:linear-gradient(105deg,transparent 20%,rgba(60,45,35,0.07) 50%,transparent 80%);}
 .toast-icon{width:20px;height:20px;flex-shrink:0;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
 .light .toast-icon{filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);}
-.toast-text{font-size:12px;color:rgba(210,190,165,0.9);font-family:'Inter',sans-serif;cursor:pointer;flex:1;}
+.toast-text{font-size:12px;font-weight:600;color:rgba(210,190,165,0.9);font-family:'Inter',sans-serif;cursor:pointer;flex:1;}
 .light .toast-text{color:rgba(40,28,20,0.85);}
 .toast{cursor:pointer;}
 .light .ditem-check{background:rgb(40,28,20) !important;}
@@ -452,11 +452,12 @@ body.light span[style*="width:5px;height:5px;background:#d2bea5"]{background:#28
 /* Inline premium notice — same size, overlays button */
 .end-inline-notice{
     position:absolute;inset:0;
-    display:flex;align-items:center;justify-content:center;gap:8px;
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
     background:rgba(42,36,32,0.97);
     border:1px solid rgba(210,190,165,0.15);
     border-radius:8px;
     font-size:12px;color:rgba(210,190,165,0.85);font-family:'Inter',sans-serif;
+    padding:0 14px;
     opacity:0;filter:blur(6px);pointer-events:none;
     transition:opacity 0.35s,filter 0.35s;
     overflow:hidden;
@@ -774,12 +775,12 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
                 <button class="ditem ditem-premium" data-premium="auto">
                     <div class="ditem-text"><span class="ditem-name">Оракул</span><span class="ditem-desc">Анализирует запрос и выбирает лучшего проводника</span></div>
                     <span class="ditem-check"></span>
-                    <img class="ditem-star" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg" alt="">
+                    <img class="ditem-star" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/c40e6d53859b253ad26cb337da3f974b72231f58/PanaceaKey45Fill.svg" alt="">
                 </button>
                 <button class="ditem ditem-premium" data-premium="consilium">
                     <div class="ditem-text"><span class="ditem-name">Консилиум</span><span class="ditem-desc">Мнения всех проводников сразу</span></div>
                     <span class="ditem-check"></span>
-                    <img class="ditem-star" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg" alt="">
+                    <img class="ditem-star" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/c40e6d53859b253ad26cb337da3f974b72231f58/PanaceaKey45Fill.svg" alt="">
                 </button>
             </div>
         </div>
@@ -794,8 +795,8 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
     </div>
     <div class="chat-area" id="chatArea"></div>
     <div class="toast" id="appToast" style="display:none;">
-        <img class="toast-icon" id="toastIcon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg" alt="">
         <span class="toast-text" id="toastText">Эта функция доступна с Panacea Plus</span>
+        <img class="toast-icon" id="toastIcon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg" alt="">
     </div>
     <div class="input-area">
         <input type="text" class="input-field" id="msgInput" placeholder="Задай свой вопрос..." autocomplete="off">
@@ -876,8 +877,8 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
             Сохранить историю сеанса
         </button>
         <div class="end-inline-notice" id="endInlineNotice" onclick="goToSubscription()">
-            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg" alt="">
             Эта функция доступна с Panacea Plus
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg" alt="">
         </div>
     </div>
     <div class="end-btns">
