@@ -1006,7 +1006,8 @@ onAuthStateChanged(auth, user => {
 <script>
 const BG = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/Webps/';
 const DOVE = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg';
-const HOURGLASS = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/hourglass.svg';
+const HOURGLASS = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/cae7db661ff32a9a6226dd3ed9403708b4dcfac7/feather.svg';
+const RUINS = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/cae7db661ff32a9a6226dd3ed9403708b4dcfac7/Ruins2.svg';
 const KEY_USER = 'soma_user';
 const KEY_CHAT = 'soma_chat';
 
@@ -1224,7 +1225,7 @@ function renderSessions(highlightId) {
 
     if (isGuest) {
         cont.innerHTML = `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:40px 0;">
-            <img src="${HOURGLASS}" style="width:32px;height:32px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.3;" alt="">
+            <img src="${RUINS}" style="width:32px;height:32px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.3;" alt="">
             <div style="color:rgba(40,28,20,0.45);font-size:12px;line-height:1.7;">История сессий недоступна<br>в гостевом режиме.<br><span style="font-size:11px;color:rgba(40,28,20,0.3);">Войдите через Google или Apple,<br>чтобы сохранять сессии.</span></div>
         </div>`;
         return;
