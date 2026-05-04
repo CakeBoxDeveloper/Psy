@@ -98,16 +98,21 @@ body.flipping{overflow:hidden;}
 .fade-bottom{bottom:0;background:linear-gradient(to top,rgb(42,36,32),transparent);}
 .fade-top.hidden,.fade-bottom.hidden{opacity:0;}
 .feat{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:8px;flex-shrink:0;}
-.feat-icon{width:14px;height:14px;flex-shrink:0;margin-top:2px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);opacity:0.6;}
+.feat-icon{width:14px;height:14px;flex-shrink:0;margin-top:2px;filter:brightness(0) saturate(100%) invert(82%) sepia(15%) saturate(300%) hue-rotate(340deg) brightness(103%);opacity:1;}
 .feat-text{font-size:12px;color:rgba(210,190,165,0.65);line-height:1.5;}
 .feat-text strong{color:rgba(210,190,165,0.9);font-weight:600;display:block;margin-bottom:1px;}
 
 /* Back */
 .back-btn{
-    background:none;border:none;border-top:1px solid rgba(210,190,165,0.12);
+    background:none;border:none;
     color:rgba(210,190,165,0.35);font-size:11px;font-family:'Inter',sans-serif;
-    cursor:pointer;padding:12px 0 0;text-align:center;width:100%;
-    transition:color 0.15s;flex-shrink:0;margin-top:8px;
+    cursor:pointer;padding:12px 0;text-align:center;width:100%;
+    transition:color 0.15s;flex-shrink:0;margin-top:auto;
+    position:relative;
+}
+.back-btn::before{
+    content:'';position:absolute;top:0;left:-24px;right:-24px;height:1px;
+    background:rgba(210,190,165,0.12);
 }
 .back-btn:hover{color:rgba(210,190,165,0.6);}
 
@@ -251,11 +256,16 @@ body.flipping{overflow:hidden;}
 
 /* Back link */
 .pay-back{
-    background:none;border:none;border-top:1px solid rgba(80,50,25,0.15);
+    background:none;border:none;
     color:rgba(55,38,22,0.35);font-size:11px;
     font-family:'Inter',sans-serif;cursor:pointer;
-    padding:12px 0 0;text-align:center;width:100%;
-    transition:color 0.15s;flex-shrink:0;margin-top:8px;
+    padding:12px 0;text-align:center;width:100%;
+    transition:color 0.15s;flex-shrink:0;margin-top:auto;
+    position:relative;
+}
+.pay-back::before{
+    content:'';position:absolute;top:0;left:-24px;right:-24px;height:1px;
+    background:rgba(80,50,25,0.15);
 }
 .pay-back:hover{color:rgba(55,38,22,0.6);}
 </style>
