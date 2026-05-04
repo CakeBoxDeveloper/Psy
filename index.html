@@ -1113,6 +1113,10 @@ function switchScreen(id) {
     if (id === 'screen2') initChat();
     if (id === 'screen1c') startLoader();
     if (id === 'screen1b') s1bReset();
+    // Save for reload
+    if (['screen2','screen1b','screenSupport'].includes(id)) {
+        sessionStorage.setItem('soma_screen', id);
+    }
 }
 
 // Init — check if already logged in — вызывается в конце скрипта
@@ -1121,11 +1125,38 @@ function init() {
     if (window.location.hash === '#login') {
         history.replaceState(null, '', window.location.pathname);
         switchScreen('screen1');
-        // Carousel is already on slide 0 (login) by default
         return;
     }
     if (localStorage.getItem(KEY_USER)) {
-        switchScreen('screen2');
+        const savedScreen = sessionStorage.getItem('soma_screen');
+        const savedFlip   = sessionStorage.getItem('soma_flip');
+
+        if (savedScreen === 'screen2') {
+            // Restore chat — switchScreen calls initChat() which loads from localStorage
+            switchScreen('screen2');
+
+        } else if (savedScreen === 'screenSupport') {
+            // Restore support chat
+            switchScreen('screen1b');
+            // Flip to sessions first (no animation on reload)
+            s1bFlipped = true;
+            document.getElementById('s1bInner').classList.add('flipped');
+            renderSessions();
+            // Then open support chat directly
+            openSupportChat();
+
+        } else if (savedScreen === 'screen1b') {
+            switchScreen('screen1b');
+            if (savedFlip === '1') {
+                s1bFlipped = true;
+                document.getElementById('s1bInner').classList.add('flipped');
+                renderSessions();
+            }
+
+        } else {
+            // Default: go to chat if logged in
+            switchScreen('screen2');
+        }
     } else if (localStorage.getItem('soma_invite')) {
         localStorage.removeItem('soma_invite');
         localStorage.setItem(KEY_USER, JSON.stringify({p:'invite',ts:Date.now()}));
@@ -1376,6 +1407,7 @@ function doFlip(toBack) {
         s1bFlipped = false;
         inner.classList.remove('flipped');
     }
+    sessionStorage.setItem('soma_flip', s1bFlipped ? '1' : '0');
 }
 
 // Click on icon
@@ -1387,6 +1419,8 @@ document.getElementById('signOutBtn').addEventListener('click', e => {
     e.stopPropagation();
     if (window._fbSignOut) window._fbSignOut();
     [KEY_USER, KEY_CHAT, KEY_SURVEY].forEach(k => localStorage.removeItem(k));
+    sessionStorage.removeItem('soma_screen');
+    sessionStorage.removeItem('soma_flip');
     currentSessionId = null;
     goTo('screen1');
 });
