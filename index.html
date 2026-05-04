@@ -714,8 +714,8 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
                 <div id="sessionsContent" style="height:100%;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;padding:4px 0;"></div>
             </div>
             <div style="width:calc(100% + 48px);height:1px;background:rgba(40,28,20,0.12);flex-shrink:0;margin:2px -24px 0;"></div>
-            <button id="signOutBtn" style="background:none;border:none;color:rgba(40,28,20,0.35);font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;padding:2px 0;text-align:center;width:100%;transition:color 0.15s;flex-shrink:0;">Выйти из учётной записи</button>
-            <button id="signInBtn" style="display:none;background:none;border:none;color:rgba(40,28,20,0.45);font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;padding:2px 0;text-align:center;width:100%;transition:color 0.15s;flex-shrink:0;" onclick="window.location.href='index.html'">Войти в аккаунт</button>
+            <button id="signOutBtn" style="background:none;border:none;color:rgba(40,28,20,0.35);font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;padding:10px 0 0;text-align:center;width:100%;transition:color 0.15s;flex-shrink:0;">Выйти из учётной записи</button>
+            <button id="signInBtn" style="display:none;background:none;border:none;color:rgba(40,28,20,0.45);font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;padding:10px 0 0;text-align:center;width:100%;transition:color 0.15s;flex-shrink:0;" onclick="window.location.href='index.html'">Войти в аккаунт</button>
         </div>
 
     </div>
@@ -1655,7 +1655,9 @@ document.addEventListener('click', e => {
 });
 
 function goToSubscription() {
-    window.location.href = 'subscription.html';
+    const ov = document.getElementById('overlay');
+    ov.classList.add('on');
+    setTimeout(() => { window.location.href = 'subscription.html'; }, 500);
 }
 
 /* ── Support chat ── */
