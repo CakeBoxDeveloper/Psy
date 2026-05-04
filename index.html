@@ -1383,10 +1383,10 @@ async function generateSessionPDF(s) {
 
 Формат ответа — строго три блока:
 
-ИНТЕРЛЮДИЯ
+ВОПРОС
 1-2 предложения: с каким внутренним состоянием или запросом пришёл пользователь.
 
-СОДЕРЖАНИЕ
+ОБСУЖДЕНИЕ
 2-3 предложения: ключевые темы и повороты диалога. Только суть, без воды.
 
 ВЫВОД
@@ -1414,8 +1414,8 @@ ${dialogue}
 
         // Reuse the same PDF generation logic
         const tempChatHistory = msgs;
-        const secInterlude  = getSection('ИНТЕРЛЮДИЯ');
-        const secContent    = getSection('СОДЕРЖАНИЕ');
+        const secInterlude  = getSection('ВОПРОС');
+        const secContent    = getSection('ОБСУЖДЕНИЕ');
         const secConclusion = getSection('ВЫВОД');
 
         // Trigger PDF via shared function — temporarily override globals
@@ -1808,10 +1808,10 @@ ${msgs || 'Диалог пуст'}
 
 Формат — строго три блока:
 
-ИНТЕРЛЮДИЯ
+ВОПРОС
 1-2 предложения: с каким внутренним состоянием пришёл пользователь. Если анкета не заполнена — интерпретируй это как признак апатии, неопределённости или спешки, не упоминая сам факт незаполненности.
 
-СОДЕРЖАНИЕ
+ОБСУЖДЕНИЕ
 2-3 предложения: ключевые темы и повороты диалога. Только суть.
 
 ВЫВОД
@@ -1839,8 +1839,8 @@ ${msgs || 'Диалог пуст'}
             const m = summary.match(re);
             return m ? m[1].trim() : '';
         };
-        const secInterlude = getSection('ИНТЕРЛЮДИЯ');
-        const secContent   = getSection('СОДЕРЖАНИЕ');
+        const secInterlude = getSection('ВОПРОС');
+        const secContent   = getSection('ОБСУЖДЕНИЕ');
         const secConclusion= getSection('ВЫВОД');
 
         // Generate PDF via pdfmake (client-side, no server needed)
@@ -2653,22 +2653,22 @@ async function generatePDFDoc({ sessionDate, secInterlude, secContent, secConclu
                 background: (p, s) => ({ canvas: [{ type:'rect', x:0, y:0, w:s.width, h:s.height, color: BG }] }),
                 content: [
                     // Header: logo only
-                    { svg: LOGO, width: 160, marginBottom: 10 },
+                    { svg: LOGO, width: 160, marginBottom: 22 },
                     // Dashed disclaimer
                     { stack: [
                         { svg: `<svg width="${W}" height="${DH}" xmlns="http://www.w3.org/2000/svg"><rect width="${W}" height="${DH}" rx="6" fill="none" stroke="${INK}" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.3"/></svg>`, width: W, marginBottom: -DH },
                         { text: `Этот протокол сеанса от ${sessionDate} был составлен автоматически`, fontSize: 11, color: INK, opacity: 0.5, alignment: 'center', margin: [14, 10, 14, 10] }
                     ], marginBottom: 28 },
                     // Sections
-                    { text: 'ИНТЕРЛЮДИЯ', fontSize: 10, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
+                    { text: 'ВОПРОС', fontSize: 10, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
                     box(secInterlude || '—'),
-                    { text: 'СОДЕРЖАНИЕ', fontSize: 10, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
+                    { text: 'ОБСУЖДЕНИЕ', fontSize: 10, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
                     box(secContent || '—'),
                     { text: 'ВЫВОД', fontSize: 10, bold: true, color: INK, characterSpacing: 1.5, marginBottom: 8 },
                     box(secConclusion || '—'),
                     // Footer
                     { columns: [
-                        { text: `Модели: ${(modelsUsed||[]).length ? modelsUsed.join(', ') : 'Тара'}`, fontSize: 11, bold: true, color: INK },
+                        { text: `Для ответов были использованы модели: ${(modelsUsed||[]).length ? modelsUsed.join(', ') : 'Тара'}`, fontSize: 11, bold: true, color: INK },
                         { text: `${msgCount || 0} сообщений`, fontSize: 11, bold: true, color: INK, alignment: 'right' }
                     ], marginTop: 20 }
                 ],
