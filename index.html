@@ -398,11 +398,11 @@ body.light .bulb-btn img{filter:invert(15%) sepia(15%) saturate(200%) brightness
 body.light span[style*="width:5px;height:5px;background:#d2bea5"]{background:#281c14 !important;}
 
 /* Loader screen */
-.loader-wrap{width:100%;height:100vh;background:rgb(28,23,20);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
-.loader-carousel-wrap{width:100%;flex:1;min-height:0;max-height:75vh;position:relative;overflow:hidden;}
+.loader-wrap{width:100%;height:100vh;background:rgb(28,23,20);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;}
+.loader-carousel-wrap{width:100%;flex:1;position:relative;overflow:hidden;}
 .lc-slide{
     position:absolute;top:50%;left:50%;
-    border-radius:12px;overflow:hidden;
+    border-radius:12px;
     background:rgb(42,36,32);background-size:cover;background-position:center;background-repeat:no-repeat;
     transform-origin:center center;
     transition:transform 0.5s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease,filter 0.5s ease;
@@ -1225,7 +1225,7 @@ function renderSessions(highlightId) {
 
     if (isGuest) {
         cont.innerHTML = `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:40px 0;">
-            <img src="${RUINS}" style="width:32px;height:32px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.3;" alt="">
+            <img src="${RUINS}" style="width:42px;height:42px;filter:invert(15%) sepia(15%) saturate(200%) brightness(20%);opacity:0.45;" alt="">
             <div style="color:rgba(40,28,20,0.45);font-size:12px;line-height:1.7;">История сессий недоступна<br>в гостевом режиме.<br><span style="font-size:11px;color:rgba(40,28,20,0.3);">Войдите через Google или Apple,<br>чтобы сохранять сессии.</span></div>
         </div>`;
         return;
@@ -1965,7 +1965,10 @@ function initChat() {
 }
 
 function showPlaceholder() {
-    chatArea.innerHTML = `<div class="empty-state"><img src="${HOURGLASS}" style="width:36px;height:36px;margin-bottom:14px;"><div>Задавайте любые вопросы.<br>Переключайте модели для ответа на них.<br><span style="font-size:11px;">Все сообщения удаляются через 24 часа.</span></div></div>`;
+    const userRaw = localStorage.getItem(KEY_USER);
+    const isGuest = !userRaw || JSON.parse(userRaw).p === 'guest';
+    const guestNote = isGuest ? '<br><span style="font-size:11px;opacity:0.6;">Все сообщения удаляются через 24 часа.</span>' : '';
+    chatArea.innerHTML = `<div class="empty-state"><img src="${HOURGLASS}" style="width:47px;height:47px;margin-bottom:14px;"><div style="max-width:220px;">Ave! Задавай любые вопросы и переключайся между моделями, чтобы узнать разные точки зрения.${guestNote}</div></div>`;
 }
 
 function saveChat() {
@@ -2459,6 +2462,38 @@ const LOADER_QUOTES = [
     {text: "Мы не можем решить проблему, используя то же мышление, которое её создало.", author: "Альберт Эйнштейн"},
     {text: "Страдание прекращается, когда мы перестаём сопротивляться тому, что есть.", author: "Буддийская мудрость"},
     {text: "Звёзды не гаснут — просто иногда облака мешают их видеть.", author: "Персидская пословица"},
+    {text: "Я — это не то, что со мной произошло, я — это то, чем я решил стать.", author: "Карл Густав Юнг"},
+    {text: "Мы выбираем не случайно друг друга… Мы встречаем только тех, кто уже существует в нашем подсознании.", author: "Зигмунд Фрейд"},
+    {text: "Единственный человек, с которым вы должны сравнивать себя — это вы в прошлом.", author: "Зигмунд Фрейд"},
+    {text: "Счастье — это когда то, что ты думаешь, говоришь и делаешь, находится в гармонии.", author: "Махатма Ганди"},
+    {text: "Стать тем, кто ты есть — это самое значительное событие в жизни человека.", author: "Абрахам Маслоу"},
+    {text: "Числа правят миром.", author: "Пифагор"},
+    {text: "Всё есть число.", author: "Пифагорейцы"},
+    {text: "Бог всегда геометр.", author: "Платон"},
+    {text: "Математика — это язык, на котором Бог написал Вселенную.", author: "Галилео Галилей"},
+    {text: "Познай самого себя.", author: "Надпись на храме Аполлона в Дельфах"},
+    {text: "Всё течёт, всё меняется.", author: "Гераклит"},
+    {text: "Я знаю только то, что я ничего не знаю.", author: "Сократ"},
+    {text: "Времена меняются, и мы меняемся вместе с ними.", author: "Лотарь I"},
+    {text: "История — это философия в примерах.", author: "Фукидид"},
+    {text: "У того, кто не смотрит вдаль, обязательно возникнут проблемы вблизи.", author: "Конфуций"},
+    {text: "Не бойся идти медленно, бойся стоять на месте.", author: "Китайская пословица"},
+    {text: "Что посеешь, то и пожнёшь.", author: "Народная мудрость"},
+    {text: "То, что внизу, аналогично тому, что вверху.", author: "Гермес Трисмегист"},
+    {text: "Звёзды управляют глупцами, а мудрый управляет звёздами.", author: "Астрологический афоризм"},
+    {text: "Твоё видение станет ясным только тогда, когда ты сможешь заглянуть в своё собственное сердце.", author: "Карл Густав Юнг"},
+    {text: "Сновидение — это маленькая, хорошо спрятанная дверь, ведущая в ту изначальную космическую ночь, которой была душа ещё до возникновения сознания.", author: "Карл Густав Юнг"},
+    {text: "Мы не столько видим вещи такими, какие они есть, сколько видим их такими, какие мы есть.", author: "Анаис Нин"},
+    {text: "Три — это число целого, ибо оно содержит начало, середину и конец.", author: "Аристотель"},
+    {text: "Судьба ведёт того, кто хочет, и тащит того, кто не хочет.", author: "Сенека"},
+    {text: "Никто не возвращается из путешествия таким, каким он был прежде.", author: "Восточная пословица"},
+    {text: "Тот, кто не знает своей истории, обречён повторять её ошибки.", author: "Джордж Сантаяна"},
+    {text: "Тихие воды глубоки.", author: "Народная пословица"},
+    {text: "Истинное знание — в осознании своего невежества.", author: "Конфуций"},
+    {text: "Природа не терпит пустоты.", author: "Аристотель"},
+    {text: "Время — самый честный свидетель.", author: "Народная мудрость"},
+    {text: "Темнота — это всего лишь отсутствие света.", author: "Альберт Эйнштейн"},
+    {text: "Даже из камней, воздвигнутых на твоём пути, можно построить лестницу.", author: "Эрих Кастнер"},
 ];
 
 const LOADER_STAGES = [
