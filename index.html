@@ -1147,6 +1147,12 @@ function switchScreen(id) {
     bgEl.style.display = showBg ? 'block' : 'none';
     bgFrame.style.display = showBg ? 'block' : 'none';
     overlayEl.classList.remove('on');
+    // Сбрасываем тему при уходе с чата
+    if (id !== 'screen2' && isLight) {
+        isLight = false;
+        document.getElementById('screen2').classList.remove('light');
+        document.body.classList.remove('light');
+    }
     if (id === 'screen2') initChat();
     if (id === 'screen1c') startLoader();
     if (id === 'screen1b') s1bReset();
