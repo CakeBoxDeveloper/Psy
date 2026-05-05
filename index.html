@@ -474,6 +474,143 @@ body.light .end-inline-notice img{filter:brightness(0) saturate(100%) invert(10%
 body.light .end-summary-icon{filter:invert(15%) sepia(15%) saturate(200%) brightness(20%) !important;opacity:0.8 !important;}
 body.light .end-summary-btn{background:rgba(60,45,35,0.1);border-color:rgba(60,45,35,0.3);color:rgba(40,28,20,0.8);}
 body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28,20);}
+
+/* ── Attach card (test/parable sent by AI) ── */
+.attach-card{
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+    padding:20px 16px 0;
+    background:rgba(255,255,255,0.06);
+    border-radius:12px;text-align:center;
+    width:192px;cursor:pointer;
+    transition:background 0.15s;
+    position:relative;
+}
+.attach-card:hover{background:rgba(255,255,255,0.1);}
+.attach-card img{width:48px;height:48px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
+.attach-card-title{font-family:'TiemposHeadline',serif;font-weight:900;font-size:15px;color:rgba(210,190,165,1);line-height:1.3;}
+.attach-card-desc{font-size:11px;color:rgba(210,190,165,0.55);line-height:1.5;}
+.attach-card-body{display:flex;flex-direction:column;align-items:center;gap:6px;padding-bottom:12px;width:100%;}
+body.light .attach-card{background:rgba(60,45,35,0.08);}
+body.light .attach-card:hover{background:rgba(60,45,35,0.14);}
+body.light .attach-card img{filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);}
+body.light .attach-card-title{color:rgb(40,28,20);}
+body.light .attach-card-desc{color:rgba(40,28,20,0.55);}
+.attach-sig{
+    width:auto;
+    margin:0 -16px;
+    padding:6px 16px 10px;
+    border-top:1px solid rgba(210,190,165,0.12);
+    font-size:11px;color:rgba(210,190,165,0.35);
+    text-align:center;line-height:1.5;
+    transition:opacity 0.3s;
+}
+body.light .attach-sig{color:rgba(40,28,20,0.45);border-top-color:rgba(40,28,20,0.12);}
+
+/* ── Test modal ── */
+.test-overlay{
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.55);
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    display:none;align-items:flex-end;justify-content:center;
+    z-index:200;
+}
+.test-overlay.show{display:flex;}
+.test-modal{
+    width:min(90%,420px);max-height:88vh;max-height:88dvh;
+    background:rgb(32,26,22);
+    border-radius:12px 12px 0 0;
+    display:flex;flex-direction:column;
+    overflow:hidden;
+    animation:slideUp 0.35s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+body.light .test-modal{background:rgb(235,222,205);}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+@keyframes slideDown{from{transform:translateY(0);}to{transform:translateY(100%);}}
+.test-modal-header{
+    padding:20px 20px 0;
+    flex-shrink:0;
+}
+.test-modal-title{
+    font-family:'TiemposHeadline',serif;font-weight:900;
+    font-size:18px;text-align:center;
+    color:rgba(210,190,165,1);line-height:1.3;
+    margin-bottom:4px;
+}
+body.light .test-modal-title{color:rgb(40,28,20);}
+.test-modal-subtitle{
+    font-size:11px;text-align:center;
+    color:rgba(210,190,165,0.4);
+    margin-bottom:16px;
+}
+body.light .test-modal-subtitle{color:rgba(40,28,20,0.45);}
+.test-modal-divider{height:1px;background:rgba(210,190,165,0.1);margin:0 -20px;}
+body.light .test-modal-divider{background:rgba(40,28,20,0.12);}
+.test-modal-body{
+    flex:1;overflow-y:auto;
+    padding:16px 20px;
+    display:flex;flex-direction:column;gap:20px;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+}
+.test-modal-body::-webkit-scrollbar{display:none;}
+.test-question{display:flex;flex-direction:column;gap:8px;}
+.test-question-text{
+    font-size:13px;font-weight:600;
+    color:rgba(210,190,165,0.9);line-height:1.5;
+}
+body.light .test-question-text{color:rgb(40,28,20);}
+.test-options{display:flex;flex-direction:column;gap:6px;}
+.test-option{
+    padding:9px 12px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(210,190,165,0.1);
+    border-radius:8px;
+    font-size:12px;color:rgba(210,190,165,0.7);
+    cursor:pointer;transition:all 0.15s;
+    text-align:left;font-family:'Inter',sans-serif;
+}
+.test-option:hover{background:rgba(255,255,255,0.09);color:rgba(210,190,165,0.9);}
+.test-option.selected{
+    background:rgba(210,190,165,0.15);
+    border-color:rgba(210,190,165,0.4);
+    color:rgba(210,190,165,1);
+}
+body.light .test-option{background:rgba(60,45,35,0.06);border-color:rgba(60,45,35,0.15);color:rgba(40,28,20,0.7);}
+body.light .test-option:hover{background:rgba(60,45,35,0.12);}
+body.light .test-option.selected{background:rgba(60,45,35,0.18);border-color:rgba(60,45,35,0.4);color:rgb(40,28,20);}
+.test-modal-footer{
+    padding:12px 20px 20px;
+    display:flex;gap:8px;
+    flex-shrink:0;
+    border-top:1px solid rgba(210,190,165,0.08);
+}
+body.light .test-modal-footer{border-top-color:rgba(40,28,20,0.1);}
+.test-btn-save{
+    flex:1;height:40px;
+    background:rgba(210,190,165,0.12);
+    border:1px solid rgba(210,190,165,0.2);
+    border-radius:8px;
+    font-size:13px;font-weight:600;
+    color:rgba(210,190,165,0.8);
+    font-family:'Inter',sans-serif;cursor:pointer;
+    transition:all 0.15s;
+}
+.test-btn-save:hover{background:rgba(210,190,165,0.2);color:rgba(210,190,165,1);}
+body.light .test-btn-save{background:rgba(60,45,35,0.08);border-color:rgba(60,45,35,0.18);color:rgba(40,28,20,0.7);}
+body.light .test-btn-save:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,20);}
+.test-btn-reset{
+    flex:1;height:40px;
+    background:rgba(210,190,165,0.12);
+    border:1px solid rgba(210,190,165,0.2);
+    border-radius:8px;
+    font-size:13px;font-weight:600;
+    color:rgba(210,190,165,0.8);
+    font-family:'Inter',sans-serif;cursor:pointer;
+    transition:all 0.15s;white-space:nowrap;
+}
+.test-btn-reset:hover{background:rgba(210,190,165,0.2);color:rgba(210,190,165,1);}
+body.light .test-btn-reset{background:rgba(60,45,35,0.08);border-color:rgba(60,45,35,0.18);color:rgba(40,28,20,0.7);}
+body.light .test-btn-reset:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,20);}
 </style>
 </head>
 <body>
@@ -809,6 +946,23 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
         </button>
     </div>
 </div>
+
+<!-- Test modal -->
+<div class="test-overlay" id="testOverlay">
+  <div class="test-modal" id="testModal">
+    <div class="test-modal-header">
+      <div class="test-modal-title" id="testModalTitle"></div>
+      <div class="test-modal-subtitle" id="testModalSubtitle"></div>
+      <div class="test-modal-divider"></div>
+    </div>
+    <div class="test-modal-body" id="testModalBody"></div>
+    <div class="test-modal-footer">
+      <button class="test-btn-reset" id="testBtnReset">Начать заново</button>
+      <button class="test-btn-save" id="testBtnSave">Сохранить</button>
+    </div>
+  </div>
+</div>
+
 </div>
 </div>
 
@@ -1967,12 +2121,15 @@ function initChat() {
                         </div>
                     </div>`;
                     chatArea.appendChild(premDiv);
+                } else if (m.s === 'attach') {
+                    const attach = m.attachId === TEST_ATTACH.id ? TEST_ATTACH : null;
+                    if (attach) showAttachInChat(attach, false, m.attachModel || null);
                 } else if (m.m === 'consilium' && m.h) {
                     addMsgHTML(m.h, m.s, false, 'consilium', 'Для этого ответа были использованы все модели');
                 } else {
                     addMsg(m.t, m.s, false, m.m || null);
                 }
-                if (m.s !== 'premium') {
+                if (m.s !== 'premium' && m.s !== 'attach') {
                     chatHistory.push({role: m.s === 'user' ? 'user' : 'assistant', content: m.t});
                 }
             });
@@ -1996,6 +2153,9 @@ function saveChat() {
     const msgs = Array.from(chatArea.querySelectorAll('.message')).map(el => {
         if (el.querySelector('.premium-activated')) {
             return { s: 'premium', t: '', m: null, h: null };
+        }
+        if (el.dataset.attachId) {
+            return { s: 'attach', attachId: el.dataset.attachId, attachModel: el.dataset.modelKey || null, t: '', m: null, h: null };
         }
         return {
             s: el.classList.contains('user') ? 'user' : 'ai',
@@ -2079,6 +2239,228 @@ function showTyping() {
     return div;
 }
 
+// ── Attach / Test system ─────────────────────────────────
+
+// Sample test data (will be replaced by AI-generated content)
+const TEST_ATTACH = {
+    id: 'test_self_awareness_01',
+    type: 'test',
+    title: 'Тест на самопознание',
+    desc: 'Пройди тест',
+    questions: [
+        {
+            id: 'q1', text: 'Когда ты сталкиваешься с трудной ситуацией, твоя первая реакция — это...',
+            options: ['Анализирую причины и ищу решение', 'Чувствую тревогу и откладываю на потом', 'Обращаюсь за советом к близким', 'Действую интуитивно, не раздумывая']
+        },
+        {
+            id: 'q2', text: 'Как ты обычно относишься к своим ошибкам?',
+            options: ['Анализирую и делаю выводы', 'Долго переживаю и виню себя', 'Стараюсь забыть как можно скорее', 'Воспринимаю как часть пути']
+        },
+        {
+            id: 'q3', text: 'Что для тебя важнее всего в отношениях с людьми?',
+            options: ['Честность и открытость', 'Взаимная поддержка', 'Общие интересы и ценности', 'Свобода и уважение границ']
+        },
+        {
+            id: 'q4', text: 'Как ты чаще всего принимаешь важные решения?',
+            options: ['Взвешиваю все за и против', 'Слушаю своё сердце', 'Советуюсь с другими', 'Жду, пока ситуация разрешится сама']
+        },
+        {
+            id: 'q5', text: 'Что тебя больше всего истощает?',
+            options: ['Конфликты и напряжение', 'Монотонность и рутина', 'Неопределённость и неизвестность', 'Ощущение, что меня не понимают']
+        },
+        {
+            id: 'q6', text: 'Как ты относишься к переменам в жизни?',
+            options: ['Воспринимаю как возможность', 'Принимаю, но с трудом', 'Стараюсь избегать', 'Зависит от ситуации']
+        },
+        {
+            id: 'q7', text: 'Что лучше всего описывает твой внутренний диалог?',
+            options: ['Конструктивный и поддерживающий', 'Критичный и требовательный', 'Хаотичный и непоследовательный', 'Спокойный и наблюдательный']
+        },
+        {
+            id: 'q8', text: 'Когда ты чувствуешь себя наиболее живым?',
+            options: ['В моменты творчества и вдохновения', 'В общении с близкими людьми', 'Когда достигаю поставленных целей', 'В тишине и уединении']
+        },
+        {
+            id: 'q9', text: 'Как ты справляешься с негативными эмоциями?',
+            options: ['Проговариваю их вслух или записываю', 'Переключаюсь на активность', 'Жду, пока пройдут сами', 'Ищу причину и работаю с ней']
+        },
+        {
+            id: 'q10', text: 'Что для тебя означает "быть собой"?',
+            options: ['Действовать согласно своим ценностям', 'Не зависеть от чужого мнения', 'Выражать свои чувства открыто', 'Принимать себя со всеми недостатками']
+        }
+    ]
+};
+
+// Current test state
+let currentTest = null;
+let testAnswers = {}; // { questionId: optionIndex }
+
+// Show attach card in chat
+function showAttachInChat(attach, save = true, modelKey = null) {
+    const div = document.createElement('div');
+    div.className = 'message ai';
+    div.style.cssText = 'animation:msgIn 0.4s ease-out forwards;justify-content:center;';
+    div.dataset.attachId = attach.id;
+    if (modelKey && modelKey !== 'auto') div.dataset.modelKey = modelKey;
+
+    const modelName = modelKey && modelKey !== 'auto' && models[modelKey] ? models[modelKey].name : null;
+    const sig = modelName
+        ? `<div class="attach-sig">Модель ${modelName} отправила вложение</div>`
+        : `<div class="attach-sig attach-sig-pending" style="opacity:0;"></div>`;
+
+    div.innerHTML = `<div class="attach-card" onclick="openTestModal('${attach.id}')">
+        <div class="attach-card-body">
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/56ff037b532d6b8dca5e28ef7a83aff38c7c43d8/Attach5.svg" alt="">
+            <div class="attach-card-title">${attach.title}</div>
+            <div class="attach-card-desc">${attach.desc}</div>
+        </div>
+        ${sig}
+    </div>`;
+
+    chatArea.appendChild(div);
+    chatArea.scrollTop = chatArea.scrollHeight;
+    if (chatArea._updateMask) chatArea._updateMask();
+    if (save) saveChat();
+}
+
+// Update attach signature once oracle resolves the model
+function resolveAttachSig(modelKey) {
+    if (!modelKey || !models[modelKey]) return;
+    const pending = chatArea.querySelector('.attach-sig-pending');
+    if (!pending) return;
+    pending.classList.remove('attach-sig-pending');
+    pending.style.opacity = '1';
+    pending.textContent = `Модель ${models[modelKey].name} отправила вложение`;
+    // Update stored modelKey on parent message
+    const msgEl = pending.closest('.message');
+    if (msgEl) {
+        msgEl.dataset.modelKey = modelKey;
+        saveChat();
+    }
+}
+
+// Open test modal
+function openTestModal(testId) {
+    const attach = testId === TEST_ATTACH.id ? TEST_ATTACH : null;
+    if (!attach) return;
+    currentTest = attach;
+
+    // Load saved answers from localStorage
+    const savedKey = 'test_answers_' + testId;
+    testAnswers = JSON.parse(localStorage.getItem(savedKey) || '{}');
+
+    // Render
+    document.getElementById('testModalTitle').textContent = attach.title;
+    document.getElementById('testModalSubtitle').textContent = `${attach.questions.length} вопросов`;
+
+    const body = document.getElementById('testModalBody');
+    body.innerHTML = '';
+
+    attach.questions.forEach((q, qi) => {
+        const qDiv = document.createElement('div');
+        qDiv.className = 'test-question';
+        qDiv.innerHTML = `<div class="test-question-text">${qi + 1}. ${q.text}</div>
+            <div class="test-options" id="opts_${q.id}">
+                ${q.options.map((opt, oi) => `
+                    <button class="test-option${testAnswers[q.id] === oi ? ' selected' : ''}"
+                        onclick="selectTestOption('${q.id}', ${oi}, this)">
+                        ${opt}
+                    </button>`).join('')}
+            </div>`;
+        body.appendChild(qDiv);
+    });
+
+    document.getElementById('testOverlay').classList.add('show');
+}
+
+// Select option
+function selectTestOption(questionId, optionIndex, btn) {
+    testAnswers[questionId] = optionIndex;
+
+    // Update UI
+    const opts = document.getElementById('opts_' + questionId);
+    opts.querySelectorAll('.test-option').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+
+    // Save to localStorage
+    if (currentTest) {
+        localStorage.setItem('test_answers_' + currentTest.id, JSON.stringify(testAnswers));
+    }
+}
+
+// Reset test
+document.getElementById('testBtnReset').addEventListener('click', () => {
+    if (!currentTest) return;
+    testAnswers = {};
+    localStorage.removeItem('test_answers_' + currentTest.id);
+    // Re-render options
+    currentTest.questions.forEach(q => {
+        const opts = document.getElementById('opts_' + q.id);
+        if (opts) opts.querySelectorAll('.test-option').forEach(b => b.classList.remove('selected'));
+    });
+});
+
+// Save test results
+document.getElementById('testBtnSave').addEventListener('click', async () => {
+    if (!currentTest) return;
+
+    const answered = Object.keys(testAnswers).length;
+    if (answered < currentTest.questions.length) {
+        showToast(`Ответь на все вопросы (${answered}/${currentTest.questions.length})`, { duration: 3000 });
+        return;
+    }
+
+    // Build results object
+    const results = currentTest.questions.map(q => ({
+        question: q.text,
+        answer: q.options[testAnswers[q.id]]
+    }));
+
+    // Save to Firebase
+    const userRaw = localStorage.getItem(KEY_USER);
+    const user = userRaw ? JSON.parse(userRaw) : null;
+    if (user && user.uid && user.p !== 'guest' && window._fbSaveSession) {
+        window._fbSaveSession(user.uid, 'test_' + currentTest.id, {
+            testId: currentTest.id,
+            title: currentTest.title,
+            completedAt: Date.now(),
+            results
+        });
+    }
+
+    // Close modal
+    document.getElementById('testOverlay').classList.remove('show');
+
+    // Send results to AI as a message
+    const resultsText = `Я прошёл тест «${currentTest.title}». Вот мои ответы:\n` +
+        results.map((r, i) => `${i + 1}. ${r.question}\n→ ${r.answer}`).join('\n\n');
+
+    addMsg(resultsText, 'user', true);
+    chatHistory.push({ role: 'user', content: resultsText });
+
+    const t = showTyping();
+    isTyping = true;
+    handleRegularMode(resultsText, t, 1200);
+});
+
+// Close test modal on overlay click
+document.getElementById('testOverlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('testOverlay')) {
+        closeTestModal();
+    }
+});
+
+function closeTestModal() {
+    const modal = document.getElementById('testModal');
+    modal.style.animation = 'slideDown 0.35s cubic-bezier(0.4,0,0.2,1) forwards';
+    setTimeout(() => {
+        document.getElementById('testOverlay').classList.remove('show');
+        modal.style.animation = '';
+    }, 340);
+}
+
+// ─────────────────────────────────────────────────────────
+
 function send() {
     const text = msgInput.value.trim();
     if (!text || isTyping) return;
@@ -2118,6 +2500,18 @@ function send() {
             if (chatArea._updateMask) chatArea._updateMask();
             saveChat();
         }
+        return;
+    }
+
+    // Check for test command
+    if (text === 'test') {
+        msgInput.value = '';
+        if (curModel === 'consilium') {
+            showToast('Вложения недоступны в режиме Консилиум', { duration: 3000 });
+            return;
+        }
+        // For oracle mode — modelKey will be resolved later, pass 'auto' as placeholder
+        showAttachInChat(TEST_ATTACH, true, curModel === 'auto' ? 'auto' : curModel);
         return;
     }
 
@@ -2217,6 +2611,9 @@ async function handleOracleMode(text, typingIndicator, thinkDelay) {
 
     setTimeout(async () => {
         try {
+            // Resolve any pending attach signatures now that model is known
+            resolveAttachSig(validModel);
+
             const resp = await fetch(`${API_BASE}/api/chat`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
