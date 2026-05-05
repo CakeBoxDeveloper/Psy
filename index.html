@@ -2278,27 +2278,23 @@ function showTyping() {
 const ATTACH_BASE = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/attaches';
 const ATTACH_CACHE = {};
 
-// All available attach IDs — add new ones here as you create files
-const ATTACH_IDS = {
-    tests: [
-        'self_awareness_01',
-        'temperament_eysenck',
-        'attachment_style',
-        'emotional_intelligence'
-    ],
-    parables: [
-        'parable_two_wolves',
-        'parable_butterfly',
-        'parable_horse',
-        'parable_empty_cup',
-        'parable_pencil',
-        'parable_spider',
-        'parable_salt',
-        'parable_window',
-        'parable_eagle',
-        'parable_monk'
-    ]
-}; // id → attach object
+// Fetch list of files in a folder via GitHub API
+async function fetchAttachList(folder) {
+    const cacheKey = '_list_' + folder;
+    if (ATTACH_CACHE[cacheKey]) return ATTACH_CACHE[cacheKey];
+    try {
+        const resp = await fetch(`https://api.github.com/repos/CakeBoxDeveloper/Psy/contents/attaches/${folder}`);
+        const files = await resp.json();
+        const ids = files
+            .filter(f => f.name.endsWith('.json'))
+            .map(f => f.name.replace('.json', ''));
+        ATTACH_CACHE[cacheKey] = ids;
+        return ids;
+    } catch (e) {
+        console.warn('[Attach] Failed to fetch list for', folder, e);
+        return [];
+    }
+} // id → attach object
 
 async function loadAttach(id) {
     if (ATTACH_CACHE[id]) return ATTACH_CACHE[id];
@@ -2357,14 +2353,14 @@ function showAttachInChat(attach, save = true, modelKey = null) {
 const _sentAttaches = new Set();
 
 async function maybeSendAttach(modelKey) {
-    if (curModel === 'consilium') return; // no attaches in consilium
-    if (Math.random() > 0.15) return;    // 15% chance
+    if (curModel === 'consilium') return;
+    if (Math.random() > 0.15) return;
 
     // Pick random type: 60% parable, 40% test
     const useParable = Math.random() < 0.6;
-    const pool = useParable ? ATTACH_IDS.parables : ATTACH_IDS.tests;
+    const folder = useParable ? 'parables' : 'tests';
 
-    // Filter out already sent this session
+    const pool = await fetchAttachList(folder);
     const available = pool.filter(id => !_sentAttaches.has(id));
     if (!available.length) return;
 
@@ -2374,7 +2370,6 @@ async function maybeSendAttach(modelKey) {
     const attach = await loadAttach(id);
     if (!attach) return;
 
-    // Small delay so attach appears after the AI message
     setTimeout(() => {
         showAttachInChat(attach, true, modelKey);
     }, 600);
