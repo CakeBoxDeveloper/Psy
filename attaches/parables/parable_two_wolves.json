@@ -1,0 +1,9 @@
+{
+  "id": "parable_two_wolves",
+  "type": "parable",
+  "title": "Два волка",
+  "desc": "Притча",
+  "icon": "https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/56ff037b532d6b8dca5e28ef7a83aff38c7c43d8/Attach5.svg",
+  "image": "https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/cae7db661ff32a9a6226dd3ed9403708b4dcfac7/Ruins2.svg",
+  "text": "Однажды старый индеец рассказал своему внуку о борьбе, которая происходит внутри каждого человека.\n\n— Внутри меня борются два волка. Один — злой. Он полон зависти, жадности, гордыни, лжи и эгоизма. Другой — добрый. Он несёт в себе мир, любовь, надежду, доброту и верность.\n\nВнук задумался, а потом спросил:\n\n— Дедушка, а какой волк побеждает?\n\nСтарик ответил тихо:\n\n— Тот, которого ты кормишь."
+}
