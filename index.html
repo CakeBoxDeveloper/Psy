@@ -596,8 +596,11 @@ body.light .test-modal-footer{border-top-color:rgba(40,28,20,0.1);}
     transition:all 0.15s;
 }
 .test-btn-save:hover{background:rgba(210,190,165,0.2);color:rgba(210,190,165,1);}
+.test-btn-save:disabled{opacity:0.35;cursor:not-allowed;}
+.test-btn-save:disabled:hover{background:rgba(210,190,165,0.12);color:rgba(210,190,165,0.8);}
 body.light .test-btn-save{background:rgba(60,45,35,0.08);border-color:rgba(60,45,35,0.18);color:rgba(40,28,20,0.7);}
 body.light .test-btn-save:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,20);}
+body.light .test-btn-save:disabled{opacity:0.35;cursor:not-allowed;}
 .test-btn-reset{
     flex:1;height:40px;
     background:rgba(210,190,165,0.12);
@@ -2352,6 +2355,10 @@ function openTestModal(attach) {
     });
 
     document.getElementById('testOverlay').classList.add('show');
+
+    // Set save button state based on existing answers
+    const saveBtn = document.getElementById('testBtnSave');
+    saveBtn.disabled = Object.keys(testAnswers).length < attach.questions.length;
 }
 
 // ── Parable modal ─────────────────────────────────────────
@@ -2397,6 +2404,10 @@ function selectTestOption(questionId, optionIndex, btn) {
     btn.classList.add('selected');
     if (currentTest) {
         localStorage.setItem('test_answers_' + currentTest.id, JSON.stringify(testAnswers));
+        // Enable save button when all questions answered
+        const answered = Object.keys(testAnswers).length;
+        const saveBtn = document.getElementById('testBtnSave');
+        saveBtn.disabled = answered < currentTest.questions.length;
     }
 }
 
@@ -2409,19 +2420,13 @@ document.getElementById('testBtnReset').addEventListener('click', () => {
         const opts = document.getElementById('opts_' + q.id);
         if (opts) opts.querySelectorAll('.test-option').forEach(b => b.classList.remove('selected'));
     });
+    document.getElementById('testBtnSave').disabled = true;
 });
 
 // Save test results / close parable
 document.getElementById('testBtnSave').addEventListener('click', async () => {
-    // Parable — just close (footer is hidden, but just in case)
     if (!currentTest) {
         closeTestModal();
-        return;
-    }
-
-    const answered = Object.keys(testAnswers).length;
-    if (answered < currentTest.questions.length) {
-        showToast(`Ответь на все вопросы (${answered}/${currentTest.questions.length})`, { duration: 3000 });
         return;
     }
 
@@ -2443,18 +2448,17 @@ document.getElementById('testBtnSave').addEventListener('click', async () => {
     }
 
     // Close modal
-    document.getElementById('testOverlay').classList.remove('show');
+    closeTestModal();
 
-    // Send results to AI as a message
-    const resultsText = `Я прошёл тест «${currentTest.title}». Вот мои ответы:\n` +
-        results.map((r, i) => `${i + 1}. ${r.question}\n→ ${r.answer}`).join('\n\n');
+    // Send results directly to AI (hidden from chat UI)
+    const resultsText = `Пользователь прошёл тест «${currentTest.title}». Результаты:\n` +
+        results.map((r, i) => `${i + 1}. ${r.question}\n→ ${r.answer}`).join('\n\n') +
+        `\n\nПроанализируй ответы и дай развёрнутый комментарий.`;
 
-    addMsg(resultsText, 'user', true);
     chatHistory.push({ role: 'user', content: resultsText });
-
-    const t = showTyping();
     isTyping = true;
-    handleRegularMode(resultsText, t, 1200);
+    const t = showTyping();
+    handleRegularMode(resultsText, t, 800);
 });
 
 // Close test modal on overlay click
