@@ -22,7 +22,7 @@ html,body{width:100%;height:100%;background:rgb(28,23,20);font-family:'Inter',-a
 .scene{width:90%;max-width:420px;height:min(90vh,90dvh);perspective:1200px;}
 .flipper{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.65s cubic-bezier(0.4,0,0.2,1);}
 .flipper.flipped{transform:rotateY(180deg);}
-.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;overflow:hidden;}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;}
 body.flipping{overflow:hidden;}
 
 /* ── FRONT ── */
@@ -124,6 +124,7 @@ body.flipping{overflow:hidden;}
     background:rgb(232,220,200);
     transform:rotateY(180deg);
     display:flex;flex-direction:column;padding:28px 24px 0;
+    border-radius:12px;overflow:hidden;
 }
 
 /* Back header */
@@ -474,19 +475,32 @@ body.flipping{overflow:hidden;}
 /* ── iOS touch scroll fix for preserve-3d containers ── */
 (function() {
     let startY = 0;
+    let startX = 0;
+    let scrollEl = null;
+
     document.addEventListener('touchstart', e => {
         startY = e.touches[0].clientY;
+        startX = e.touches[0].clientX;
+        scrollEl = e.target.closest('.feats-scroll');
     }, { passive: true });
 
     document.addEventListener('touchmove', e => {
-        const el = e.target.closest('.feats-scroll');
-        if (!el) return;
-        const delta = startY - e.touches[0].clientY;
-        const atTop = el.scrollTop === 0;
-        const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-        if ((delta < 0 && atTop) || (delta > 0 && atBottom)) return;
-        e.stopPropagation();
-    }, { passive: true });
+        if (!scrollEl) return;
+        const dy = startY - e.touches[0].clientY;
+        const dx = startX - e.touches[0].clientX;
+        // Только вертикальный скролл
+        if (Math.abs(dx) > Math.abs(dy)) return;
+        const atTop = scrollEl.scrollTop <= 0;
+        const atBottom = scrollEl.scrollTop + scrollEl.clientHeight >= scrollEl.scrollHeight - 1;
+        // Не блокируем если есть куда скроллить
+        if (!(dy < 0 && atTop) && !(dy > 0 && atBottom)) {
+            scrollEl.scrollTop += dy;
+            startY = e.touches[0].clientY;
+        }
+        e.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener('touchend', () => { scrollEl = null; }, { passive: true });
 })();
 
 /* ── Page transitions ── */
