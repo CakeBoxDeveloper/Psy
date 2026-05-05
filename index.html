@@ -2111,7 +2111,8 @@ function initChat() {
     if (raw) {
         const data = JSON.parse(raw);
         if (Date.now() - data.ts < 86400000) {
-            data.msgs.forEach(m => {
+            // Restore all messages preserving order — attach uses placeholder
+            const restorePromises = data.msgs.map(m => {
                 if (m.s === 'premium') {
                     const premDiv = document.createElement('div');
                     premDiv.className = 'message ai';
@@ -2124,20 +2125,47 @@ function initChat() {
                         </div>
                     </div>`;
                     chatArea.appendChild(premDiv);
+                    return Promise.resolve();
                 } else if (m.s === 'attach') {
-                    loadAttach(m.attachId).then(attach => {
-                        if (attach) showAttachInChat(attach, false, m.attachModel || null);
+                    // Create placeholder div immediately to preserve order
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'message ai';
+                    placeholder.style.cssText = 'justify-content:center;';
+                    chatArea.appendChild(placeholder);
+                    return loadAttach(m.attachId).then(attach => {
+                        if (!attach) { placeholder.remove(); return; }
+                        // Build attach card HTML in-place
+                        const modelName = m.attachModel && models[m.attachModel] ? models[m.attachModel].name : null;
+                        const sig = modelName
+                            ? `<div class="attach-sig">Модель ${modelName} отправила вложение</div>`
+                            : '';
+                        const icon = attach.icon || 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/56ff037b532d6b8dca5e28ef7a83aff38c7c43d8/Attach5.svg';
+                        placeholder.dataset.attachId = attach.id;
+                        if (m.attachModel) placeholder.dataset.modelKey = m.attachModel;
+                        placeholder.innerHTML = `<div class="attach-card" onclick="openAttach('${attach.id}')">
+                            <div class="attach-card-body">
+                                <img src="${icon}" alt="">
+                                <div class="attach-card-title">${attach.title}</div>
+                                <div class="attach-card-desc">${attach.desc}</div>
+                            </div>
+                            ${sig}
+                        </div>`;
                     });
                 } else if (m.m === 'consilium' && m.h) {
                     addMsgHTML(m.h, m.s, false, 'consilium', 'Для этого ответа были использованы все модели');
+                    return Promise.resolve();
                 } else {
                     addMsg(m.t, m.s, false, m.m || null);
-                }
-                if (m.s !== 'premium' && m.s !== 'attach') {
-                    chatHistory.push({role: m.s === 'user' ? 'user' : 'assistant', content: m.t});
+                    if (m.s !== 'premium') {
+                        chatHistory.push({role: m.s === 'user' ? 'user' : 'assistant', content: m.t});
+                    }
+                    return Promise.resolve();
                 }
             });
-            setTimeout(updateChatMask, 50);
+            Promise.all(restorePromises).then(() => {
+                chatArea.scrollTop = chatArea.scrollHeight;
+                setTimeout(updateChatMask, 50);
+            });
             return;
         }
         localStorage.removeItem(KEY_CHAT);
@@ -2248,7 +2276,29 @@ function showTyping() {
 // ── Attach registry — loads JSON files from GitHub ───────
 
 const ATTACH_BASE = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/attaches';
-const ATTACH_CACHE = {}; // id → attach object
+const ATTACH_CACHE = {};
+
+// All available attach IDs — add new ones here as you create files
+const ATTACH_IDS = {
+    tests: [
+        'self_awareness_01',
+        'temperament_eysenck',
+        'attachment_style',
+        'emotional_intelligence'
+    ],
+    parables: [
+        'parable_two_wolves',
+        'parable_butterfly',
+        'parable_horse',
+        'parable_empty_cup',
+        'parable_pencil',
+        'parable_spider',
+        'parable_salt',
+        'parable_window',
+        'parable_eagle',
+        'parable_monk'
+    ]
+}; // id → attach object
 
 async function loadAttach(id) {
     if (ATTACH_CACHE[id]) return ATTACH_CACHE[id];
@@ -2300,6 +2350,34 @@ function showAttachInChat(attach, save = true, modelKey = null) {
     chatArea.scrollTop = chatArea.scrollHeight;
     if (chatArea._updateMask) chatArea._updateMask();
     if (save) saveChat();
+}
+
+// Maybe send a random attach after AI response (15% chance)
+// Tracks sent attaches per session to avoid repeats
+const _sentAttaches = new Set();
+
+async function maybeSendAttach(modelKey) {
+    if (curModel === 'consilium') return; // no attaches in consilium
+    if (Math.random() > 0.15) return;    // 15% chance
+
+    // Pick random type: 60% parable, 40% test
+    const useParable = Math.random() < 0.6;
+    const pool = useParable ? ATTACH_IDS.parables : ATTACH_IDS.tests;
+
+    // Filter out already sent this session
+    const available = pool.filter(id => !_sentAttaches.has(id));
+    if (!available.length) return;
+
+    const id = available[Math.floor(Math.random() * available.length)];
+    _sentAttaches.add(id);
+
+    const attach = await loadAttach(id);
+    if (!attach) return;
+
+    // Small delay so attach appears after the AI message
+    setTimeout(() => {
+        showAttachInChat(attach, true, modelKey);
+    }, 600);
 }
 
 // Update attach signature once oracle resolves the model
@@ -2627,6 +2705,7 @@ function handleRegularMode(text, typingIndicator, thinkDelay) {
         chatHistory.push({role: 'assistant', content: reply});
         addMsg(reply, 'ai', true, curModel);
         saveChat();
+        maybeSendAttach(curModel);
     })
     .catch((err) => {
         console.error('[API] fetch error:', err);
@@ -2695,6 +2774,7 @@ async function handleOracleMode(text, typingIndicator, thinkDelay) {
             chatArea.scrollTop = chatArea.scrollHeight;
             if (chatArea._updateMask) chatArea._updateMask();
             saveChat();
+            maybeSendAttach(validModel);
         } catch (err) {
             typingIndicator.remove();
             isTyping = false;
