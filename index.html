@@ -228,21 +228,35 @@ body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%)
 .bubble-sig{display:block;margin:8px -12px 0;padding:6px 12px 0;border-top:1px solid rgba(210,190,165,0.15);font-size:11px;color:rgba(210,190,165,0.35);text-align:center;font-style:normal;}
 .light .bubble-sig{color:rgba(40,28,20,0.65);border-top-color:rgba(40,28,20,0.2);}
 
-/* TTS button — disabled
-.tts-btn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border:none;background:none;cursor:pointer;padding:0;border-radius:4px;opacity:0.4;transition:opacity 0.15s;vertical-align:middle;margin-left:6px;flex-shrink:0;}
-.tts-btn:hover{opacity:0.8;}
-.tts-btn.playing{opacity:1;}
-.tts-btn svg{width:14px;height:14px;}
+/* TTS button */
+.tts-btn{
+    position:absolute;bottom:34px;right:4px;
+    width:24px;height:24px;
+    border:none;background:rgba(255,255,255,0.08);cursor:pointer;padding:0;
+    border-radius:6px;opacity:0.5;
+    transition:opacity 0.15s,background 0.15s;
+    flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+}
+.tts-btn:hover{opacity:1;background:rgba(255,255,255,0.14);}
+.tts-btn.playing{opacity:1;background:rgba(210,190,165,0.2);}
+.tts-btn img{width:12px;height:12px;display:block;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
 .tts-btn .tts-icon-play{display:block;}
 .tts-btn .tts-icon-stop{display:none;}
 .tts-btn.playing .tts-icon-play{display:none;}
 .tts-btn.playing .tts-icon-stop{display:block;}
-.bubble-footer{display:flex;align-items:center;justify-content:space-between;margin:6px -12px 0;padding:5px 12px 0;border-top:1px solid rgba(210,190,165,0.15);}
-.light .bubble-footer{border-top-color:rgba(40,28,20,0.2);}
-.bubble-footer .bubble-sig{margin:0;padding:0;border:none;flex:1;}
-.bubble-footer .tts-btn svg path,.bubble-footer .tts-btn svg rect{fill:rgba(210,190,165,0.6);}
-.light .bubble-footer .tts-btn svg path,.light .bubble-footer .tts-btn svg rect{fill:rgba(40,28,20,0.5);}
-*/
+.light .tts-btn{background:rgba(60,45,35,0.1);}
+.light .tts-btn:hover{background:rgba(60,45,35,0.18);}
+.light .tts-btn.playing{background:rgba(60,45,35,0.18);}
+.light .tts-btn img{filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);}
+.bubble{position:relative;}
+.bubble-sig-row{
+    display:flex;align-items:center;
+    margin:8px -12px 0;padding:6px 12px 0;
+    border-top:1px solid rgba(210,190,165,0.15);
+}
+.light .bubble-sig-row{border-top-color:rgba(40,28,20,0.2);}
+.bubble-sig-row .bubble-sig{margin:0;padding:0;border:none;flex:1;}
 
 /* Premium activated message */
 .premium-activated{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 16px;background:rgba(255,255,255,0.06);border-radius:12px;text-align:center;width:192px;cursor:pointer;transition:background 0.15s;}
@@ -516,7 +530,7 @@ body.light .attach-sig{color:rgba(40,28,20,0.45);border-top-color:rgba(40,28,20,
 }
 .test-overlay.show{display:flex;}
 .test-modal{
-    width:min(72%,336px);max-height:88vh;max-height:88dvh;
+    width:min(82%,380px);max-height:88vh;max-height:88dvh;
     background:rgb(32,26,22);
     border-radius:12px 12px 0 0;
     display:flex;flex-direction:column;
@@ -2219,6 +2233,11 @@ function saveChat() {
     }
 }
 
+const TTS_BTN = `<button class="tts-btn" title="Озвучить">
+    <img class="tts-icon-play" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/d28f785814378915efa2baf8d268ba2475ef634e/sound-svgrepo-com.svg" alt="">
+    <img class="tts-icon-stop" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/d28f785814378915efa2baf8d268ba2475ef634e/sound-off-svgrepo-com.svg" alt="">
+</button>`;
+
 function addMsg(text, sender, animate, modelKey) {
     const div = document.createElement('div');
     div.className = `message ${sender}`;
@@ -2235,9 +2254,9 @@ function addMsg(text, sender, animate, modelKey) {
         const clean = sigMatch ? lines.slice(0, -1).join('\n').trimEnd() : text.trim();
         b.innerHTML =
             `<span class="bubble-body">${clean.replace(/\n/g,'<br>')}</span>` +
-            `<span class="bubble-sig">Для ответа была использована модель ${m.name}</span>`;
+            `<div class="bubble-sig-row"><span class="bubble-sig">Для ответа была использована модель ${m.name}</span></div>${TTS_BTN}`;
     } else if (sender === 'ai') {
-        b.innerHTML = `<span class="bubble-body">${text.replace(/\n/g,'<br>')}</span>`;
+        b.innerHTML = `<span class="bubble-body">${text.replace(/\n/g,'<br>')}</span>${TTS_BTN}`;
     } else {
         b.textContent = text;
     }
@@ -2763,7 +2782,7 @@ async function handleOracleMode(text, typingIndicator, thinkDelay) {
             div.dataset.modelKey = validModel;
             const b = document.createElement('div');
             b.className = 'bubble';
-            b.innerHTML = `<span class="bubble-body">${reply.replace(/\n/g,'<br>')}</span><span class="bubble-sig">${oracleSig}</span>`;
+            b.innerHTML = `<span class="bubble-body">${reply.replace(/\n/g,'<br>')}</span><div class="bubble-sig-row"><span class="bubble-sig">${oracleSig}</span></div>${TTS_BTN}`;
             div.appendChild(b);
             chatArea.appendChild(div);
             chatArea.scrollTop = chatArea.scrollHeight;
@@ -2930,45 +2949,48 @@ voiceBtn.addEventListener('click', async () => {
     }
 });
 
-/* TTS disabled
-// ── TTS (Web Speech API) ──────────────────────────────────
-let ttsUtterance = null;
+// ── TTS via Google Cloud ──────────────────────────────────
+let ttsAudio = null;
 let ttsActiveBtn = null;
 
 function ttsStop() {
-    window.speechSynthesis.cancel();
+    if (ttsAudio) {
+        ttsAudio.pause();
+        ttsAudio.currentTime = 0;
+        ttsAudio = null;
+    }
     if (ttsActiveBtn) {
         ttsActiveBtn.classList.remove('playing');
         ttsActiveBtn = null;
     }
 }
 
-function ttsSpeak(text, btn) {
+async function ttsSpeak(text, btn, modelKey) {
     ttsStop();
-    if (!window.speechSynthesis) return;
-
-    ttsUtterance = new SpeechSynthesisUtterance(text);
-    ttsUtterance.lang = 'ru-RU';
-    ttsUtterance.rate = 0.95;
-    ttsUtterance.pitch = 1;
-
-    // Try to find a Russian voice
-    const voices = window.speechSynthesis.getVoices();
-    const ruVoice = voices.find(v => v.lang.startsWith('ru'));
-    if (ruVoice) ttsUtterance.voice = ruVoice;
-
-    ttsUtterance.onend = () => {
-        if (ttsActiveBtn) ttsActiveBtn.classList.remove('playing');
-        ttsActiveBtn = null;
-    };
-    ttsUtterance.onerror = () => {
-        if (ttsActiveBtn) ttsActiveBtn.classList.remove('playing');
-        ttsActiveBtn = null;
-    };
-
     btn.classList.add('playing');
     ttsActiveBtn = btn;
-    window.speechSynthesis.speak(ttsUtterance);
+
+    try {
+        const resp = await fetch(`${API_BASE}/api/tts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text, modelKey: modelKey || 'tara' })
+        });
+        const data = await resp.json();
+        if (!data.audio) {
+            console.warn('[TTS] No audio in response:', data);
+            ttsStop();
+            return;
+        }
+
+        ttsAudio = new Audio(`data:audio/mp3;base64,${data.audio}`);
+        ttsAudio.onended = () => ttsStop();
+        ttsAudio.onerror = () => ttsStop();
+        ttsAudio.play();
+    } catch (e) {
+        console.warn('[TTS] error:', e);
+        ttsStop();
+    }
 }
 
 // Delegate click on TTS buttons
@@ -2976,20 +2998,27 @@ chatArea.addEventListener('click', e => {
     const btn = e.target.closest('.tts-btn');
     if (!btn) return;
     e.stopPropagation();
+
+    if (!isPremium) {
+        showPremiumToast();
+        return;
+    }
+
     if (btn.classList.contains('playing')) {
         ttsStop();
     } else {
-        const text = btn.dataset.text || btn.closest('.bubble')?.querySelector('.bubble-body')?.textContent || '';
-        if (text) ttsSpeak(text, btn);
+        const msgEl = btn.closest('.message');
+        const modelKey = msgEl?.dataset.modelKey || 'tara';
+        const text = btn.closest('.bubble')?.querySelector('.bubble-body')?.textContent || '';
+        if (text) ttsSpeak(text, btn, modelKey);
     }
 });
 
-// Stop TTS when leaving chat screen
+// Stop TTS when leaving chat
 document.addEventListener('visibilitychange', () => {
     if (document.hidden) ttsStop();
 });
 // ─────────────────────────────────────────────────────────
-*/
 
 // Loader
 const LOADER_QUOTES = [
