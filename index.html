@@ -2122,8 +2122,9 @@ function initChat() {
                     </div>`;
                     chatArea.appendChild(premDiv);
                 } else if (m.s === 'attach') {
-                    const attach = m.attachId === TEST_ATTACH.id ? TEST_ATTACH : null;
-                    if (attach) showAttachInChat(attach, false, m.attachModel || null);
+                    loadAttach(m.attachId).then(attach => {
+                        if (attach) showAttachInChat(attach, false, m.attachModel || null);
+                    });
                 } else if (m.m === 'consilium' && m.h) {
                     addMsgHTML(m.h, m.s, false, 'consilium', 'Для этого ответа были использованы все модели');
                 } else {
@@ -2182,7 +2183,7 @@ function saveChat() {
             messages: msgs,
             modelsUsed,
             survey: surveyRaw ? JSON.parse(surveyRaw) : [],
-            msgCount: msgs.length
+            msgCount: msgs.filter(m => m.s === 'user' || m.s === 'ai').length
         });
     }
 }
@@ -2241,59 +2242,32 @@ function showTyping() {
 
 // ── Attach / Test system ─────────────────────────────────
 
-// Sample test data (will be replaced by AI-generated content)
-const TEST_ATTACH = {
-    id: 'test_self_awareness_01',
-    type: 'test',
-    title: 'Тест на самопознание',
-    desc: 'Пройди тест',
-    questions: [
-        {
-            id: 'q1', text: 'Когда ты сталкиваешься с трудной ситуацией, твоя первая реакция — это...',
-            options: ['Анализирую причины и ищу решение', 'Чувствую тревогу и откладываю на потом', 'Обращаюсь за советом к близким', 'Действую интуитивно, не раздумывая']
-        },
-        {
-            id: 'q2', text: 'Как ты обычно относишься к своим ошибкам?',
-            options: ['Анализирую и делаю выводы', 'Долго переживаю и виню себя', 'Стараюсь забыть как можно скорее', 'Воспринимаю как часть пути']
-        },
-        {
-            id: 'q3', text: 'Что для тебя важнее всего в отношениях с людьми?',
-            options: ['Честность и открытость', 'Взаимная поддержка', 'Общие интересы и ценности', 'Свобода и уважение границ']
-        },
-        {
-            id: 'q4', text: 'Как ты чаще всего принимаешь важные решения?',
-            options: ['Взвешиваю все за и против', 'Слушаю своё сердце', 'Советуюсь с другими', 'Жду, пока ситуация разрешится сама']
-        },
-        {
-            id: 'q5', text: 'Что тебя больше всего истощает?',
-            options: ['Конфликты и напряжение', 'Монотонность и рутина', 'Неопределённость и неизвестность', 'Ощущение, что меня не понимают']
-        },
-        {
-            id: 'q6', text: 'Как ты относишься к переменам в жизни?',
-            options: ['Воспринимаю как возможность', 'Принимаю, но с трудом', 'Стараюсь избегать', 'Зависит от ситуации']
-        },
-        {
-            id: 'q7', text: 'Что лучше всего описывает твой внутренний диалог?',
-            options: ['Конструктивный и поддерживающий', 'Критичный и требовательный', 'Хаотичный и непоследовательный', 'Спокойный и наблюдательный']
-        },
-        {
-            id: 'q8', text: 'Когда ты чувствуешь себя наиболее живым?',
-            options: ['В моменты творчества и вдохновения', 'В общении с близкими людьми', 'Когда достигаю поставленных целей', 'В тишине и уединении']
-        },
-        {
-            id: 'q9', text: 'Как ты справляешься с негативными эмоциями?',
-            options: ['Проговариваю их вслух или записываю', 'Переключаюсь на активность', 'Жду, пока пройдут сами', 'Ищу причину и работаю с ней']
-        },
-        {
-            id: 'q10', text: 'Что для тебя означает "быть собой"?',
-            options: ['Действовать согласно своим ценностям', 'Не зависеть от чужого мнения', 'Выражать свои чувства открыто', 'Принимать себя со всеми недостатками']
-        }
-    ]
-};
+// ── Attach registry — loads JSON files from GitHub ───────
+
+const ATTACH_BASE = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/main/attaches';
+const ATTACH_CACHE = {}; // id → attach object
+
+async function loadAttach(id) {
+    if (ATTACH_CACHE[id]) return ATTACH_CACHE[id];
+    // Determine subfolder by id prefix
+    const folder = id.startsWith('parable_') ? 'parables' : 'tests';
+    const url = `${ATTACH_BASE}/${folder}/${id}.json`;
+    try {
+        const data = await fetch(url).then(r => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.json();
+        });
+        ATTACH_CACHE[id] = data;
+        return data;
+    } catch (e) {
+        console.warn(`[Attach] Failed to load ${id}:`, e);
+        return null;
+    }
+}
 
 // Current test state
 let currentTest = null;
-let testAnswers = {}; // { questionId: optionIndex }
+let testAnswers = {};
 
 // Show attach card in chat
 function showAttachInChat(attach, save = true, modelKey = null) {
@@ -2308,9 +2282,11 @@ function showAttachInChat(attach, save = true, modelKey = null) {
         ? `<div class="attach-sig">Модель ${modelName} отправила вложение</div>`
         : `<div class="attach-sig attach-sig-pending" style="opacity:0;"></div>`;
 
-    div.innerHTML = `<div class="attach-card" onclick="openTestModal('${attach.id}')">
+    const icon = attach.icon || 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/56ff037b532d6b8dca5e28ef7a83aff38c7c43d8/Attach5.svg';
+
+    div.innerHTML = `<div class="attach-card" onclick="openAttach('${attach.id}')">
         <div class="attach-card-body">
-            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/56ff037b532d6b8dca5e28ef7a83aff38c7c43d8/Attach5.svg" alt="">
+            <img src="${icon}" alt="">
             <div class="attach-card-title">${attach.title}</div>
             <div class="attach-card-desc">${attach.desc}</div>
         </div>
@@ -2331,7 +2307,6 @@ function resolveAttachSig(modelKey) {
     pending.classList.remove('attach-sig-pending');
     pending.style.opacity = '1';
     pending.textContent = `Модель ${models[modelKey].name} отправила вложение`;
-    // Update stored modelKey on parent message
     const msgEl = pending.closest('.message');
     if (msgEl) {
         msgEl.dataset.modelKey = modelKey;
@@ -2339,17 +2314,23 @@ function resolveAttachSig(modelKey) {
     }
 }
 
-// Open test modal
-function openTestModal(testId) {
-    const attach = testId === TEST_ATTACH.id ? TEST_ATTACH : null;
-    if (!attach) return;
+// Open attach by id — loads JSON then routes by type
+async function openAttach(id) {
+    const attach = await loadAttach(id);
+    if (!attach) {
+        showToast('Не удалось загрузить вложение', { duration: 3000 });
+        return;
+    }
+    if (attach.type === 'test') openTestModal(attach);
+    else if (attach.type === 'parable') openParableModal(attach);
+}
+
+// ── Test modal ────────────────────────────────────────────
+
+function openTestModal(attach) {
     currentTest = attach;
+    testAnswers = JSON.parse(localStorage.getItem('test_answers_' + attach.id) || '{}');
 
-    // Load saved answers from localStorage
-    const savedKey = 'test_answers_' + testId;
-    testAnswers = JSON.parse(localStorage.getItem(savedKey) || '{}');
-
-    // Render
     document.getElementById('testModalTitle').textContent = attach.title;
     document.getElementById('testModalSubtitle').textContent = `${attach.questions.length} вопросов`;
 
@@ -2373,16 +2354,40 @@ function openTestModal(testId) {
     document.getElementById('testOverlay').classList.add('show');
 }
 
+// ── Parable modal ─────────────────────────────────────────
+
+function openParableModal(attach) {
+    document.getElementById('testModalTitle').textContent = attach.title;
+    document.getElementById('testModalSubtitle').textContent = '';
+
+    const body = document.getElementById('testModalBody');
+    body.innerHTML = '';
+
+    if (attach.image) {
+        const img = document.createElement('img');
+        img.src = attach.image;
+        img.style.cssText = 'width:100%;max-width:200px;margin:0 auto 20px;display:block;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);';
+        body.appendChild(img);
+    }
+
+    const text = document.createElement('div');
+    text.style.cssText = 'font-size:13px;color:rgba(210,190,165,0.75);line-height:1.9;white-space:pre-wrap;padding-bottom:8px;';
+    text.textContent = attach.text || '';
+    body.appendChild(text);
+
+    // Hide footer entirely for parables
+    document.getElementById('testModal').querySelector('.test-modal-footer').style.display = 'none';
+    currentTest = null;
+
+    document.getElementById('testOverlay').classList.add('show');
+}
+
 // Select option
 function selectTestOption(questionId, optionIndex, btn) {
     testAnswers[questionId] = optionIndex;
-
-    // Update UI
     const opts = document.getElementById('opts_' + questionId);
     opts.querySelectorAll('.test-option').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
-
-    // Save to localStorage
     if (currentTest) {
         localStorage.setItem('test_answers_' + currentTest.id, JSON.stringify(testAnswers));
     }
@@ -2393,16 +2398,19 @@ document.getElementById('testBtnReset').addEventListener('click', () => {
     if (!currentTest) return;
     testAnswers = {};
     localStorage.removeItem('test_answers_' + currentTest.id);
-    // Re-render options
     currentTest.questions.forEach(q => {
         const opts = document.getElementById('opts_' + q.id);
         if (opts) opts.querySelectorAll('.test-option').forEach(b => b.classList.remove('selected'));
     });
 });
 
-// Save test results
+// Save test results / close parable
 document.getElementById('testBtnSave').addEventListener('click', async () => {
-    if (!currentTest) return;
+    // Parable — just close (footer is hidden, but just in case)
+    if (!currentTest) {
+        closeTestModal();
+        return;
+    }
 
     const answered = Object.keys(testAnswers).length;
     if (answered < currentTest.questions.length) {
@@ -2410,7 +2418,6 @@ document.getElementById('testBtnSave').addEventListener('click', async () => {
         return;
     }
 
-    // Build results object
     const results = currentTest.questions.map(q => ({
         question: q.text,
         answer: q.options[testAnswers[q.id]]
@@ -2456,6 +2463,8 @@ function closeTestModal() {
     setTimeout(() => {
         document.getElementById('testOverlay').classList.remove('show');
         modal.style.animation = '';
+        // Restore footer for next open
+        modal.querySelector('.test-modal-footer').style.display = '';
     }, 340);
 }
 
@@ -2510,8 +2519,22 @@ function send() {
             showToast('Вложения недоступны в режиме Консилиум', { duration: 3000 });
             return;
         }
-        // For oracle mode — modelKey will be resolved later, pass 'auto' as placeholder
-        showAttachInChat(TEST_ATTACH, true, curModel === 'auto' ? 'auto' : curModel);
+        loadAttach('self_awareness_01').then(attach => {
+            if (attach) showAttachInChat(attach, true, curModel === 'auto' ? 'auto' : curModel);
+        });
+        return;
+    }
+
+    // Check for parable command
+    if (text === 'parable') {
+        msgInput.value = '';
+        if (curModel === 'consilium') {
+            showToast('Вложения недоступны в режиме Консилиум', { duration: 3000 });
+            return;
+        }
+        loadAttach('parable_two_wolves').then(attach => {
+            if (attach) showAttachInChat(attach, true, curModel === 'auto' ? 'auto' : curModel);
+        });
         return;
     }
 
