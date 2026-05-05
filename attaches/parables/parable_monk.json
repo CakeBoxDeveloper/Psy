@@ -1,0 +1,9 @@
+{
+  "id": "parable_monk",
+  "type": "parable",
+  "title": "Монах и скорпион",
+  "desc": "Притча",
+  "icon": "https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/56ff037b532d6b8dca5e28ef7a83aff38c7c43d8/Attach5.svg",
+  "image": "https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/cae7db661ff32a9a6226dd3ed9403708b4dcfac7/Ruins2.svg",
+  "text": "Монах увидел тонущего скорпиона и вытащил его из воды. Скорпион ужалил его.\n\nМонах снова вытащил его — снова был ужален.\n\nПрохожий наблюдал за этим и спросил:\n— Зачем ты продолжаешь? Он всё равно жалит тебя.\n\n— Жалить — его природа, — ответил монах. — Спасать — моя.\n\nПочему я должен менять свою природу только потому, что он не может изменить свою?"
+}
