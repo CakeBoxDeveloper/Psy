@@ -5,12 +5,12 @@ const CORS = {
 };
 
 const VOICES = {
-    tara:   { name: 'ru-RU-Neural2-A', pitch: 1.5,  speakingRate: 0.92 }, // мистичный, чуть выше
-    karma:  { name: 'ru-RU-Wavenet-A', pitch: -1.5, speakingRate: 0.88 }, // глубокий, медленный
-    astra:  { name: 'ru-RU-Neural2-A', pitch: 0.5,  speakingRate: 1.0  }, // чёткий, уверенный
-    eva:    { name: 'ru-RU-Wavenet-C', pitch: -0.5, speakingRate: 0.87 }, // мягкий, медитативный
-    psyche: { name: 'ru-RU-Wavenet-A', pitch: 0,    speakingRate: 0.93 }, // внимательный, ровный
-    gera:   { name: 'ru-RU-Neural2-A', pitch: 2,    speakingRate: 1.02 }, // аналитичный, живой
+    tara:   { name: 'ru-RU-Wavenet-C', pitch: 2,    speakingRate: 0.92 },
+    karma:  { name: 'ru-RU-Wavenet-A', pitch: -2,   speakingRate: 0.88 },
+    astra:  { name: 'ru-RU-Wavenet-E', pitch: 1,    speakingRate: 1.0  },
+    eva:    { name: 'ru-RU-Wavenet-C', pitch: -1,   speakingRate: 0.87 },
+    psyche: { name: 'ru-RU-Wavenet-A', pitch: 0,    speakingRate: 0.93 },
+    gera:   { name: 'ru-RU-Wavenet-E', pitch: 2.5,  speakingRate: 1.02 },
 };
 
 export default async function handler(req, res) {
