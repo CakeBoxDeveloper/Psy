@@ -155,7 +155,8 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .fcustom-option{padding:9px 12px;font-size:12px;color:rgba(210,190,165,0.85);cursor:pointer;transition:background 0.1s;}
 .fcustom-option:hover{background:rgba(255,255,255,0.06);}
 .fcustom-option.selected{background:rgba(255,255,255,0.08);color:rgba(210,190,165,1);}
-.submit-btn{width:100%;height:42px;background:rgb(55,46,40);border:none;color:rgb(210,190,165);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-family:'Inter',sans-serif;transition:all 0.15s;margin-top:auto;}
+.submit-btn{width:100%;height:42px;background:rgb(55,46,40);border:none;color:rgb(210,190,165);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-family:'Inter',sans-serif;transition:all 0.15s;margin-top:auto;position:relative;overflow:hidden;}
+.submit-btn::after{content:'';position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.08) 50%,transparent 80%);animation:shimmer 3s ease-in-out infinite;}
 .submit-btn:hover{background:rgb(65,54,47);}
 .submit-btn:active{transform:scale(0.98);}
 .submit-btn img{width:16px;height:16px;filter:invert(80%) sepia(20%) saturate(300%) hue-rotate(10deg) brightness(95%);}
@@ -685,7 +686,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
                 <div><div class="flabel">Есть ли у тебя конкретный вопрос?</div>
                 <div class="fcustom-wrap" data-name="question">
                   <button type="button" class="fcustom-trigger" data-placeholder="Выбери вариант">Выбери вариант<svg class="fcustom-arrow" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="rgba(210,190,165,0.6)" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></button>
-                  <div class="fcustom-dropdown"><div class="fcustom-option" data-value="Да, есть чёткий вопрос">Да, есть чёткий вопрос</div><div class="fcustom-option" data-value="Скорее ощущение, чем вопрос">Скорее ощущение, чем вопрос</div><div class="fcustom-option" data-value="Хочу просто поговорить">Хочу просто поговорить</div><div class="fcustom-option" data-value="Не знаю с чего начать">Не знаю с чего начать</div></div>
+                  <div class="fcustom-dropdown"><div class="fcustom-option" data-value="Да, есть чёткий вопрос">Да, есть чёткий вопрос</div><div class="fcustom-option" data-value="Скорее ощущение, чем вопрос">Скорее ощущение, чем вопрос</div><div class="fcustom-option" data-value="Хочу просто поговорить">Хочу просто поговорить</div></div>
                   <input type="hidden" class="fselect" value="">
                 </div></div>
             </div>
@@ -877,7 +878,7 @@ body.light .end-summary-btn:hover{background:rgba(60,45,35,0.18);color:rgb(40,28
             Сохранить историю сеанса
         </button>
         <div class="end-inline-notice" id="endInlineNotice" onclick="goToSubscription()">
-            Эта функция доступна с Panacea Plus
+            Доступно с Panacea Plus
             <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg" alt="">
         </div>
     </div>
@@ -2669,7 +2670,7 @@ async function generatePDFDoc({ sessionDate, secInterlude, secContent, secConclu
                     { svg: LOGO, width: 270, marginBottom: 36 },
                     // Key icon — top right corner
                     { svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 610.53 573.64"><path fill="#281C14" fill-rule="evenodd" d="M356.59,105.26l-65.67,24.19,24.19-65.67a35.75,35.75,0,0,0-21.18-45.91c-.83-.31-1.68-.58-2.54-.83L236.56,1.38a35.76,35.76,0,0,0-42.69,20.29L172.55,71.42,147,45.85a35.75,35.75,0,0,0-50.56,0h0L45.85,96.41a35.75,35.75,0,0,0,0,50.56h0l25.57,25.55L21.67,193.85A35.75,35.75,0,0,0,1.38,236.53L17,291.36A35.75,35.75,0,0,0,61.26,315.9c.85-.24,1.69-.51,2.52-.82l65.67-24.19-24.23,65.7A35.75,35.75,0,0,0,126.4,402.5c.84.31,1.69.58,2.55.83L183.77,419a35.76,35.76,0,0,0,42.69-20.3L247.78,349l50.86.29L254.39,305a17.85,17.85,0,0,0-29,5.6l-31.72,74-54.83-15.67,37.59-102a17.89,17.89,0,0,0-23-23l-102,37.55L35.76,226.71l74-31.72a17.87,17.87,0,0,0,5.6-29.06L71.11,121.69l50.57-50.57,44.24,44.24A17.86,17.86,0,0,0,195,109.77l31.72-74,54.82,15.66-37.58,102a17.88,17.88,0,0,0,22.95,23l102-37.59,15.67,54.83-74,31.72A17.86,17.86,0,0,0,305,254.4l69.33,68.54c14-14,14.16-35.61.2-49.58l-25.58-25.57,49.79-21.26A35.76,35.76,0,0,0,419,183.84L403.33,129a35.76,35.76,0,0,0-44.17-24.6C358.29,104.67,357.44,105,356.59,105.26Z"/><path fill="#281C14" d="M464.41,363.47,453,374.92a18.8,18.8,0,0,1-26.59,0h0L316.43,265l24.79-24.75Z"/><path fill="#281C14" d="M563.79,512.83l-50.51,50.51a35.47,35.47,0,0,1-50.1-.11L240.67,340.72,265.42,316,487.93,538.53a.48.48,0,0,0,.61.11L539,488.13a.46.46,0,0,0-.1-.6l-19.88-19.87a16.78,16.78,0,0,1,0-23.73L531.94,431l31.75,31.74A35.46,35.46,0,0,1,563.79,512.83Z"/><path fill="none" stroke="#281C14" stroke-miterlimit="10" stroke-width="35" d="M539.88,447.89l50.25-50.25c6.42-6.42,1.55-18.76-8.37-21.22l-41.54-10.31a15.27,15.27,0,0,1-10.88-10.88L519,313.7c-2.46-9.93-14.8-14.8-21.22-8.38l-50.25,50.21"/><polygon fill="#281C14" fill-rule="evenodd" points="464.41 549.89 250.25 331.14 210.19 401.89 128 386.89 162 270.89 45 302.42 12 218.89 104 185.89 49 121.89 117 54.89 174 92.89 210.19 18.89 305.27 40.89 269 137.89 340 132.89 383 127.89 400 205.89 334 240.22 353 277.89 439 359.89 487 310.33 526 315.98 540.22 366.11 593.03 392.89 548 463.89 553 504.89 487 567.89 464.41 549.89"/></svg>`,
-                      width: 58, absolutePosition: { x: 482, y: 61 }, opacity: 0.3 },
+                      width: 49, absolutePosition: { x: 499, y: 66 }, opacity: 0.3 },
                     // Dashed disclaimer
                     { stack: [
                         { svg: `<svg width="${W}" height="${DH}" xmlns="http://www.w3.org/2000/svg"><rect width="${W}" height="${DH}" rx="6" fill="none" stroke="${INK}" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.3"/></svg>`, width: W, marginBottom: -DH },
