@@ -93,7 +93,7 @@ body.flipping{overflow:hidden;}
 
 /* Features */
 .feats-outer{flex:1;min-height:0;position:relative;}
-.feats-scroll{height:100%;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:4px;padding:2px 0;}
+.feats-scroll{height:100%;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:4px;padding:2px 0;-webkit-overflow-scrolling:touch;touch-action:pan-y;}
 .feats-scroll::-webkit-scrollbar{display:none;}
 .feats-inner{display:flex;flex-direction:column;gap:4px;}
 .fade-top,.fade-bottom{position:absolute;left:0;right:0;height:28px;pointer-events:none;z-index:1;transition:opacity 0.2s;}
@@ -145,8 +145,8 @@ body.flipping{overflow:hidden;}
     background:linear-gradient(105deg,transparent 20%,rgba(80,50,25,0.1) 50%,transparent 80%);
     animation:shimmer 3s ease-in-out infinite;
 }
-.pay-order-name{font-size:13px;font-weight:600;color:rgb(55,38,22);}
-.pay-order-period{font-size:12px;font-weight:600;color:rgb(55,38,22);}
+.pay-order-name{font-size:13px;font-weight:600;color:rgb(55,38,22);white-space:nowrap;}
+.pay-order-period{font-size:12px;font-weight:600;color:rgb(55,38,22);white-space:nowrap;}
 
 /* Dropdown label */
 .pay-label{font-size:11px;font-weight:600;color:rgb(55,38,22);margin-bottom:6px;flex-shrink:0;}
@@ -214,6 +214,9 @@ body.flipping{overflow:hidden;}
     flex-shrink:0;
     margin:12px 0;
 }
+@media (max-width: 768px) {
+    .pay-qr-box{display:none;}
+}
 #qrCanvas{width:164px;height:164px;display:block;}
 
 /* Address + amount row */
@@ -223,18 +226,50 @@ body.flipping{overflow:hidden;}
     background:rgba(80,50,25,0.07);
     border:1px solid rgba(80,50,25,0.35);
     border-radius:8px;padding:7px 10px;
-    cursor:pointer;transition:background 0.15s,color 0.15s;
+    cursor:pointer;transition:background 0.15s;
     min-width:0;
 }
-.pay-field-label{font-size:9px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(55,38,22,0.5);margin-bottom:2px;}
+.pay-field-label{font-size:9px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(55,38,22,0.5);margin-bottom:2px;display:flex;justify-content:space-between;align-items:center;}
 .pay-field-value{
     font-size:10px;font-family:'SF Mono','Fira Mono',monospace;
     color:rgb(55,38,22);
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .pay-field:hover{background:rgba(80,50,25,0.13);}
-.pay-field.copied .pay-field-value{color:rgb(55,38,22);text-align:center;}
+.pay-field-copied-badge{
+    font-size:9px;font-weight:600;letter-spacing:0.04em;
+    color:rgba(55,38,22,0.5);
+    opacity:0;
+    transition:opacity 0.2s;
+    pointer-events:none;
+    text-transform:uppercase;
+    flex-shrink:0;
+}
+.pay-field.copied .pay-field-copied-badge{opacity:1;}
 .pay-amount-loading{opacity:0.4;font-style:italic;}
+
+/* Copy toast */
+.copy-toast{
+    position:fixed;
+    bottom:80px;
+    left:50%;
+    transform:translateX(-50%) translateY(100px);
+    background:rgb(55,38,22);
+    color:rgb(232,220,200);
+    padding:10px 20px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:600;
+    opacity:0;
+    transition:opacity 0.3s,transform 0.3s;
+    pointer-events:none;
+    z-index:1000;
+    box-shadow:0 4px 12px rgba(0,0,0,0.3);
+}
+.copy-toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
 
 /* Instruction block */
 .pay-instruction{
@@ -404,11 +439,17 @@ body.flipping{overflow:hidden;}
         </div>
         <div class="pay-fields">
           <div class="pay-field" id="fieldAddr" onclick="copyField('addr')">
-            <div class="pay-field-label">Адрес</div>
+            <div class="pay-field-label">
+              <span>Адрес</span>
+              <span class="pay-field-copied-badge">Скопировано</span>
+            </div>
             <div class="pay-field-value" id="fieldAddrVal">—</div>
           </div>
           <div class="pay-field" id="fieldAmt" onclick="copyField('amt')">
-            <div class="pay-field-label">Сумма</div>
+            <div class="pay-field-label">
+              <span>Сумма</span>
+              <span class="pay-field-copied-badge">Скопировано</span>
+            </div>
             <div class="pay-field-value" id="fieldAmtVal">—</div>
           </div>
         </div>
@@ -426,6 +467,8 @@ body.flipping{overflow:hidden;}
 
   </div><!-- /flipper -->
 </div><!-- /scene -->
+
+<div class="copy-toast" id="copyToast">Скопировано</div>
 
 <script>
 /* ── Page transitions ── */
@@ -652,7 +695,16 @@ async function onCoinChange() {
         const base = PRICE_USD / price;
         const fp = getFingerprint(coin) * base;
         const total = base + fp;
-        amtStr = total.toFixed(dec);
+        
+        // Определяем тикер для отображения
+        let ticker = '';
+        if (coin.startsWith('USDT_')) {
+            ticker = 'USDT';
+        } else {
+            ticker = coin;
+        }
+        
+        amtStr = total.toFixed(dec) + ' ' + ticker;
     } else {
         amtStr = '≈ $' + PRICE_USD;
     }
@@ -664,13 +716,11 @@ function copyField(which) {
     const valEl   = document.getElementById(which === 'addr' ? 'fieldAddrVal' : 'fieldAmtVal');
     const text = valEl.textContent;
     if (!text || text === '—' || text === '…') return;
-    const orig = text;
+    
     navigator.clipboard.writeText(text).then(() => {
         fieldEl.classList.add('copied');
-        valEl.textContent = 'Скопировано';
         setTimeout(() => {
             fieldEl.classList.remove('copied');
-            valEl.textContent = orig;
         }, 1800);
     });
 }
