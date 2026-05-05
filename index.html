@@ -2363,15 +2363,22 @@ function openParableModal(attach) {
     const body = document.getElementById('testModalBody');
     body.innerHTML = '';
 
+    const isLight = document.body.classList.contains('light');
+
     if (attach.image) {
         const img = document.createElement('img');
         img.src = attach.image;
-        img.style.cssText = 'width:100%;max-width:200px;margin:0 auto 20px;display:block;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);';
+        img.style.cssText = `width:100%;max-width:200px;margin:0 auto 20px;display:block;
+            filter:${isLight
+                ? 'brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%)'
+                : 'invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%)'
+            };opacity:${isLight ? '0.6' : '0.85'};`;
         body.appendChild(img);
     }
 
     const text = document.createElement('div');
-    text.style.cssText = 'font-size:13px;color:rgba(210,190,165,0.75);line-height:1.9;white-space:pre-wrap;padding-bottom:8px;';
+    text.style.cssText = `font-size:13px;line-height:1.9;white-space:pre-wrap;padding-bottom:8px;
+        color:${isLight ? 'rgba(40,28,20,0.75)' : 'rgba(210,190,165,0.75)'};`;
     text.textContent = attach.text || '';
     body.appendChild(text);
 
