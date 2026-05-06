@@ -272,7 +272,7 @@ body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%)
 @keyframes toastIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 @keyframes toastOut{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(4px);}}
 .toast{
-    position:fixed;bottom:60px;left:16px;right:16px;z-index:9000;
+    position:absolute;bottom:60px;left:16px;right:16px;
     display:flex;align-items:center;gap:10px;
     padding:10px 14px;
     background:rgba(42,36,32,0.97);
@@ -868,6 +868,16 @@ body.light .test-btn-reset:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,
             <div id="sessionsWrapper" style="flex:1;min-height:0;position:relative;">
                 <div id="sessionsContent" style="height:100%;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;padding:4px 0;"></div>
             </div>
+            <div id="archiveToast" style="display:none;position:absolute;bottom:60px;left:0;right:0;
+                background:rgba(42,36,32,0.97);border:1px solid rgba(210,190,165,0.15);border-radius:10px;
+                padding:10px 14px;display:none;align-items:center;gap:10px;z-index:100;
+                font-size:12px;font-weight:600;color:rgba(210,190,165,0.9);font-family:'Inter',sans-serif;
+                animation:toastIn 0.25s ease-out forwards;cursor:pointer;"
+                onclick="this.style.display='none'">
+                <img style="width:20px;height:20px;flex-shrink:0;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);"
+                    src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg" alt="">
+                <span id="archiveToastText">Доступно с Panacea Plus</span>
+            </div>
             <div style="width:calc(100% + 48px);height:1px;background:rgba(40,28,20,0.12);flex-shrink:0;margin:2px -24px 0;"></div>
             <button id="signOutBtn" style="background:none;border:none;color:rgba(40,28,20,0.35);font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;padding:10px 0 0;text-align:center;width:100%;transition:color 0.15s;flex-shrink:0;">Выйти из учётной записи</button>
             <button id="signInBtn" style="display:none;background:none;border:none;color:rgba(40,28,20,0.45);font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;padding:10px 0 0;text-align:center;width:100%;transition:color 0.15s;flex-shrink:0;" onclick="window.location.href='index.html'">Войти в аккаунт</button>
@@ -948,6 +958,10 @@ body.light .test-btn-reset:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,
         </div>
     </div>
     <div class="chat-area" id="chatArea"></div>
+    <div class="toast" id="appToast" style="display:none;">
+        <span class="toast-text" id="toastText">Эта функция доступна с Panacea Plus</span>
+        <img class="toast-icon" id="toastIcon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg" alt="">
+    </div>
     <div class="input-area">
         <input type="text" class="input-field" id="msgInput" placeholder="Задай свой вопрос..." autocomplete="off">
         <button class="voice-btn" id="voiceBtn" title="Голосовой ввод">
@@ -1488,7 +1502,12 @@ function renderSessions(highlightId) {
             });
             card.querySelector('.sess-pdf-btn').addEventListener('click', e => {
                 e.stopPropagation();
-                if (!isPremium) { showPremiumToast(); return; }
+                if (!isPremium) {
+                    const t = document.getElementById('archiveToast');
+                    t.style.display = 'flex';
+                    setTimeout(() => { t.style.display = 'none'; }, 4000);
+                    return;
+                }
                 generateSessionPDF(s);
             });
             cont.appendChild(card);
@@ -2184,8 +2203,6 @@ function initChat() {
             Promise.all(restorePromises).then(() => {
                 chatArea.scrollTop = chatArea.scrollHeight;
                 setTimeout(updateChatMask, 50);
-                // Show placeholder if nothing was rendered
-                if (!chatArea.querySelector('.message')) showPlaceholder();
             });
             return;
         }
@@ -3262,11 +3279,5 @@ async function generatePDFDoc({ sessionDate, secInterlude, secContent, secConclu
 
 init();
 </script>
-
-<!-- Global toast — outside all screens so it works everywhere -->
-<div class="toast" id="appToast" style="display:none;position:fixed;bottom:60px;left:16px;right:16px;z-index:9000;">
-    <span class="toast-text" id="toastText">Эта функция доступна с Panacea Plus</span>
-    <img class="toast-icon" id="toastIcon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg" alt="">
-</div>
 </body>
 </html>
