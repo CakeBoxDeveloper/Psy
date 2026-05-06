@@ -868,12 +868,12 @@ body.light .test-btn-reset:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,
             <div id="sessionsWrapper" style="flex:1;min-height:0;position:relative;">
                 <div id="sessionsContent" style="height:100%;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;padding:4px 0;"></div>
             </div>
-            <div id="archiveToast" style="display:none;position:absolute;bottom:60px;left:0;right:0;
+            <div id="archiveToast" style="display:none;position:absolute;bottom:52px;left:16px;right:16px;
                 background:rgba(42,36,32,0.97);border:1px solid rgba(210,190,165,0.15);border-radius:10px;
-                padding:10px 14px;display:none;align-items:center;gap:10px;z-index:100;
+                padding:10px 14px;align-items:center;gap:10px;z-index:100;
                 font-size:12px;font-weight:600;color:rgba(210,190,165,0.9);font-family:'Inter',sans-serif;
-                animation:toastIn 0.25s ease-out forwards;cursor:pointer;"
-                onclick="this.style.display='none'">
+                animation:toastIn 0.25s ease-out forwards;cursor:pointer;overflow:hidden;"
+                onclick="window.location.href='subscription.html'">
                 <img style="width:20px;height:20px;flex-shrink:0;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);"
                     src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg" alt="">
                 <span id="archiveToastText">Доступно с Panacea Plus</span>
