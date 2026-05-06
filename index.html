@@ -272,7 +272,7 @@ body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%)
 @keyframes toastIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 @keyframes toastOut{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(4px);}}
 .toast{
-    position:absolute;bottom:60px;left:16px;right:16px;
+    position:fixed;bottom:60px;left:16px;right:16px;z-index:9000;
     display:flex;align-items:center;gap:10px;
     padding:10px 14px;
     background:rgba(42,36,32,0.97);
@@ -948,10 +948,6 @@ body.light .test-btn-reset:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,
         </div>
     </div>
     <div class="chat-area" id="chatArea"></div>
-    <div class="toast" id="appToast" style="display:none;">
-        <span class="toast-text" id="toastText">Эта функция доступна с Panacea Plus</span>
-        <img class="toast-icon" id="toastIcon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg" alt="">
-    </div>
     <div class="input-area">
         <input type="text" class="input-field" id="msgInput" placeholder="Задай свой вопрос..." autocomplete="off">
         <button class="voice-btn" id="voiceBtn" title="Голосовой ввод">
@@ -2188,6 +2184,8 @@ function initChat() {
             Promise.all(restorePromises).then(() => {
                 chatArea.scrollTop = chatArea.scrollHeight;
                 setTimeout(updateChatMask, 50);
+                // Show placeholder if nothing was rendered
+                if (!chatArea.querySelector('.message')) showPlaceholder();
             });
             return;
         }
@@ -3264,5 +3262,11 @@ async function generatePDFDoc({ sessionDate, secInterlude, secContent, secConclu
 
 init();
 </script>
+
+<!-- Global toast — outside all screens so it works everywhere -->
+<div class="toast" id="appToast" style="display:none;position:fixed;bottom:60px;left:16px;right:16px;z-index:9000;">
+    <span class="toast-text" id="toastText">Эта функция доступна с Panacea Plus</span>
+    <img class="toast-icon" id="toastIcon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg" alt="">
+</div>
 </body>
 </html>
