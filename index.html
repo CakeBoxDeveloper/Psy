@@ -230,17 +230,16 @@ body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%)
 
 /* TTS button */
 .tts-btn{
-    position:absolute;bottom:34px;right:4px;
-    width:24px;height:24px;
+    width:22px;height:22px;
     border:none;background:rgba(255,255,255,0.08);cursor:pointer;padding:0;
-    border-radius:6px;opacity:0.5;
+    border-radius:5px;opacity:0.5;
     transition:opacity 0.15s,background 0.15s;
     flex-shrink:0;
     display:flex;align-items:center;justify-content:center;
 }
 .tts-btn:hover{opacity:1;background:rgba(255,255,255,0.14);}
 .tts-btn.playing{opacity:1;background:rgba(210,190,165,0.2);}
-.tts-btn img{width:12px;height:12px;display:block;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
+.tts-btn img{width:11px;height:11px;display:block;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);}
 .tts-btn .tts-icon-play{display:block;}
 .tts-btn .tts-icon-stop{display:none;}
 .tts-btn.playing .tts-icon-play{display:none;}
@@ -251,7 +250,7 @@ body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%)
 .light .tts-btn img{filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);}
 .bubble{position:relative;}
 .bubble-sig-row{
-    display:flex;align-items:center;
+    display:flex;align-items:center;gap:8px;
     margin:8px -12px 0;padding:6px 12px 0;
     border-top:1px solid rgba(210,190,165,0.15);
 }
@@ -1414,7 +1413,10 @@ function renderSessions(highlightId) {
     if (!window._fbLoadSessions) return;
     window._fbLoadSessions(user.uid).then(sessions => {
         if (!sessions.length) {
-            cont.innerHTML = `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:rgba(40,28,20,0.35);font-size:12px;text-align:center;">сеансов пока нет</div>`;
+            cont.innerHTML = `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:40px 20px;text-align:center;">
+                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/dfaf3a61486f97e44cd5ca32ec26073053be6e36/Ruins2.svg" style="width:52px;height:52px;opacity:0.25;filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);" alt="">
+                <div style="color:rgba(40,28,20,0.45);font-size:12px;line-height:1.7;">Здесь будет храниться<br>история твоих сеансов.</div>
+            </div>`;
             return;
         }
         cont.innerHTML = '';
@@ -2261,9 +2263,10 @@ function addMsg(text, sender, animate, modelKey) {
         const clean = sigMatch ? lines.slice(0, -1).join('\n').trimEnd() : text.trim();
         b.innerHTML =
             `<span class="bubble-body">${clean.replace(/\n/g,'<br>')}</span>` +
-            `<div class="bubble-sig-row"><span class="bubble-sig">Для ответа была использована модель ${m.name}</span></div>${TTS_BTN}`;
+            `<div class="bubble-sig-row"><span class="bubble-sig">Для ответа была использована модель ${m.name}</span>${TTS_BTN}</div>`;
     } else if (sender === 'ai') {
-        b.innerHTML = `<span class="bubble-body">${text.replace(/\n/g,'<br>')}</span>${TTS_BTN}`;
+        b.innerHTML = `<span class="bubble-body">${text.replace(/\n/g,'<br>')}</span>` +
+            `<div class="bubble-sig-row"><span class="bubble-sig"></span>${TTS_BTN}</div>`;
     } else {
         b.textContent = text;
     }
@@ -2789,7 +2792,7 @@ async function handleOracleMode(text, typingIndicator, thinkDelay) {
             div.dataset.modelKey = validModel;
             const b = document.createElement('div');
             b.className = 'bubble';
-            b.innerHTML = `<span class="bubble-body">${reply.replace(/\n/g,'<br>')}</span><div class="bubble-sig-row"><span class="bubble-sig">${oracleSig}</span></div>${TTS_BTN}`;
+            b.innerHTML = `<span class="bubble-body">${reply.replace(/\n/g,'<br>')}</span><div class="bubble-sig-row"><span class="bubble-sig">${oracleSig}</span>${TTS_BTN}</div>`;
             div.appendChild(b);
             chatArea.appendChild(div);
             chatArea.scrollTop = chatArea.scrollHeight;
