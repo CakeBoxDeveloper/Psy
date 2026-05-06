@@ -1490,6 +1490,7 @@ function renderSessions(highlightId) {
             });
             card.querySelector('.sess-pdf-btn').addEventListener('click', e => {
                 e.stopPropagation();
+                if (!isPremium) { showPremiumToast(); return; }
                 generateSessionPDF(s);
             });
             cont.appendChild(card);
@@ -2061,8 +2062,15 @@ ${msgs || 'Диалог пуст'}
 
 document.getElementById('endMenu').addEventListener('click', () => {
     endOverlay.classList.remove('show');
+    // Clear chat for guests
+    const _uRaw = localStorage.getItem(KEY_USER);
+    const _u = _uRaw ? JSON.parse(_uRaw) : null;
+    if (!_u || _u.p === 'guest') {
+        localStorage.removeItem(KEY_CHAT);
+        chatHistory = [];
+        currentSessionId = null;
+    }
     const savedId = currentSessionId;
-    // Go to sessions list (back side of card)
     goTo('screen1b');
     setTimeout(() => {
         s1bFlipped = true;
@@ -2077,7 +2085,6 @@ document.getElementById('endNew').addEventListener('click', () => {
     currentSessionId = null;
     chatArea.innerHTML = '';
     showPlaceholder();
-    // Go to survey screen (front side of card)
     goTo('screen1b');
     setTimeout(() => {
         s1bFlipped = false;
