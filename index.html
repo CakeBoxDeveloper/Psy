@@ -2108,7 +2108,7 @@ function showContactCard() {
     div.className = 'message ai';
     div.style.cssText = 'animation:msgIn 0.4s ease-out forwards;justify-content:center;';
     const icon = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/56ff037b532d6b8dca5e28ef7a83aff38c7c43d8/Attach5.svg';
-    div.innerHTML = `<div class="attach-card" onclick="event.stopPropagation();openContactModal()">
+    div.innerHTML = `<div class="attach-card" data-contact="1">
         <div class="attach-card-body">
             <img src="${icon}" alt="">
             <div class="attach-card-title">Обратная связь</div>
@@ -2259,6 +2259,14 @@ document.getElementById('contactOverlay').addEventListener('click', e => {
 });
 
 window.openContactModal = openContactModal;
+
+// Delegate click on contact attach card in support chat
+document.getElementById('supportChatArea').addEventListener('click', e => {
+    const card = e.target.closest('[data-contact="1"]');
+    if (!card) return;
+    e.stopPropagation();
+    openContactModal();
+});
 
 function showPremiumToast() {
     showToast('Эта функция доступна с Panacea Plus', {
