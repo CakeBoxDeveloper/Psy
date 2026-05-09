@@ -522,7 +522,97 @@ body.light .attach-card-desc{color:rgba(40,28,20,0.55);}
 }
 body.light .attach-sig{color:rgba(40,28,20,0.45);border-top-color:rgba(40,28,20,0.12);}
 
-/* ── Test modal ── */
+/* ── Contact modal (feedback) ── */
+.contact-overlay{
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.55);
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    display:none;align-items:flex-end;justify-content:center;
+    z-index:200;
+}
+.contact-overlay.show{display:flex;}
+.contact-modal{
+    width:min(82%,380px);
+    background:rgb(32,26,22);
+    border-radius:12px 12px 0 0;
+    display:flex;flex-direction:column;
+    overflow:hidden;
+    animation:slideUp 0.35s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+body.light .contact-modal{background:rgb(235,222,205);}
+.contact-modal-header{
+    padding:20px 20px 0;
+    flex-shrink:0;
+}
+.contact-modal-title-row{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+    margin-bottom:2px;
+}
+.contact-modal-title{
+    font-family:'TiemposHeadline',serif;font-weight:900;
+    font-size:18px;text-align:left;
+    color:rgba(210,190,165,1);line-height:1.3;flex:1;
+}
+body.light .contact-modal-title{color:rgb(40,28,20);}
+.contact-modal-icon{
+    width:38px;height:38px;flex-shrink:0;margin-top:2px;
+    filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);
+    opacity:0.6;
+}
+body.light .contact-modal-icon{filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);}
+.contact-modal-status{
+    font-size:11px;text-align:left;
+    color:rgba(210,190,165,0.4);
+    margin-bottom:16px;margin-top:-2px;
+}
+body.light .contact-modal-status{color:rgba(40,28,20,0.45);}
+.contact-modal-status.sent{color:rgba(210,190,165,0.65);}
+body.light .contact-modal-status.sent{color:rgba(40,28,20,0.65);}
+.contact-modal-divider{height:1px;background:rgba(210,190,165,0.1);margin:0 -20px;}
+body.light .contact-modal-divider{background:rgba(40,28,20,0.12);}
+.contact-modal-body{
+    padding:16px 20px;
+    display:flex;flex-direction:column;gap:12px;
+}
+.contact-textarea{
+    width:100%;min-height:100px;max-height:200px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(210,190,165,0.12);
+    border-radius:8px;
+    color:rgba(210,190,165,0.85);
+    font-size:12px;line-height:1.6;
+    font-family:'Inter',sans-serif;
+    padding:10px 12px;
+    outline:none;resize:none;
+    transition:background 0.15s,border-color 0.15s;
+}
+.contact-textarea:focus{background:rgba(255,255,255,0.08);border-color:rgba(210,190,165,0.25);}
+.contact-textarea::placeholder{color:rgba(210,190,165,0.3);}
+.contact-textarea:disabled{opacity:0.5;cursor:not-allowed;}
+body.light .contact-textarea{background:rgba(60,45,35,0.06);border-color:rgba(60,45,35,0.15);color:rgba(40,28,20,0.85);}
+body.light .contact-textarea:focus{background:rgba(60,45,35,0.1);border-color:rgba(60,45,35,0.3);}
+body.light .contact-textarea::placeholder{color:rgba(40,28,20,0.35);}
+.contact-modal-footer{
+    padding:0 20px 20px;
+    flex-shrink:0;
+}
+.contact-submit-btn{
+    width:100%;height:40px;
+    background:rgba(210,190,165,0.12);
+    border:1px solid rgba(210,190,165,0.2);
+    border-radius:8px;
+    font-size:13px;font-weight:600;
+    color:rgba(210,190,165,0.8);
+    font-family:'Inter',sans-serif;cursor:pointer;
+    transition:all 0.15s;
+}
+.contact-submit-btn:hover{background:rgba(210,190,165,0.2);color:rgba(210,190,165,1);}
+.contact-submit-btn.close-mode{background:rgba(255,255,255,0.05);color:rgba(210,190,165,0.5);}
+.contact-submit-btn.close-mode:hover{background:rgba(255,255,255,0.08);color:rgba(210,190,165,0.7);}
+body.light .contact-submit-btn{background:rgba(60,45,35,0.08);border-color:rgba(60,45,35,0.18);color:rgba(40,28,20,0.7);}
+body.light .contact-submit-btn:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,20);}
+body.light .contact-submit-btn.close-mode{background:rgba(60,45,35,0.04);color:rgba(40,28,20,0.4);}
+body.light .contact-submit-btn.close-mode:hover{background:rgba(60,45,35,0.08);color:rgba(40,28,20,0.6);}
 .test-overlay{
     position:fixed;inset:0;
     background:rgba(0,0,0,0.55);
@@ -986,6 +1076,26 @@ body.light .test-btn-reset:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,
             <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/3da70af56c4c3a8e162fda9748666df480ad4dfb/dove.svg" class="icon-dove" alt="">
         </button>
     </div>
+</div>
+
+<!-- Contact / Feedback modal -->
+<div class="contact-overlay" id="contactOverlay">
+  <div class="contact-modal" id="contactModal">
+    <div class="contact-modal-header">
+      <div class="contact-modal-title-row">
+        <div class="contact-modal-title">Обратная связь</div>
+        <img class="contact-modal-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/56ff037b532d6b8dca5e28ef7a83aff38c7c43d8/Attach5.svg" alt="">
+      </div>
+      <div class="contact-modal-status" id="contactModalStatus">Новое обращение</div>
+      <div class="contact-modal-divider"></div>
+    </div>
+    <div class="contact-modal-body">
+      <textarea class="contact-textarea" id="contactTextarea" placeholder="Опиши проблему или вопрос..."></textarea>
+    </div>
+    <div class="contact-modal-footer">
+      <button class="contact-submit-btn" id="contactSubmitBtn">Отправить</button>
+    </div>
+  </div>
 </div>
 
 <!-- Test modal -->
@@ -1948,22 +2058,202 @@ document.getElementById('supportInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') sendSupportMsg();
 });
 
-function sendSupportMsg() {
+// ── Support chat knowledge base ───────────────────────────
+let SUPPORT_KB = '';
+fetch('support-kb.md').then(r => r.text()).then(t => { SUPPORT_KB = t; }).catch(() => {});
+
+
+const SUPPORT_SYSTEM = `Ты — Оракул, помощник поддержки приложения Panacea. Отвечай кратко и по делу, только на русском языке.
+
+У тебя есть база знаний о приложении:
+${SUPPORT_KB}
+
+Правила:
+1. Если вопрос пользователя касается темы из базы знаний — дай краткий ответ (2-4 предложения) на основе базы знаний.
+2. Если вопрос НЕ касается базы знаний или требует ручного вмешательства (баги, оплата, жалобы) — ответь: "Я не могу помочь с этим автоматически. Создай обращение — я передам его команде." и больше ничего не добавляй.
+3. Никогда не выдумывай функции которых нет в базе знаний.
+4. Не используй markdown в ответах.`;
+
+let supportHistory = [];
+let supportTyping = false;
+
+function addSupportMsg(text, sender) {
+    const area = document.getElementById('supportChatArea');
+    if (area.querySelector('.empty-state')) area.innerHTML = '';
+    const div = document.createElement('div');
+    div.className = `message ${sender}`;
+    div.innerHTML = `<div class="bubble">${text.replace(/\n/g,'<br>')}</div>`;
+    area.appendChild(div);
+    area.scrollTop = area.scrollHeight;
+    if (area._updateMask) area._updateMask();
+}
+
+function showSupportTyping() {
+    const area = document.getElementById('supportChatArea');
+    const div = document.createElement('div');
+    div.className = 'message ai';
+    div.innerHTML = `<div class="typing-bubble"><span></span><span></span><span></span></div>`;
+    area.appendChild(div);
+    area.scrollTop = area.scrollHeight;
+    return div;
+}
+
+// Show contact attach card in support chat
+function showContactCard() {
+    const area = document.getElementById('supportChatArea');
+    const div = document.createElement('div');
+    div.className = 'message ai';
+    div.style.cssText = 'animation:msgIn 0.4s ease-out forwards;justify-content:center;';
+    const icon = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/56ff037b532d6b8dca5e28ef7a83aff38c7c43d8/Attach5.svg';
+    div.innerHTML = `<div class="attach-card" onclick="openContactModal()">
+        <div class="attach-card-body">
+            <img src="${icon}" alt="">
+            <div class="attach-card-title">Обратная связь</div>
+            <div class="attach-card-desc">Создать обращение</div>
+        </div>
+        <div class="attach-sig">Оракул предлагает связаться с командой</div>
+    </div>`;
+    area.appendChild(div);
+    area.scrollTop = area.scrollHeight;
+    if (area._updateMask) area._updateMask();
+}
+
+async function sendSupportMsg() {
+    if (supportTyping) return;
     const input = document.getElementById('supportInput');
     const text = input.value.trim();
     if (!text) return;
     input.value = '';
-    const area = document.getElementById('supportChatArea');
-    // Clear empty state
-    if (area.querySelector('.empty-state')) area.innerHTML = '';
-    // Add user bubble
-    const userDiv = document.createElement('div');
-    userDiv.className = 'message user';
-    userDiv.innerHTML = `<div class="bubble">${text}</div>`;
-    area.appendChild(userDiv);
-    area.scrollTop = area.scrollHeight;
-    // TODO: send to real support backend
+
+    addSupportMsg(text, 'user');
+    supportHistory.push({ role: 'user', content: text });
+
+    supportTyping = true;
+    const t = showSupportTyping();
+
+    try {
+        const resp = await fetch(`${API_BASE}/api/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                modelKey: 'tara',
+                history: [
+                    { role: 'system', content: SUPPORT_SYSTEM },
+                    ...supportHistory
+                ],
+                max_tokens: 300,
+                temperature: 0.3
+            })
+        });
+        const data = await resp.json();
+        t.remove();
+        supportTyping = false;
+
+        const reply = data.choices?.[0]?.message?.content?.trim() || 'Что-то пошло не так. Попробуй ещё раз.';
+        supportHistory.push({ role: 'assistant', content: reply });
+        addSupportMsg(reply, 'ai');
+
+        // If AI suggests creating a ticket — show contact card
+        if (reply.includes('Создай обращение') || reply.includes('создай обращение')) {
+            setTimeout(() => showContactCard(), 600);
+        }
+    } catch(e) {
+        t.remove();
+        supportTyping = false;
+        addSupportMsg('Связь прервалась. Попробуй ещё раз.', 'ai');
+    }
 }
+
+// ── Contact modal logic ───────────────────────────────────
+const KEY_CONTACT = 'soma_contact';
+
+function openContactModal() {
+    const saved = localStorage.getItem(KEY_CONTACT);
+    const state = saved ? JSON.parse(saved) : null;
+
+    const textarea = document.getElementById('contactTextarea');
+    const status   = document.getElementById('contactModalStatus');
+    const btn      = document.getElementById('contactSubmitBtn');
+
+    if (state && state.sent) {
+        textarea.value = state.text || '';
+        textarea.disabled = true;
+        status.textContent = 'В обработке';
+        status.classList.add('sent');
+        btn.textContent = 'Закрыть обращение';
+        btn.classList.add('close-mode');
+    } else {
+        textarea.value = state?.text || '';
+        textarea.disabled = false;
+        status.textContent = 'Новое обращение';
+        status.classList.remove('sent');
+        btn.textContent = 'Отправить';
+        btn.classList.remove('close-mode');
+    }
+
+    document.getElementById('contactOverlay').classList.add('show');
+}
+
+document.getElementById('contactSubmitBtn').addEventListener('click', () => {
+    const saved = localStorage.getItem(KEY_CONTACT);
+    const state = saved ? JSON.parse(saved) : null;
+    const textarea = document.getElementById('contactTextarea');
+    const status   = document.getElementById('contactModalStatus');
+    const btn      = document.getElementById('contactSubmitBtn');
+
+    if (state && state.sent) {
+        // Close ticket
+        localStorage.removeItem(KEY_CONTACT);
+        document.getElementById('contactOverlay').classList.remove('show');
+        addSupportMsg('Обращение закрыто.', 'ai');
+    } else {
+        const text = textarea.value.trim();
+        if (!text) return;
+
+        // Save to localStorage
+        const userRaw = localStorage.getItem(KEY_USER);
+        const user = userRaw ? JSON.parse(userRaw) : null;
+        const contactData = { text, sent: true, sentAt: Date.now(), uid: user?.uid || 'guest' };
+        localStorage.setItem(KEY_CONTACT, JSON.stringify(contactData));
+
+        // Save to Firestore
+        if (user && user.uid && window._fbSaveSession) {
+            window._fbSaveSession(user.uid, 'contact_' + Date.now(), {
+                type: 'contact',
+                text,
+                sentAt: Date.now(),
+                status: 'pending'
+            });
+        }
+
+        // Update UI
+        textarea.disabled = true;
+        status.textContent = 'В обработке';
+        status.classList.add('sent');
+        btn.textContent = 'Закрыть обращение';
+        btn.classList.add('close-mode');
+
+        addSupportMsg('Обращение принято. Команда рассмотрит его в ближайшее время.', 'ai');
+    }
+});
+
+// Save textarea draft as user types
+document.getElementById('contactTextarea').addEventListener('input', () => {
+    const saved = localStorage.getItem(KEY_CONTACT);
+    const state = saved ? JSON.parse(saved) : {};
+    if (!state.sent) {
+        localStorage.setItem(KEY_CONTACT, JSON.stringify({ ...state, text: document.getElementById('contactTextarea').value }));
+    }
+});
+
+// Close contact modal on overlay click
+document.getElementById('contactOverlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('contactOverlay')) {
+        document.getElementById('contactOverlay').classList.remove('show');
+    }
+});
+
+window.openContactModal = openContactModal;
 
 function showPremiumToast() {
     showToast('Эта функция доступна с Panacea Plus', {
@@ -2269,13 +2559,16 @@ function saveChat() {
             if (m.m === 'auto') return 'Оракул';
             return models[m.m]?.name || m.m;
         }))];
+        const realMsgCount = msgs.filter(m => m.s === 'user' || m.s === 'ai').length;
+        // Don't save empty sessions to Firestore
+        if (realMsgCount === 0) return;
         const surveyRaw = localStorage.getItem(KEY_SURVEY);
         window._fbSaveSession(user.uid, currentSessionId, {
             date: new Date().toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'}),
             messages: msgs,
             modelsUsed,
             survey: surveyRaw ? JSON.parse(surveyRaw) : [],
-            msgCount: msgs.filter(m => m.s === 'user' || m.s === 'ai').length
+            msgCount: realMsgCount
         });
     }
 }
