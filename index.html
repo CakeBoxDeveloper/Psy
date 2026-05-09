@@ -2048,7 +2048,7 @@ document.getElementById('supportHeader').addEventListener('click', () => closeSu
 
 // Click outside input/buttons → flip back
 document.getElementById('screenSupport').addEventListener('click', e => {
-    if (e.target.closest('.input-area') || e.target.closest('.chat-header') || e.target.closest('.bubble')) return;
+    if (e.target.closest('.input-area') || e.target.closest('.chat-header') || e.target.closest('.bubble') || e.target.closest('.attach-card') || e.target.closest('.contact-overlay')) return;
     closeSupportChat();
 });
 
@@ -2060,7 +2060,10 @@ document.getElementById('supportInput').addEventListener('keydown', e => {
 
 // ── Support chat knowledge base ───────────────────────────
 let SUPPORT_KB = '';
-fetch('support-kb.md').then(r => r.text()).then(t => { SUPPORT_KB = t; }).catch(() => {});
+fetch('support-kb.md').then(r => r.text()).then(t => { SUPPORT_KB = t; }).catch(() => {
+    // Fallback: fetch via relative path with cache-bust
+    fetch('./support-kb.md?_=' + Date.now()).then(r => r.text()).then(t => { SUPPORT_KB = t; }).catch(() => {});
+});
 
 
 const SUPPORT_SYSTEM = `Ты — Оракул, помощник поддержки приложения Panacea. Отвечай кратко и по делу, только на русском языке.
@@ -2070,7 +2073,7 @@ ${SUPPORT_KB}
 
 Правила:
 1. Если вопрос пользователя касается темы из базы знаний — дай краткий ответ (2-4 предложения) на основе базы знаний.
-2. Если вопрос НЕ касается базы знаний или требует ручного вмешательства (баги, оплата, жалобы) — ответь: "Я не могу помочь с этим автоматически. Создай обращение — я передам его команде." и больше ничего не добавляй.
+2. Если вопрос НЕ касается базы знаний или требует ручного вмешательства (баги, оплата, жалобы) — ответь только этой фразой, без добавлений: "Я не могу помочь с этим автоматически. [CONTACT]"
 3. Никогда не выдумывай функции которых нет в базе знаний.
 4. Не используй markdown в ответах.`;
 
@@ -2105,7 +2108,7 @@ function showContactCard() {
     div.className = 'message ai';
     div.style.cssText = 'animation:msgIn 0.4s ease-out forwards;justify-content:center;';
     const icon = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/56ff037b532d6b8dca5e28ef7a83aff38c7c43d8/Attach5.svg';
-    div.innerHTML = `<div class="attach-card" onclick="openContactModal()">
+    div.innerHTML = `<div class="attach-card" onclick="event.stopPropagation();openContactModal()">
         <div class="attach-card-body">
             <img src="${icon}" alt="">
             <div class="attach-card-title">Обратная связь</div>
@@ -2149,12 +2152,14 @@ async function sendSupportMsg() {
         t.remove();
         supportTyping = false;
 
-        const reply = data.choices?.[0]?.message?.content?.trim() || 'Что-то пошло не так. Попробуй ещё раз.';
+        const rawReply = data.choices?.[0]?.message?.content?.trim() || 'Что-то пошло не так. Попробуй ещё раз.';
+        const needsContact = rawReply.includes('[CONTACT]');
+        const reply = rawReply.replace('[CONTACT]', '').trim();
+
         supportHistory.push({ role: 'assistant', content: reply });
         addSupportMsg(reply, 'ai');
 
-        // If AI suggests creating a ticket — show contact card
-        if (reply.includes('Создай обращение') || reply.includes('создай обращение')) {
+        if (needsContact) {
             setTimeout(() => showContactCard(), 600);
         }
     } catch(e) {
