@@ -173,6 +173,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
     #s1bStack{width:100%;max-width:100%;height:100vh;height:100dvh;}
     .s1b-card{border-radius:0;}
     .s1b-card.s1b-back{transform:translateX(-41%) scale(0.8);}
+    .bubble{max-width:92%;}
 }
 .chat-header{padding:12px 16px;background:transparent;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:space-between;}
 .chat-header-left{display:flex;align-items:center;}
@@ -271,6 +272,8 @@ body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%)
 /* Toast notification */
 @keyframes toastIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 @keyframes toastOut{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(4px);}}
+@keyframes archiveToastIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes archiveToastOut{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(16px);}}
 .toast{
     position:absolute;bottom:60px;left:16px;right:16px;
     display:flex;align-items:center;gap:10px;
@@ -543,17 +546,29 @@ body.light .test-modal{background:rgb(235,222,205);}
     padding:20px 20px 0;
     flex-shrink:0;
 }
+.test-modal-title-row{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+    margin-bottom:2px;
+}
 .test-modal-title{
     font-family:'TiemposHeadline',serif;font-weight:900;
-    font-size:18px;text-align:center;
+    font-size:18px;text-align:left;
     color:rgba(210,190,165,1);line-height:1.3;
-    margin-bottom:4px;
+    flex:1;
 }
 body.light .test-modal-title{color:rgb(40,28,20);}
+.test-modal-icon{
+    width:38px;height:38px;flex-shrink:0;
+    filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);
+    opacity:0.6;
+    margin-top:2px;
+}
+body.light .test-modal-icon{filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);}
 .test-modal-subtitle{
-    font-size:11px;text-align:center;
+    font-size:11px;text-align:left;
     color:rgba(210,190,165,0.4);
     margin-bottom:16px;
+    margin-top:-4px;
 }
 body.light .test-modal-subtitle{color:rgba(40,28,20,0.45);}
 .test-modal-divider{height:1px;background:rgba(210,190,165,0.1);margin:0 -20px;}
@@ -873,7 +888,7 @@ body.light .test-btn-reset:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,
                 padding:10px 14px;align-items:center;gap:10px;z-index:100;
                 font-size:12px;font-weight:600;color:rgba(210,190,165,0.9);font-family:'Inter',sans-serif;
                 animation:toastIn 0.25s ease-out forwards;cursor:pointer;overflow:hidden;"
-                onclick="window.location.href='subscription.html'">
+                onclick="(function(t){t.style.animation='archiveToastOut 0.3s cubic-bezier(0.4,0,0.2,1) forwards';setTimeout(()=>{t.style.display='none';t.style.animation='';},300);})(this);window.location.href='subscription.html'">
                 <img style="width:20px;height:20px;flex-shrink:0;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);"
                     src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg" alt="">
                 <span id="archiveToastText">Доступно с Panacea Plus</span>
@@ -977,7 +992,10 @@ body.light .test-btn-reset:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,
 <div class="test-overlay" id="testOverlay">
   <div class="test-modal" id="testModal">
     <div class="test-modal-header">
-      <div class="test-modal-title" id="testModalTitle"></div>
+      <div class="test-modal-title-row">
+        <div class="test-modal-title" id="testModalTitle"></div>
+        <img class="test-modal-icon" id="testModalIcon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/56ff037b532d6b8dca5e28ef7a83aff38c7c43d8/Attach5.svg" alt="">
+      </div>
       <div class="test-modal-subtitle" id="testModalSubtitle"></div>
       <div class="test-modal-divider"></div>
     </div>
@@ -1504,8 +1522,13 @@ function renderSessions(highlightId) {
                 e.stopPropagation();
                 if (!isPremium) {
                     const t = document.getElementById('archiveToast');
+                    t.style.animation = 'archiveToastIn 0.3s cubic-bezier(0.4,0,0.2,1) forwards';
                     t.style.display = 'flex';
-                    setTimeout(() => { t.style.display = 'none'; }, 4000);
+                    clearTimeout(t._timer);
+                    t._timer = setTimeout(() => {
+                        t.style.animation = 'archiveToastOut 0.3s cubic-bezier(0.4,0,0.2,1) forwards';
+                        setTimeout(() => { t.style.display = 'none'; t.style.animation = ''; }, 300);
+                    }, 3500);
                     return;
                 }
                 generateSessionPDF(s);
@@ -2453,6 +2476,8 @@ function openTestModal(attach) {
 
     document.getElementById('testModalTitle').textContent = attach.title;
     document.getElementById('testModalSubtitle').textContent = `${attach.questions.length} вопросов`;
+    document.getElementById('testModalIcon').src = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/56ff037b532d6b8dca5e28ef7a83aff38c7c43d8/Attach5.svg';
+    document.getElementById('testModalIcon').style.display = '';
 
     const body = document.getElementById('testModalBody');
     body.innerHTML = '';
@@ -2482,7 +2507,9 @@ function openTestModal(attach) {
 
 function openParableModal(attach) {
     document.getElementById('testModalTitle').textContent = attach.title;
-    document.getElementById('testModalSubtitle').textContent = '';
+    document.getElementById('testModalSubtitle').textContent = 'Притча';
+    document.getElementById('testModalIcon').src = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/56ff037b532d6b8dca5e28ef7a83aff38c7c43d8/Attach5.svg';
+    document.getElementById('testModalIcon').style.display = '';
 
     const body = document.getElementById('testModalBody');
     body.innerHTML = '';
