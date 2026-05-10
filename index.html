@@ -2084,7 +2084,7 @@ ${SUPPORT_KB}
 let supportHistory = [];
 let supportTyping = false;
 
-function addSupportMsg(text, sender) {
+function addSupportMsg(text, sender, skipSave = false) {
     const area = document.getElementById('supportChatArea');
     if (area.querySelector('.empty-state')) area.innerHTML = '';
     const div = document.createElement('div');
@@ -2093,10 +2093,9 @@ function addSupportMsg(text, sender) {
         div.innerHTML = `<div class="bubble">
             <span class="bubble-body">${text.replace(/\n/g,'<br>')}</span>
             <div class="bubble-sig-row">
-                <span class="bubble-sig" style="cursor:pointer;text-decoration:underline;text-underline-offset:2px;" id="supportSigBtn_${Date.now()}">Оракул не решил мой вопрос</span>
+                <span class="bubble-sig" style="cursor:pointer;text-decoration:underline;text-underline-offset:2px;">Оракул не решил мой вопрос</span>
             </div>
         </div>`;
-        // Attach click to the sig after insertion
         setTimeout(() => {
             const sig = div.querySelector('.bubble-sig');
             if (sig) sig.addEventListener('click', e => { e.stopPropagation(); openContactModal(); });
@@ -2107,7 +2106,7 @@ function addSupportMsg(text, sender) {
     area.appendChild(div);
     area.scrollTop = area.scrollHeight;
     if (area._updateMask) area._updateMask();
-    saveSupportChat();
+    if (!skipSave) saveSupportChat();
 }
 
 function showSupportTyping() {
@@ -2154,12 +2153,13 @@ function restoreSupportChat() {
     if (!data.msgs || !data.msgs.length) return false;
     supportHistory = [];
     data.msgs.forEach(m => {
-        addSupportMsg(m.t, m.s);
+        addSupportMsg(m.t, m.s, true); // true = skip save during restore
         supportHistory.push({ role: m.s === 'user' ? 'user' : 'assistant', content: m.t });
     });
     return true;
 }
-    if (supportTyping) return;
+
+async function sendSupportMsg() {
     const input = document.getElementById('supportInput');
     const text = input.value.trim();
     if (!text) return;
