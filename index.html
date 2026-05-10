@@ -2003,24 +2003,24 @@ function goToSubscription() {
 
 /* ── Support chat ── */
 function openSupportChat() {
-    // Init empty state if first open
+    // Reset history and chat area on every open
+    supportHistory = [];
     const area = document.getElementById('supportChatArea');
-    if (!area._inited) {
-        area._inited = true;
-        area.innerHTML = `<div class="empty-state">
-            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/9ada1e087395447e7255335bcc515b652e524b03/temple-structure-svgrepo-com.svg" style="width:32px;height:32px;margin-bottom:8px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);opacity:0.4;">
-            <div style="font-size:11px;margin-top:6px;opacity:0.55;line-height:1.6;max-width:220px;">Оракул отвечает на вопросы в порядке очереди. Наберитесь терпения — ответ придёт. Не дублируйте вопросы: повторные обращения отодвигают вас в конец очереди.</div>
-        </div>`;
-        function updateSupportMask() {
-            const atTop = area.scrollTop < 4;
-            const atBottom = area.scrollHeight - area.scrollTop - area.clientHeight < 4;
-            area.classList.toggle('at-top', atTop);
-            area.classList.toggle('at-bottom', atBottom);
-        }
-        area.addEventListener('scroll', updateSupportMask, {passive: true});
-        area._updateMask = updateSupportMask;
-        requestAnimationFrame(updateSupportMask);
+    area.innerHTML = '';
+    area._inited = true;
+
+    function updateSupportMask() {
+        const atTop = area.scrollTop < 4;
+        const atBottom = area.scrollHeight - area.scrollTop - area.clientHeight < 4;
+        area.classList.toggle('at-top', atTop);
+        area.classList.toggle('at-bottom', atBottom);
     }
+    if (!area._maskBound) {
+        area.addEventListener('scroll', updateSupportMask, {passive: true});
+        area._maskBound = true;
+    }
+    area._updateMask = updateSupportMask;
+    requestAnimationFrame(updateSupportMask);
     // If restoring after reload — no animation
     if (openSupportChat._restoring) {
         openSupportChat._restoring = false;
@@ -2086,7 +2086,14 @@ function addSupportMsg(text, sender) {
     if (area.querySelector('.empty-state')) area.innerHTML = '';
     const div = document.createElement('div');
     div.className = `message ${sender}`;
-    div.innerHTML = `<div class="bubble">${text.replace(/\n/g,'<br>')}</div>`;
+    if (sender === 'ai') {
+        div.innerHTML = `<div class="bubble">
+            <span class="bubble-body">${text.replace(/\n/g,'<br>')}</span>
+            <div class="bubble-sig-row"><span class="bubble-sig">На этот вопрос отвечал Оракул</span></div>
+        </div>`;
+    } else {
+        div.innerHTML = `<div class="bubble">${text.replace(/\n/g,'<br>')}</div>`;
+    }
     area.appendChild(div);
     area.scrollTop = area.scrollHeight;
     if (area._updateMask) area._updateMask();
@@ -2266,8 +2273,32 @@ document.addEventListener('click', e => {
     const card = e.target.closest('[data-contact="1"]');
     if (!card) return;
     e.stopPropagation();
-    openContactModal();
-}, true); // capture phase — fires before any other handler
+    e.preventDefault();
+    const overlay = document.getElementById('contactOverlay');
+    if (!overlay) { console.error('[Contact] overlay not found'); return; }
+    // Reset state
+    const saved = localStorage.getItem(KEY_CONTACT);
+    const state = saved ? JSON.parse(saved) : null;
+    const textarea = document.getElementById('contactTextarea');
+    const status   = document.getElementById('contactModalStatus');
+    const btn      = document.getElementById('contactSubmitBtn');
+    if (state && state.sent) {
+        textarea.value = state.text || '';
+        textarea.disabled = true;
+        status.textContent = 'В обработке';
+        status.classList.add('sent');
+        btn.textContent = 'Закрыть обращение';
+        btn.classList.add('close-mode');
+    } else {
+        textarea.value = state?.text || '';
+        textarea.disabled = false;
+        status.textContent = 'Новое обращение';
+        status.classList.remove('sent');
+        btn.textContent = 'Отправить';
+        btn.classList.remove('close-mode');
+    }
+    overlay.classList.add('show');
+}, true); // capture phase
 
 function showPremiumToast() {
     showToast('Эта функция доступна с Panacea Plus', {
