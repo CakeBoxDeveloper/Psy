@@ -1298,6 +1298,25 @@ window._fbDeleteSession = async (uid, sessionId) => {
     } catch(e) { console.error('Delete session:', e); }
 };
 
+// Support chat — separate collection, never shown in sessions list
+window._fbSaveSupportChat = async (uid, msgs) => {
+    if (!uid || uid === 'guest') return;
+    try {
+        await setDoc(doc(db, 'support', uid), {
+            messages: msgs,
+            updatedAt: serverTimestamp()
+        });
+    } catch(e) { console.error('Save support chat:', e); }
+};
+
+window._fbLoadSupportChat = async (uid) => {
+    if (!uid || uid === 'guest') return null;
+    try {
+        const snap = await getDoc(doc(db, 'support', uid));
+        return snap.exists() ? snap.data() : null;
+    } catch(e) { return null; }
+};
+
 // ── Auth state ────────────────────────────────────────────
 onAuthStateChanged(auth, user => {
     if (user) {
@@ -2020,8 +2039,24 @@ function openSupportChat() {
     }
     area._updateMask = updateSupportMask;
 
-    // Restore previous chat if exists
-    restoreSupportChat();
+    // Restore previous chat — Firestore for logged-in, localStorage for guests
+    const userRaw = localStorage.getItem(KEY_USER);
+    const user = userRaw ? JSON.parse(userRaw) : null;
+    if (user && user.uid && user.p !== 'guest' && window._fbLoadSupportChat) {
+        window._fbLoadSupportChat(user.uid).then(data => {
+            if (data && data.messages && data.messages.length) {
+                supportHistory = [];
+                data.messages.forEach(m => {
+                    addSupportMsg(m.t, m.s, true);
+                    supportHistory.push({ role: m.s === 'user' ? 'user' : 'assistant', content: m.t });
+                });
+                area.scrollTop = area.scrollHeight;
+                if (area._updateMask) area._updateMask();
+            }
+        });
+    } else {
+        restoreSupportChat();
+    }
 
     requestAnimationFrame(updateSupportMask);
     // If restoring after reload — no animation
@@ -2052,7 +2087,7 @@ document.getElementById('supportHeader').addEventListener('click', () => closeSu
 
 // Click outside input/buttons → flip back
 document.getElementById('screenSupport').addEventListener('click', e => {
-    if (e.target.closest('.input-area') || e.target.closest('.chat-header') || e.target.closest('.bubble') || e.target.closest('.attach-card') || e.target.closest('.contact-overlay')) return;
+    if (e.target.closest('.input-area') || e.target.closest('.chat-header') || e.target.closest('.bubble') || e.target.closest('.attach-card') || e.target.closest('.contact-overlay') || e.target.classList.contains('support-contact-sig')) return;
     closeSupportChat();
 });
 
@@ -2090,28 +2125,24 @@ function addSupportMsg(text, sender, skipSave = false) {
     const div = document.createElement('div');
     div.className = `message ${sender}`;
     if (sender === 'ai') {
-        const sigEl = document.createElement('span');
-        sigEl.className = 'bubble-sig';
-        sigEl.textContent = 'Оракул не решил мой вопрос';
-        sigEl.style.cssText = 'cursor:pointer;text-decoration:underline;text-underline-offset:2px;';
-        sigEl.addEventListener('click', e => {
-            e.stopPropagation();
-            openContactModal();
-        });
-
-        const sigRow = document.createElement('div');
-        sigRow.className = 'bubble-sig-row';
-        sigRow.appendChild(sigEl);
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
 
         const body = document.createElement('span');
         body.className = 'bubble-body';
         body.innerHTML = text.replace(/\n/g,'<br>');
 
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble';
+        const sigRow = document.createElement('div');
+        sigRow.className = 'bubble-sig-row';
+
+        const sig = document.createElement('span');
+        sig.className = 'bubble-sig support-contact-sig';
+        sig.textContent = 'Оракул не решил мой вопрос';
+        sig.style.cssText = 'cursor:pointer;text-decoration:underline;text-underline-offset:2px;';
+
+        sigRow.appendChild(sig);
         bubble.appendChild(body);
         bubble.appendChild(sigRow);
-
         div.appendChild(bubble);
     } else {
         div.innerHTML = `<div class="bubble">${text.replace(/\n/g,'<br>')}</div>`;
@@ -2121,6 +2152,12 @@ function addSupportMsg(text, sender, skipSave = false) {
     if (area._updateMask) area._updateMask();
     if (!skipSave) saveSupportChat();
 }
+
+// Delegated click for support contact sig — on document to bypass any stopPropagation
+document.addEventListener('click', e => {
+    if (!e.target.classList.contains('support-contact-sig')) return;
+    openContactModal();
+});
 
 function showSupportTyping() {
     const area = document.getElementById('supportChatArea');
@@ -2145,17 +2182,13 @@ function saveSupportChat() {
         s: el.classList.contains('user') ? 'user' : 'ai',
         t: el.querySelector('.bubble-body')?.textContent || el.querySelector('.bubble')?.textContent || ''
     }));
+    // Always save to localStorage
     localStorage.setItem(KEY_SUPPORT, JSON.stringify({ ts: Date.now(), msgs }));
-
-    // Save to Firestore for logged-in users
+    // For logged-in users — also save to Firestore (separate collection, not in sessions list)
     const userRaw = localStorage.getItem(KEY_USER);
     const user = userRaw ? JSON.parse(userRaw) : null;
-    if (user && user.uid && user.p !== 'guest' && window._fbSaveSession) {
-        window._fbSaveSession(user.uid, 'support_chat', {
-            type: 'support',
-            messages: msgs,
-            updatedAt: Date.now()
-        });
+    if (user && user.uid && user.p !== 'guest' && window._fbSaveSupportChat) {
+        window._fbSaveSupportChat(user.uid, msgs);
     }
 }
 
