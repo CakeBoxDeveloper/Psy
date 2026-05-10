@@ -2033,6 +2033,7 @@ function openSupportChat() {
 }
 
 function closeSupportChat() {
+    document.getElementById('contactOverlay').classList.remove('show');
     goTo('screen1b');
     setTimeout(() => {
         doFlip(true);
@@ -2261,12 +2262,12 @@ document.getElementById('contactOverlay').addEventListener('click', e => {
 window.openContactModal = openContactModal;
 
 // Delegate click on contact attach card in support chat
-document.getElementById('supportChatArea').addEventListener('click', e => {
+document.addEventListener('click', e => {
     const card = e.target.closest('[data-contact="1"]');
     if (!card) return;
     e.stopPropagation();
     openContactModal();
-});
+}, true); // capture phase — fires before any other handler
 
 function showPremiumToast() {
     showToast('Эта функция доступна с Panacea Plus', {
