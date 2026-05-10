@@ -2105,16 +2105,17 @@ fetch('support-kb.md').then(r => r.text()).then(t => { SUPPORT_KB = t; }).catch(
 });
 
 
-const SUPPORT_SYSTEM = `Ты — Оракул, помощник поддержки приложения Panacea. Отвечай кратко и по делу, только на русском языке.
+function getSupportSystem() {
+    return `Ты — Оракул, помощник поддержки приложения Panacea. Отвечай кратко и по делу, только на русском языке. Ты помогаешь пользователям разобраться с функциями приложения.
 
-У тебя есть база знаний о приложении:
-${SUPPORT_KB}
+${SUPPORT_KB ? `База знаний:\n${SUPPORT_KB}` : 'Отвечай на вопросы об использовании приложения Panacea кратко и по делу.'}
 
 Правила:
-1. Если вопрос пользователя касается темы из базы знаний — дай краткий ответ (2-4 предложения) на основе базы знаний.
-2. Если вопрос НЕ касается базы знаний или требует ручного вмешательства (баги, оплата, жалобы) — ответь только этой фразой, без добавлений: "Я не могу помочь с этим автоматически. [CONTACT]"
-3. Никогда не выдумывай функции которых нет в базе знаний.
-4. Не используй markdown в ответах.`;
+1. Если вопрос касается функций приложения — дай краткий ответ (2-4 предложения).
+2. Если вопрос НЕ касается приложения или требует ручного вмешательства (баги, оплата, жалобы) — ответь только: "Я не могу помочь с этим автоматически. [CONTACT]"
+3. Не выдумывай функции.
+4. Не используй markdown.`;
+}
 
 let supportHistory = [];
 let supportTyping = false;
@@ -2135,10 +2136,11 @@ function addSupportMsg(text, sender, skipSave = false) {
         const sigRow = document.createElement('div');
         sigRow.className = 'bubble-sig-row';
 
-        const sig = document.createElement('span');
+        const sig = document.createElement('button');
         sig.className = 'bubble-sig support-contact-sig';
         sig.textContent = 'Оракул не решил мой вопрос';
-        sig.style.cssText = 'cursor:pointer;text-decoration:underline;text-underline-offset:2px;';
+        sig.style.cssText = 'cursor:pointer;text-decoration:underline;text-underline-offset:2px;background:none;border:none;font:inherit;color:inherit;padding:0;';
+        sig.onclick = (e) => { e.stopPropagation(); window.openContactModal && window.openContactModal(); };
 
         sigRow.appendChild(sig);
         bubble.appendChild(body);
@@ -2224,7 +2226,7 @@ async function sendSupportMsg() {
             body: JSON.stringify({
                 modelKey: 'tara',
                 history: [
-                    { role: 'system', content: SUPPORT_SYSTEM },
+                    { role: 'system', content: getSupportSystem() },
                     ...supportHistory
                 ],
                 max_tokens: 300,
@@ -2283,6 +2285,7 @@ function openContactModal() {
 
     document.getElementById('contactOverlay').classList.add('show');
 }
+window.openContactModal = openContactModal;
 
 document.getElementById('contactSubmitBtn').addEventListener('click', () => {
     const saved = localStorage.getItem(KEY_CONTACT);
