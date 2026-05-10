@@ -2003,7 +2003,6 @@ function goToSubscription() {
 
 /* ── Support chat ── */
 function openSupportChat() {
-    // Reset history and chat area on every open
     supportHistory = [];
     const area = document.getElementById('supportChatArea');
     area.innerHTML = '';
@@ -2020,6 +2019,10 @@ function openSupportChat() {
         area._maskBound = true;
     }
     area._updateMask = updateSupportMask;
+
+    // Restore previous chat if exists
+    restoreSupportChat();
+
     requestAnimationFrame(updateSupportMask);
     // If restoring after reload — no animation
     if (openSupportChat._restoring) {
@@ -2089,14 +2092,22 @@ function addSupportMsg(text, sender) {
     if (sender === 'ai') {
         div.innerHTML = `<div class="bubble">
             <span class="bubble-body">${text.replace(/\n/g,'<br>')}</span>
-            <div class="bubble-sig-row"><span class="bubble-sig">На этот вопрос отвечал Оракул</span></div>
+            <div class="bubble-sig-row">
+                <span class="bubble-sig" style="cursor:pointer;text-decoration:underline;text-underline-offset:2px;" id="supportSigBtn_${Date.now()}">Оракул не решил мой вопрос</span>
+            </div>
         </div>`;
+        // Attach click to the sig after insertion
+        setTimeout(() => {
+            const sig = div.querySelector('.bubble-sig');
+            if (sig) sig.addEventListener('click', e => { e.stopPropagation(); openContactModal(); });
+        }, 0);
     } else {
         div.innerHTML = `<div class="bubble">${text.replace(/\n/g,'<br>')}</div>`;
     }
     area.appendChild(div);
     area.scrollTop = area.scrollHeight;
     if (area._updateMask) area._updateMask();
+    saveSupportChat();
 }
 
 function showSupportTyping() {
@@ -2111,25 +2122,43 @@ function showSupportTyping() {
 
 // Show contact attach card in support chat
 function showContactCard() {
-    const area = document.getElementById('supportChatArea');
-    const div = document.createElement('div');
-    div.className = 'message ai';
-    div.style.cssText = 'animation:msgIn 0.4s ease-out forwards;justify-content:center;';
-    const icon = 'https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/56ff037b532d6b8dca5e28ef7a83aff38c7c43d8/Attach5.svg';
-    div.innerHTML = `<div class="attach-card" data-contact="1">
-        <div class="attach-card-body">
-            <img src="${icon}" alt="">
-            <div class="attach-card-title">Обратная связь</div>
-            <div class="attach-card-desc">Создать обращение</div>
-        </div>
-        <div class="attach-sig">Оракул предлагает связаться с командой</div>
-    </div>`;
-    area.appendChild(div);
-    area.scrollTop = area.scrollHeight;
-    if (area._updateMask) area._updateMask();
+    // No longer needed — contact is triggered via sig click
 }
 
-async function sendSupportMsg() {
+const KEY_SUPPORT = 'soma_support';
+
+function saveSupportChat() {
+    const area = document.getElementById('supportChatArea');
+    const msgs = Array.from(area.querySelectorAll('.message')).map(el => ({
+        s: el.classList.contains('user') ? 'user' : 'ai',
+        t: el.querySelector('.bubble-body')?.textContent || el.querySelector('.bubble')?.textContent || ''
+    }));
+    localStorage.setItem(KEY_SUPPORT, JSON.stringify({ ts: Date.now(), msgs }));
+
+    // Save to Firestore for logged-in users
+    const userRaw = localStorage.getItem(KEY_USER);
+    const user = userRaw ? JSON.parse(userRaw) : null;
+    if (user && user.uid && user.p !== 'guest' && window._fbSaveSession) {
+        window._fbSaveSession(user.uid, 'support_chat', {
+            type: 'support',
+            messages: msgs,
+            updatedAt: Date.now()
+        });
+    }
+}
+
+function restoreSupportChat() {
+    const raw = localStorage.getItem(KEY_SUPPORT);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    if (!data.msgs || !data.msgs.length) return false;
+    supportHistory = [];
+    data.msgs.forEach(m => {
+        addSupportMsg(m.t, m.s);
+        supportHistory.push({ role: m.s === 'user' ? 'user' : 'assistant', content: m.t });
+    });
+    return true;
+}
     if (supportTyping) return;
     const input = document.getElementById('supportInput');
     const text = input.value.trim();
@@ -2268,37 +2297,7 @@ document.getElementById('contactOverlay').addEventListener('click', e => {
 
 window.openContactModal = openContactModal;
 
-// Delegate click on contact attach card in support chat
-document.addEventListener('click', e => {
-    const card = e.target.closest('[data-contact="1"]');
-    if (!card) return;
-    e.stopPropagation();
-    e.preventDefault();
-    const overlay = document.getElementById('contactOverlay');
-    if (!overlay) { console.error('[Contact] overlay not found'); return; }
-    // Reset state
-    const saved = localStorage.getItem(KEY_CONTACT);
-    const state = saved ? JSON.parse(saved) : null;
-    const textarea = document.getElementById('contactTextarea');
-    const status   = document.getElementById('contactModalStatus');
-    const btn      = document.getElementById('contactSubmitBtn');
-    if (state && state.sent) {
-        textarea.value = state.text || '';
-        textarea.disabled = true;
-        status.textContent = 'В обработке';
-        status.classList.add('sent');
-        btn.textContent = 'Закрыть обращение';
-        btn.classList.add('close-mode');
-    } else {
-        textarea.value = state?.text || '';
-        textarea.disabled = false;
-        status.textContent = 'Новое обращение';
-        status.classList.remove('sent');
-        btn.textContent = 'Отправить';
-        btn.classList.remove('close-mode');
-    }
-    overlay.classList.add('show');
-}, true); // capture phase
+
 
 function showPremiumToast() {
     showToast('Эта функция доступна с Panacea Plus', {
