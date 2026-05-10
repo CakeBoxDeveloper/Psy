@@ -2090,16 +2090,29 @@ function addSupportMsg(text, sender, skipSave = false) {
     const div = document.createElement('div');
     div.className = `message ${sender}`;
     if (sender === 'ai') {
-        div.innerHTML = `<div class="bubble">
-            <span class="bubble-body">${text.replace(/\n/g,'<br>')}</span>
-            <div class="bubble-sig-row">
-                <span class="bubble-sig" style="cursor:pointer;text-decoration:underline;text-underline-offset:2px;">Оракул не решил мой вопрос</span>
-            </div>
-        </div>`;
-        setTimeout(() => {
-            const sig = div.querySelector('.bubble-sig');
-            if (sig) sig.addEventListener('click', e => { e.stopPropagation(); openContactModal(); });
-        }, 0);
+        const sigEl = document.createElement('span');
+        sigEl.className = 'bubble-sig';
+        sigEl.textContent = 'Оракул не решил мой вопрос';
+        sigEl.style.cssText = 'cursor:pointer;text-decoration:underline;text-underline-offset:2px;';
+        sigEl.addEventListener('click', e => {
+            e.stopPropagation();
+            openContactModal();
+        });
+
+        const sigRow = document.createElement('div');
+        sigRow.className = 'bubble-sig-row';
+        sigRow.appendChild(sigEl);
+
+        const body = document.createElement('span');
+        body.className = 'bubble-body';
+        body.innerHTML = text.replace(/\n/g,'<br>');
+
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        bubble.appendChild(body);
+        bubble.appendChild(sigRow);
+
+        div.appendChild(bubble);
     } else {
         div.innerHTML = `<div class="bubble">${text.replace(/\n/g,'<br>')}</div>`;
     }
@@ -2210,6 +2223,8 @@ async function sendSupportMsg() {
 const KEY_CONTACT = 'soma_contact';
 
 function openContactModal() {
+    const overlay = document.getElementById('contactOverlay');
+    if (!overlay) { alert('overlay not found'); return; }
     const saved = localStorage.getItem(KEY_CONTACT);
     const state = saved ? JSON.parse(saved) : null;
 
