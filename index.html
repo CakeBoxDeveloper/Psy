@@ -1323,6 +1323,48 @@ onAuthStateChanged(auth, user => {
         const p = user.isAnonymous ? 'guest'
                 : user.providerData[0]?.providerId === 'apple.com' ? 'apple' : 'google';
         localStorage.setItem('soma_user', JSON.stringify({ uid: user.uid, p, ts: Date.now() }));
+
+        // Загружаем premium_status из Firestore при каждом входе
+        if (!user.isAnonymous) {
+            const premRef = doc(db, 'sessions', user.uid, 'list', 'premium_status');
+            getDoc(premRef).then(snap => {
+                if (snap.exists()) {
+                    const data = snap.data();
+                    const now = Date.now();
+                    const isActive = data.active === true &&
+                                     (!data.expiresAt || data.expiresAt > now);
+                    if (isActive) {
+                        // Подписка активна
+                        localStorage.setItem('soma_premium', '1');
+                        localStorage.setItem('soma_premium_expires', String(data.expiresAt || 0));
+                        if (!isPremium) {
+                            isPremium = true;
+                            document.body.classList.add('is-premium');
+                            document.querySelectorAll('.ditem-star').forEach(el => el.style.display = 'none');
+                        }
+                    } else {
+                        // Подписка истекла или неактивна — деактивируем
+                        localStorage.removeItem('soma_premium');
+                        localStorage.removeItem('soma_premium_expires');
+                        localStorage.removeItem('soma_premium_card');
+                        if (isPremium) {
+                            isPremium = false;
+                            document.body.classList.remove('is-premium');
+                            document.querySelectorAll('.ditem-star').forEach(el => el.style.display = '');
+                        }
+                        // Если истекла — обновляем флаг в Firestore
+                        if (data.active && data.expiresAt && data.expiresAt <= now) {
+                            setDoc(premRef, { active: false, updatedAt: serverTimestamp() }, { merge: true });
+                        }
+                    }
+                } else {
+                    // Документа нет — сбрасываем локальный кэш
+                    localStorage.removeItem('soma_premium');
+                    localStorage.removeItem('soma_premium_expires');
+                }
+            }).catch(() => {});
+        }
+
         // If on login screen — go to survey
         if (document.getElementById('screen1')?.classList.contains('active')) {
             window._goToAfterAuth?.();
@@ -1912,10 +1954,18 @@ let chatHistory = [];
 let curModel = 'tara', isTyping = false;
 let currentSessionId = null; // Firestore session ID
 let isPremium = false; // Premium status
-// Restore premium from localStorage
+// Restore premium from localStorage — с проверкой срока действия
 if (localStorage.getItem('soma_premium') === '1') {
-    isPremium = true;
-    document.body.classList.add('is-premium');
+    const expires = parseInt(localStorage.getItem('soma_premium_expires') || '0');
+    if (!expires || expires > Date.now()) {
+        isPremium = true;
+        document.body.classList.add('is-premium');
+    } else {
+        // Срок истёк — чистим кэш
+        localStorage.removeItem('soma_premium');
+        localStorage.removeItem('soma_premium_expires');
+        localStorage.removeItem('soma_premium_card');
+    }
 }
 
 const modelBtn = document.getElementById('modelBtn');
@@ -3026,13 +3076,15 @@ function send() {
         }
         isPremium = true;
         localStorage.setItem('soma_premium', '1');
+        const _plusExpires = Date.now() + 30 * 24 * 60 * 60 * 1000;
+        localStorage.setItem('soma_premium_expires', String(_plusExpires));
         document.body.classList.add('is-premium');
         document.querySelectorAll('.ditem-star').forEach(el => el.style.display = 'none');
         // Save to Firestore if logged in
         const _uRaw = localStorage.getItem(KEY_USER);
         const _u = _uRaw ? JSON.parse(_uRaw) : null;
         if (_u && _u.uid && _u.p !== 'guest' && window._fbSaveSession) {
-            window._fbSaveSession(_u.uid, 'premium_status', { active: true, activatedAt: Date.now() });
+            window._fbSaveSession(_u.uid, 'premium_status', { active: true, activatedAt: Date.now(), expiresAt: _plusExpires });
         }
         // Show card only if not already present — use localStorage flag
         if (!localStorage.getItem('soma_premium_card')) {
