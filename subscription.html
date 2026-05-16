@@ -947,12 +947,37 @@ function startPaymentCheck() {
 }
 
 function activatePremium(uid, txid) {
+    const method = currentCoin ? `crypto_${currentCoin.toLowerCase()}` : 'crypto';
+
+    if (giftTarget) {
+        // ── Gift purchase — store pending gift by email, no expiry yet ──
+        const _userRaw = localStorage.getItem('soma_user');
+        const _user = _userRaw ? JSON.parse(_userRaw) : null;
+        if (_user && _user.uid && window._fbSaveGift) {
+            window._fbSaveGift(giftTarget, {
+                fromUid: _user.uid,
+                txid: txid || null,
+                method,
+                purchasedAt: Date.now(),
+                durationDays: 30
+            });
+        }
+        // Show success and go back — no local premium activation
+        setTimeout(() => {
+            const ov = document.getElementById('pageOverlay');
+            ov.classList.remove('hidden');
+            ov.classList.add('visible');
+            setTimeout(() => history.back(), 450);
+        }, 2000);
+        return;
+    }
+
+    // ── Regular purchase — activate immediately ──
     const expires = Date.now() + 30 * 24 * 60 * 60 * 1000;
     localStorage.setItem('soma_premium', '1');
     localStorage.setItem('soma_premium_expires', String(expires));
     localStorage.setItem('soma_premium_date', String(Date.now()));
 
-    // Save to Firestore if logged in
     const _userRaw = localStorage.getItem('soma_user');
     const _user = _userRaw ? JSON.parse(_userRaw) : null;
     if (_user && _user.uid && _user.p !== 'guest' && window._fbSaveSession) {
@@ -961,7 +986,7 @@ function activatePremium(uid, txid) {
             activatedAt: Date.now(),
             expiresAt: expires,
             txid: txid || null,
-            method: 'crypto_trc20'
+            method
         });
     }
 
