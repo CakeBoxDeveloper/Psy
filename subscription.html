@@ -460,30 +460,30 @@ body.flipping{overflow:hidden;}
           <div class="pay-instruction-step"><b>I.</b>Выбери удобную сеть и скопируй адрес кошелька.</div>
           <div class="pay-instruction-step"><b>II.</b>Нажми на поле «Сумма» — она скопируется. Переводи именно её: сумма уникальна и нужна для идентификации платежа.</div>
           <div class="pay-instruction-step"><b>III.</b>Отправь транзакцию и нажми кнопку ниже.</div>
-          <div class="pay-instruction-note">Проверка занимает до 30 секунд после подтверждения сети.</div>
+          <!-- Check button inside instruction block, only for TRC20 -->
+          <div id="checkPayWrap" style="display:none;margin:6px -12px -10px;border-top:1px solid rgba(80,50,25,0.15);">
+            <button id="checkPayBtn" onclick="startPaymentCheck()" style="
+              width:100%;height:38px;
+              background:none;border:none;
+              font-size:11px;font-weight:600;
+              color:rgba(55,38,22,0.6);
+              font-family:'Inter',sans-serif;
+              cursor:pointer;
+              transition:color 0.15s;
+              padding:0 12px;
+              text-align:center;
+            ">Проверить оплату</button>
+          </div>
         </div>
 
-        <!-- Check payment button — only shown for TRC20 -->
-        <div id="checkPayWrap" style="width:100%;flex-shrink:0;margin-top:8px;display:none;">
-          <button id="checkPayBtn" onclick="startPaymentCheck()" style="
-            width:100%;height:42px;
-            background:rgba(80,50,25,0.12);
-            border:1px solid rgba(80,50,25,0.35);
-            border-radius:10px;
-            font-size:13px;font-weight:600;
-            color:rgb(55,38,22);
-            font-family:'Inter',sans-serif;
-            cursor:pointer;
-            transition:background 0.15s;
-            position:relative;overflow:hidden;
-          ">Я оплатил — проверить</button>
-          <div id="checkPayStatus" style="
-            text-align:center;font-size:11px;
-            color:rgba(55,38,22,0.5);
-            margin-top:6px;min-height:16px;
-            line-height:1.5;
-          "></div>
-        </div>
+        <!-- Result message below instruction block -->
+        <div id="checkPayStatus" style="
+          text-align:center;font-size:11px;
+          color:rgb(55,38,22);
+          min-height:0;
+          line-height:1.5;
+          display:none;
+        "></div>
       </div>
 
       <button class="pay-back" onclick="flipBack()">Назад на страницу подписок</button>
@@ -835,17 +835,18 @@ function getNumericAmount() {
     return isNaN(num) ? null : num;
 }
 
-function setCheckStatus(msg, color) {
+function setCheckStatus(msg, show) {
     const el = document.getElementById('checkPayStatus');
+    if (!msg) { el.style.display = 'none'; return; }
     el.textContent = msg;
-    el.style.color = color || 'rgba(55,38,22,0.5)';
+    el.style.display = show ? 'block' : 'none';
 }
 
 function setCheckBtnState(loading) {
     const btn = document.getElementById('checkPayBtn');
     btn.disabled = loading;
-    btn.textContent = loading ? 'Проверяем...' : 'Я оплатил — проверить';
-    btn.style.opacity = loading ? '0.6' : '1';
+    btn.textContent = loading ? 'Идёт проверка' : 'Проверить оплату';
+    btn.style.opacity = loading ? '0.5' : '1';
     btn.style.cursor = loading ? 'not-allowed' : 'pointer';
 }
 
@@ -867,7 +868,7 @@ async function doCheck() {
         if (data.paid) {
             clearTimeout(checkTimer);
             setCheckBtnState(false);
-            setCheckStatus('✓ Платёж подтверждён! Активируем подписку...', 'rgb(55,38,22)');
+            setCheckStatus('Оплата прошла успешно', true);
             activatePremium(uid, data.txid);
             return;
         }
@@ -876,12 +877,10 @@ async function doCheck() {
         if (checkAttempts >= CHECK_MAX_ATTEMPTS) {
             clearTimeout(checkTimer);
             setCheckBtnState(false);
-            setCheckStatus('Платёж не найден. Проверь сумму и сеть, затем попробуй снова.', 'rgba(180,60,40,0.8)');
+            setCheckStatus('Оплата не найдена', true);
             return;
         }
 
-        const remaining = CHECK_MAX_ATTEMPTS - checkAttempts;
-        setCheckStatus(`Ищем транзакцию... (ещё ${remaining} попыток)`, 'rgba(55,38,22,0.45)');
         checkTimer = setTimeout(doCheck, CHECK_INTERVAL_MS);
 
     } catch (err) {
@@ -890,7 +889,7 @@ async function doCheck() {
         if (checkAttempts >= CHECK_MAX_ATTEMPTS) {
             clearTimeout(checkTimer);
             setCheckBtnState(false);
-            setCheckStatus('Ошибка соединения. Попробуй позже.', 'rgba(180,60,40,0.8)');
+            setCheckStatus('Оплата не найдена', true);
             return;
         }
         checkTimer = setTimeout(doCheck, CHECK_INTERVAL_MS);
@@ -900,16 +899,15 @@ async function doCheck() {
 function startPaymentCheck() {
     const amount = getNumericAmount();
     if (!amount) {
-        setCheckStatus('Подожди, пока загрузится сумма.', 'rgba(180,60,40,0.8)');
+        setCheckStatus('Подожди, пока загрузится сумма.', true);
         return;
     }
 
     clearTimeout(checkTimer);
     checkAttempts = 0;
     currentExpectedAmount = amount;
-
+    setCheckStatus('', false);
     setCheckBtnState(true);
-    setCheckStatus('Подключаемся к блокчейну...', 'rgba(55,38,22,0.45)');
     doCheck();
 }
 
@@ -933,7 +931,6 @@ function activatePremium(uid, txid) {
     }
 
     setTimeout(() => {
-        setCheckStatus('Panacea Plus активирован!', 'rgb(55,38,22)');
         setTimeout(() => {
             const ov = document.getElementById('pageOverlay');
             ov.classList.remove('hidden');
