@@ -2444,18 +2444,22 @@ function openContactModal() {
 
     const textarea = document.getElementById('contactTextarea');
     const status   = document.getElementById('contactModalStatus');
+    const title    = document.querySelector('.contact-modal-title');
     const btn      = document.getElementById('contactSubmitBtn');
 
     if (state && state.sent) {
         textarea.value = state.text || '';
         textarea.disabled = true;
-        status.textContent = 'В обработке';
+        // Show ticket number in title
+        if (title) title.textContent = state.ticketId || 'Обратная связь';
+        status.textContent = 'Направление закрыто';
         status.classList.add('sent');
         btn.textContent = 'Закрыть обращение';
         btn.classList.add('close-mode');
     } else {
         textarea.value = state?.text || '';
         textarea.disabled = false;
+        if (title) title.textContent = 'Обратная связь';
         status.textContent = 'Новое обращение';
         status.classList.remove('sent');
         btn.textContent = 'Отправить';
@@ -2482,10 +2486,13 @@ document.getElementById('contactSubmitBtn').addEventListener('click', () => {
         const text = textarea.value.trim();
         if (!text) return;
 
+        // Generate short ticket ID: # + 4 uppercase alphanumeric chars
+        const ticketId = '#' + Math.random().toString(36).slice(2, 6).toUpperCase();
+
         // Save to localStorage
         const userRaw = localStorage.getItem(KEY_USER);
         const user = userRaw ? JSON.parse(userRaw) : null;
-        const contactData = { text, sent: true, sentAt: Date.now(), uid: user?.uid || 'guest' };
+        const contactData = { text, sent: true, sentAt: Date.now(), uid: user?.uid || 'guest', ticketId };
         localStorage.setItem(KEY_CONTACT, JSON.stringify(contactData));
 
         // Save to Firestore
@@ -2494,13 +2501,16 @@ document.getElementById('contactSubmitBtn').addEventListener('click', () => {
                 type: 'contact',
                 text,
                 sentAt: Date.now(),
-                status: 'pending'
+                status: 'pending',
+                ticketId
             });
         }
 
-        // Update UI
+        // Update UI — show ticket number in title
+        const title = document.querySelector('.contact-modal-title');
+        if (title) title.textContent = ticketId;
         textarea.disabled = true;
-        status.textContent = 'В обработке';
+        status.textContent = 'Направление закрыто';
         status.classList.add('sent');
         btn.textContent = 'Закрыть обращение';
         btn.classList.add('close-mode');
