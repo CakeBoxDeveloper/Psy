@@ -306,6 +306,7 @@ body.light .pf-marker{filter:brightness(0) saturate(100%) invert(10%) sepia(15%)
 .input-area{padding:12px 16px;background:transparent;display:flex;gap:8px;flex-shrink:0;align-items:center;}
 .input-field{flex:1;background:rgba(255,255,255,0.06);border:none;color:rgba(210,190,165,0.85);padding:0 12px;border-radius:8px;font-size:12px;outline:none;transition:all 0.15s;font-family:'Inter',sans-serif;height:36px;line-height:36px;}
 .input-field::placeholder{color:rgba(210,190,165,0.3);}
+#supportInput::placeholder{color:rgba(210,190,165,0.3);line-height:normal;}
 .input-field:focus{background:rgba(255,255,255,0.1);}
 .send-btn{width:36px;height:36px;background:rgba(255,255,255,0.06);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
 .send-btn:hover{background:rgba(255,255,255,0.1);}
@@ -1078,24 +1079,7 @@ body.light .test-btn-reset:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,
     </div>
 </div>
 
-<!-- Contact / Feedback modal -->
-<div class="contact-overlay" id="contactOverlay">
-  <div class="contact-modal" id="contactModal">
-    <div class="contact-modal-header">
-      <div class="contact-modal-title-row">
-        <div class="contact-modal-title">Обратная связь</div>
-        <img class="contact-modal-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/56ff037b532d6b8dca5e28ef7a83aff38c7c43d8/Attach5.svg" alt="">
-      </div>
-      <div class="contact-modal-status" id="contactModalStatus">Новое обращение</div>
-      <div class="contact-modal-divider"></div>
-    </div>
-    <div class="contact-modal-body">
-      <textarea class="contact-textarea" id="contactTextarea" placeholder="Опиши проблему или вопрос..."></textarea>
-    </div>
-    <div class="contact-modal-footer">
-      <button class="contact-submit-btn" id="contactSubmitBtn">Отправить</button>
-    </div>
-  </div>
+</div>
 </div>
 
 <!-- Test modal -->
@@ -1195,6 +1179,26 @@ body.light .test-btn-reset:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,
         <button class="end-btn end-btn-new" id="endNew">Новый сеанс</button>
     </div>
 </div>
+</div>
+
+<!-- Contact / Feedback modal -->
+<div class="contact-overlay" id="contactOverlay">
+  <div class="contact-modal" id="contactModal">
+    <div class="contact-modal-header">
+      <div class="contact-modal-title-row">
+        <div class="contact-modal-title">Обратная связь</div>
+        <img class="contact-modal-icon" src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/56ff037b532d6b8dca5e28ef7a83aff38c7c43d8/Attach5.svg" alt="">
+      </div>
+      <div class="contact-modal-status" id="contactModalStatus">Новое обращение</div>
+      <div class="contact-modal-divider"></div>
+    </div>
+    <div class="contact-modal-body">
+      <textarea class="contact-textarea" id="contactTextarea" placeholder="Опиши проблему или вопрос..."></textarea>
+    </div>
+    <div class="contact-modal-footer">
+      <button class="contact-submit-btn" id="contactSubmitBtn">Отправить</button>
+    </div>
+  </div>
 </div>
 
 <!-- SCREEN: Support chat -->
@@ -2071,6 +2075,13 @@ function goToSubscription() {
 }
 
 /* ── Support chat ── */
+function showSupportEmptyState(area) {
+    if (!area) area = document.getElementById('supportChatArea');
+    if (area && !area.querySelector('.message')) {
+        area.innerHTML = `<div class="empty-state"><div style="max-width:220px;text-align:center;">Оракул отвечает в порядке очереди.<br><br><span style="font-size:11px;opacity:0.6;">Мы отвечаем всем — если ты уже писал нам, не нужно отправлять повторное сообщение. Мы обязательно ответим.</span></div></div>`;
+    }
+}
+
 function openSupportChat() {
     supportHistory = [];
     const area = document.getElementById('supportChatArea');
@@ -2102,10 +2113,13 @@ function openSupportChat() {
                 });
                 area.scrollTop = area.scrollHeight;
                 if (area._updateMask) area._updateMask();
+            } else {
+                showSupportEmptyState(area);
             }
-        });
+        }).catch(() => showSupportEmptyState(area));
     } else {
-        restoreSupportChat();
+        const restored = restoreSupportChat();
+        if (!restored) showSupportEmptyState(area);
     }
 
     requestAnimationFrame(updateSupportMask);
@@ -2189,8 +2203,8 @@ function addSupportMsg(text, sender, skipSave = false) {
         const sig = document.createElement('button');
         sig.className = 'bubble-sig support-contact-sig';
         sig.textContent = 'Оракул не решил мой вопрос';
-        sig.style.cssText = 'cursor:pointer;text-decoration:underline;text-underline-offset:2px;background:none;border:none;font:inherit;color:inherit;padding:0;';
-        sig.onclick = (e) => { e.stopPropagation(); window.openContactModal && window.openContactModal(); };
+        sig.style.cssText = 'cursor:pointer;text-decoration:none;background:none;border:none;font:inherit;color:inherit;padding:0;opacity:0.7;'
+        sig.onclick = (e) => { e.stopPropagation(); openContactModal(); };
 
         sigRow.appendChild(sig);
         bubble.appendChild(body);
@@ -2208,6 +2222,7 @@ function addSupportMsg(text, sender, skipSave = false) {
 // Delegated click for support contact sig — on document to bypass any stopPropagation
 document.addEventListener('click', e => {
     if (!e.target.classList.contains('support-contact-sig')) return;
+    e.stopPropagation();
     openContactModal();
 });
 
