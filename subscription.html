@@ -826,19 +826,36 @@ document.addEventListener('click', e => {
 
 /* ── Payment checker ── */
 const API_BASE = 'https://panacea-ochre.vercel.app';
-const CHECK_INTERVAL_MS = 8000;  // poll every 8s
-const CHECK_MAX_ATTEMPTS = 15;   // give up after ~2 min
+const CHECK_INTERVAL_MS = 8000;
+const CHECK_MAX_ATTEMPTS = 15;
+
+// Map coin key → check mode sent to API
+const COIN_MODE = {
+    USDT_TRC20: 'usdt_trc20',
+    TRX:        'trx_native',
+    TRX_TEST:   'trx_native',
+    BTC:        'btc',
+    SOL:        'sol_native',
+    USDT_SOL:   'usdt_sol',
+    LTC:        'ltc',
+    DOGE:       'doge',
+    XRP:        'xrp',
+    // ERC20-family requires API key — not supported without key
+    // USDT_ERC20, USDT_BEP20, USDT_ARB, USDT_POLY, ETH, BNB
+};
+
+// Coins that support keyless checking
+const CHECKABLE = new Set(Object.keys(COIN_MODE));
 
 let checkTimer = null;
 let checkAttempts = 0;
 let currentExpectedAmount = null;
 
-// Show/hide check button based on selected coin (only TRC20 and TRX_TEST supported for now)
+// Show/hide check button — visible for all keyless-supported coins
 function updateCheckButton() {
     const wrap = document.getElementById('checkPayWrap');
-    wrap.style.display = (currentCoin === 'USDT_TRC20' || currentCoin === 'TRX_TEST') ? 'block' : 'none';
+    wrap.style.display = CHECKABLE.has(currentCoin) ? 'block' : 'none';
 }
-
 // Extract numeric amount from displayed string like "5.03 USDT"
 function getNumericAmount() {
     const raw = document.getElementById('fieldAmtVal').textContent || '';
@@ -867,15 +884,14 @@ async function doCheck() {
     const userRaw = localStorage.getItem('soma_user');
     const user = userRaw ? JSON.parse(userRaw) : null;
     const uid = user?.uid || 'guest';
-    const isTest = currentCoin === 'TRX_TEST';
+    const mode = COIN_MODE[currentCoin] || 'usdt_trc20';
 
     try {
         const resp = await fetch(`${API_BASE}/api/check-payment`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ address, amount, uid, mode: isTest ? 'trx_native' : 'usdt_trc20' })
-        });
-        const data = await resp.json();
+            body: JSON.stringify({ address, amount, uid, mode })
+        });        const data = await resp.json();
 
         if (data.paid) {
             clearTimeout(checkTimer);
