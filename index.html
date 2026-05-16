@@ -1645,7 +1645,25 @@ function renderSessions(highlightId) {
         }
         cont.addEventListener('scroll', updateSessionsMask, { passive: true });
         setTimeout(updateSessionsMask, 50);
-        sessions.forEach(s => {
+        // Filter out non-chat records (premium_status, test_*, contact_*) and empty sessions
+        const chatSessions = sessions.filter(s => {
+            if (!s.id) return false;
+            if (s.id === 'premium_status') return false;
+            if (s.id.startsWith('test_')) return false;
+            if (s.id.startsWith('contact_')) return false;
+            if ((s.msgCount || 0) === 0 && (!s.messages || s.messages.length === 0)) return false;
+            return true;
+        });
+
+        if (!chatSessions.length) {
+            cont.innerHTML = `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:40px 20px;text-align:center;">
+                <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/dfaf3a61486f97e44cd5ca32ec26073053be6e36/Ruins2.svg" style="width:52px;height:52px;opacity:0.25;filter:brightness(0) saturate(100%) invert(10%) sepia(15%) saturate(500%) hue-rotate(340deg) brightness(40%);" alt="">
+                <div style="color:rgba(40,28,20,0.45);font-size:12px;line-height:1.7;">Здесь будет храниться<br>история твоих сеансов.</div>
+            </div>`;
+            return;
+        }
+
+        chatSessions.forEach(s => {
             const isHighlighted = highlightId && s.id === highlightId;
             const card = document.createElement('div');
             card.style.cssText = `background:rgba(40,28,20,0.08);border-radius:8px;padding:12px 14px;cursor:pointer;transition:background 0.15s;display:flex;align-items:center;justify-content:space-between;gap:8px;position:relative;overflow:hidden;flex-shrink:0;`;
@@ -1660,7 +1678,7 @@ function renderSessions(highlightId) {
             card.innerHTML += `
                 <div style="flex:1;min-width:0;">
                     <div style="font-size:13px;font-weight:600;color:rgb(40,28,20);margin-bottom:3px;">${s.date || 'сеанс'}</div>
-                    <div style="font-size:11px;color:rgba(40,28,20,0.5);">${s.msgCount || 0} сообщений · ${(s.modelsUsed||[]).map(k => {
+                    <div style="font-size:11px;color:rgba(40,28,20,0.5);">${s.msgCount || (s.messages ? s.messages.filter(m => m.s === 'user' || m.s === 'ai').length : 0)} сообщений · ${(s.modelsUsed||[]).map(k => {
                         if (k === 'consilium') return 'Консилиум';
                         if (k === 'auto') return 'Оракул';
                         return models[k]?.name || k;
