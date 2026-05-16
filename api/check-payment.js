@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-    const { address, amount, uid } = req.body || {};
+    const { address, amount, uid, mode } = req.body || {};
 
     if (!address || !amount || !uid) {
         return res.status(400).json({ error: 'Missing required fields: address, amount, uid' });
@@ -31,7 +31,9 @@ export default async function handler(req, res) {
     }
 
     try {
-        const found = await checkTRC20Payment(address, expectedAmount);
+        const found = mode === 'trx_native'
+            ? await checkTRXPayment(address, expectedAmount)
+            : await checkTRC20Payment(address, expectedAmount);
         if (found) {
             return res.status(200).json({ paid: true, txid: found.txid, confirmedAt: found.confirmedAt });
         } else {
@@ -76,6 +78,50 @@ async function checkTRC20Payment(toAddress, expectedAmount) {
         if (diff <= AMOUNT_TOLERANCE) {
             return {
                 txid: tx.transaction_id,
+                confirmedAt: tx.block_timestamp,
+                receivedAmount
+            };
+        }
+    }
+
+    return null;
+}
+
+// TRX native transfer checker (for test payments)
+// TRX has 6 decimal places (sun = 1e-6 TRX)
+const TRX_AMOUNT_TOLERANCE = 0.05; // ±0.05 TRX
+
+async function checkTRXPayment(toAddress, expectedAmount) {
+    const since = Date.now() - LOOKBACK_MS;
+
+    const url = `${TRONGRID_BASE}/v1/accounts/${toAddress}/transactions` +
+        `?limit=50` +
+        `&only_to=true` +
+        `&min_timestamp=${since}`;
+
+    const resp = await fetch(url, {
+        headers: { 'Accept': 'application/json' }
+    });
+
+    if (!resp.ok) {
+        throw new Error(`TronGrid responded with ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    const txs = data.data || [];
+
+    for (const tx of txs) {
+        // Only TRX transfers (type = TransferContract)
+        const contract = tx.raw_data?.contract?.[0];
+        if (contract?.type !== 'TransferContract') continue;
+
+        const amountSun = contract.parameter?.value?.amount || 0;
+        const receivedAmount = amountSun / 1e6; // sun → TRX
+        const diff = Math.abs(receivedAmount - expectedAmount);
+
+        if (diff <= TRX_AMOUNT_TOLERANCE) {
+            return {
+                txid: tx.txID,
                 confirmedAt: tx.block_timestamp,
                 receivedAmount
             };
