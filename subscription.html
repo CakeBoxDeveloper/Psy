@@ -433,6 +433,8 @@ body.flipping{overflow:hidden;}
           <div class="pay-option" data-value="LTC">LTC — Litecoin</div>
           <div class="pay-option" data-value="XRP">XRP — Ripple</div>
           <div class="pay-option" data-value="DOGE">DOGE — Dogecoin</div>
+          <div class="pay-optgroup-label">Тест</div>
+          <div class="pay-option" data-value="TRX_TEST">TRX — тест (0.5 TRX)</div>
         </div>
       </div>
 
@@ -563,6 +565,7 @@ const WALLETS = {
     LTC:        'ltc1qaj6l4hdk2zpf4d96k3gftv4a6lmu9nn9xe3ymw',
     XRP:        'rLHZei6UASAyekNZSwuGKDq1LYcykxxPRX',
     DOGE:       'DGHrdqJfeWAk2VkTDWhx8y6o1WHtJMqn19',
+    TRX_TEST:   'TMfDJhbJXc89oZgXnEm6qC9MAnDc97f2GJ',
 };
 
 /* ── Status (front) ── */
@@ -660,6 +663,7 @@ const GECKO_IDS = {
     USDT_SOL:'tether',   USDT_ARB:'tether',   USDT_POLY:'tether',
     BTC:'bitcoin', ETH:'ethereum', SOL:'solana', BNB:'binancecoin',
     TRX:'tron', LTC:'litecoin', XRP:'ripple', DOGE:'dogecoin',
+    TRX_TEST:'tron',
 };
 
 // Decimal places per coin
@@ -667,6 +671,7 @@ const DECIMALS = {
     USDT_TRC20:2, USDT_ERC20:2, USDT_BEP20:2, USDT_SOL:2,
     USDT_ARB:2,   USDT_POLY:2,
     BTC:6, ETH:5, SOL:3, BNB:4, TRX:1, LTC:4, XRP:2, DOGE:1,
+    TRX_TEST:1,
 };
 
 // Unique fingerprint: small random offset stored per session
@@ -746,6 +751,12 @@ async function onCoinChange() {
     amtEl.classList.remove('pay-amount-loading');
 
     let amtStr;
+    // Test mode — fixed amount, no price fetch needed
+    if (coin === 'TRX_TEST') {
+        amtEl.classList.remove('pay-amount-loading');
+        amtEl.textContent = '0.5 TRX';
+        return;
+    }
     if (price) {
         const dec = DECIMALS[coin] ?? 4;
         const base = PRICE_USD / price;
@@ -822,10 +833,10 @@ let checkTimer = null;
 let checkAttempts = 0;
 let currentExpectedAmount = null;
 
-// Show/hide check button based on selected coin (only TRC20 supported for now)
+// Show/hide check button based on selected coin (only TRC20 and TRX_TEST supported for now)
 function updateCheckButton() {
     const wrap = document.getElementById('checkPayWrap');
-    wrap.style.display = currentCoin === 'USDT_TRC20' ? 'block' : 'none';
+    wrap.style.display = (currentCoin === 'USDT_TRC20' || currentCoin === 'TRX_TEST') ? 'block' : 'none';
 }
 
 // Extract numeric amount from displayed string like "5.03 USDT"
@@ -851,17 +862,18 @@ function setCheckBtnState(loading) {
 }
 
 async function doCheck() {
-    const address = WALLETS['USDT_TRC20'];
+    const address = WALLETS[currentCoin] || WALLETS['USDT_TRC20'];
     const amount = currentExpectedAmount;
     const userRaw = localStorage.getItem('soma_user');
     const user = userRaw ? JSON.parse(userRaw) : null;
     const uid = user?.uid || 'guest';
+    const isTest = currentCoin === 'TRX_TEST';
 
     try {
         const resp = await fetch(`${API_BASE}/api/check-payment`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ address, amount, uid })
+            body: JSON.stringify({ address, amount, uid, mode: isTest ? 'trx_native' : 'usdt_trc20' })
         });
         const data = await resp.json();
 
