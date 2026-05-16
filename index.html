@@ -2135,7 +2135,7 @@ function openSupportChat() {
 }
 
 function closeSupportChat() {
-    document.getElementById('contactOverlay').classList.remove('show');
+    closeContactModal();
     goTo('screen1b');
     setTimeout(() => {
         doFlip(true);
@@ -2184,7 +2184,7 @@ ${SUPPORT_KB ? `База знаний:\n${SUPPORT_KB}` : 'Отвечай на в
 let supportHistory = [];
 let supportTyping = false;
 
-function addSupportMsg(text, sender, skipSave = false) {
+function addSupportMsg(text, sender, skipSave = false, noSig = false) {
     const area = document.getElementById('supportChatArea');
     if (area.querySelector('.empty-state')) area.innerHTML = '';
     const div = document.createElement('div');
@@ -2197,18 +2197,22 @@ function addSupportMsg(text, sender, skipSave = false) {
         body.className = 'bubble-body';
         body.innerHTML = text.replace(/\n/g,'<br>');
 
-        const sigRow = document.createElement('div');
-        sigRow.className = 'bubble-sig-row';
-
-        const sig = document.createElement('button');
-        sig.className = 'bubble-sig support-contact-sig';
-        sig.textContent = 'Оракул не решил мой вопрос';
-        sig.style.cssText = 'cursor:pointer;text-decoration:none;background:none;border:none;font:inherit;color:inherit;padding:0;opacity:0.7;'
-        sig.onclick = (e) => { e.stopPropagation(); openContactModal(); };
-
-        sigRow.appendChild(sig);
         bubble.appendChild(body);
-        bubble.appendChild(sigRow);
+
+        if (!noSig) {
+            const sigRow = document.createElement('div');
+            sigRow.className = 'bubble-sig-row';
+
+            const sig = document.createElement('button');
+            sig.className = 'bubble-sig support-contact-sig';
+            sig.textContent = 'Оракул не решил мой вопрос';
+            sig.style.cssText = 'cursor:pointer;text-decoration:none;background:none;border:none;font:inherit;color:inherit;padding:0;opacity:0.7;'
+            sig.onclick = (e) => { e.stopPropagation(); openContactModal(); };
+
+            sigRow.appendChild(sig);
+            bubble.appendChild(sigRow);
+        }
+
         div.appendChild(bubble);
     } else {
         div.innerHTML = `<div class="bubble">${text.replace(/\n/g,'<br>')}</div>`;
@@ -2362,8 +2366,8 @@ document.getElementById('contactSubmitBtn').addEventListener('click', () => {
     if (state && state.sent) {
         // Close ticket
         localStorage.removeItem(KEY_CONTACT);
-        document.getElementById('contactOverlay').classList.remove('show');
-        addSupportMsg('Обращение закрыто.', 'ai');
+        closeContactModal();
+        addSupportMsg('Обращение закрыто.', 'ai', false, true);
     } else {
         const text = textarea.value.trim();
         if (!text) return;
@@ -2391,7 +2395,7 @@ document.getElementById('contactSubmitBtn').addEventListener('click', () => {
         btn.textContent = 'Закрыть обращение';
         btn.classList.add('close-mode');
 
-        addSupportMsg('Обращение принято. Команда рассмотрит его в ближайшее время.', 'ai');
+        addSupportMsg('Обращение принято. Команда рассмотрит его в ближайшее время.', 'ai', false, true);
     }
 });
 
@@ -2407,9 +2411,20 @@ document.getElementById('contactTextarea').addEventListener('input', () => {
 // Close contact modal on overlay click
 document.getElementById('contactOverlay').addEventListener('click', e => {
     if (e.target === document.getElementById('contactOverlay')) {
-        document.getElementById('contactOverlay').classList.remove('show');
+        closeContactModal();
     }
 });
+
+function closeContactModal() {
+    const modal = document.getElementById('contactModal');
+    const overlay = document.getElementById('contactOverlay');
+    if (!overlay.classList.contains('show')) return;
+    modal.style.animation = 'slideDown 0.35s cubic-bezier(0.4,0,0.2,1) forwards';
+    setTimeout(() => {
+        overlay.classList.remove('show');
+        modal.style.animation = '';
+    }, 350);
+}
 
 window.openContactModal = openContactModal;
 
