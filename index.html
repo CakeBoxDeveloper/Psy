@@ -1321,6 +1321,47 @@ window._fbLoadSupportChat = async (uid) => {
     } catch(e) { return null; }
 };
 
+// ── Gift subscriptions ────────────────────────────────────
+// Save pending gift by recipient email (no expiry yet)
+window._fbSaveGift = async (email, data) => {
+    if (!email) return;
+    try {
+        const key = email.toLowerCase().replace(/[^a-z0-9]/g, '_');
+        await setDoc(doc(db, 'gifts', key), {
+            ...data,
+            email: email.toLowerCase(),
+            claimed: false,
+            updatedAt: serverTimestamp()
+        });
+    } catch(e) { console.error('Save gift:', e); }
+};
+
+// Check and claim gift for a given email — called on login
+window._fbClaimGift = async (email) => {
+    if (!email) return null;
+    try {
+        const key = email.toLowerCase().replace(/[^a-z0-9]/g, '_');
+        const snap = await getDoc(doc(db, 'gifts', key));
+        if (!snap.exists()) return null;
+        const gift = snap.data();
+        if (gift.claimed) return null; // already used
+        return gift;
+    } catch(e) { console.error('Claim gift:', e); return null; }
+};
+
+// Mark gift as claimed
+window._fbMarkGiftClaimed = async (email, uid) => {
+    if (!email) return;
+    try {
+        const key = email.toLowerCase().replace(/[^a-z0-9]/g, '_');
+        await setDoc(doc(db, 'gifts', key), {
+            claimed: true,
+            claimedByUid: uid,
+            claimedAt: serverTimestamp()
+        }, { merge: true });
+    } catch(e) { console.error('Mark gift claimed:', e); }
+};
+
 // ── Auth state ────────────────────────────────────────────
 onAuthStateChanged(auth, user => {
     if (user) {
@@ -1367,6 +1408,37 @@ onAuthStateChanged(auth, user => {
                     localStorage.removeItem('soma_premium_expires');
                 }
             }).catch(() => {});
+
+            // ── Check for pending gift on this email ──
+            const userEmail = user.email;
+            if (userEmail && window._fbClaimGift) {
+                window._fbClaimGift(userEmail).then(gift => {
+                    if (!gift) return;
+                    // Gift found — activate now, start 30-day countdown from today
+                    const expires = Date.now() + (gift.durationDays || 30) * 24 * 60 * 60 * 1000;
+                    localStorage.setItem('soma_premium', '1');
+                    localStorage.setItem('soma_premium_expires', String(expires));
+                    localStorage.setItem('soma_premium_date', String(Date.now()));
+                    if (!isPremium) {
+                        isPremium = true;
+                        document.body.classList.add('is-premium');
+                        document.querySelectorAll('.ditem-star').forEach(el => el.style.display = 'none');
+                    }
+                    // Save to user's premium_status
+                    const premRef = doc(db, 'sessions', user.uid, 'list', 'premium_status');
+                    setDoc(premRef, {
+                        active: true,
+                        activatedAt: Date.now(),
+                        expiresAt: expires,
+                        txid: gift.txid || null,
+                        method: gift.method || 'gift',
+                        giftFrom: gift.fromUid || null,
+                        updatedAt: serverTimestamp()
+                    }, { merge: true });
+                    // Mark gift as claimed so it can't be reused
+                    window._fbMarkGiftClaimed(userEmail, user.uid);
+                }).catch(() => {});
+            }
         }
 
         // If on login screen — go to survey
