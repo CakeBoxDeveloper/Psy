@@ -100,6 +100,8 @@ body.flipping{overflow:hidden;}
 .fade-top{top:0;background:linear-gradient(to bottom,rgb(42,36,32),transparent);}
 .fade-bottom{bottom:0;background:linear-gradient(to top,rgb(42,36,32),transparent);}
 .fade-top.hidden,.fade-bottom.hidden{opacity:0;}
+.flipper.flipped .fade-top,
+.flipper.flipped .fade-bottom{opacity:0 !important;pointer-events:none;}
 .feat{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:8px;flex-shrink:0;}
 .feat-icon{width:14px;height:14px;flex-shrink:0;margin-top:2px;filter:brightness(0) saturate(100%) invert(82%) sepia(15%) saturate(300%) hue-rotate(340deg) brightness(103%);opacity:1;}
 .feat-text{font-size:12px;color:rgba(210,190,165,0.65);line-height:1.5;}
@@ -457,8 +459,30 @@ body.flipping{overflow:hidden;}
         <div class="pay-instruction">
           <div class="pay-instruction-step"><b>I.</b>Выбери удобную сеть и скопируй адрес кошелька.</div>
           <div class="pay-instruction-step"><b>II.</b>Нажми на поле «Сумма» — она скопируется. Переводи именно её: сумма уникальна и нужна для идентификации платежа.</div>
-          <div class="pay-instruction-step"><b>III.</b>Отправь транзакцию и подожди подтверждения сети.</div>
-          <div class="pay-instruction-note">Как только платёж пройдёт, подписка появится на аккаунте.</div>
+          <div class="pay-instruction-step"><b>III.</b>Отправь транзакцию и нажми кнопку ниже.</div>
+          <div class="pay-instruction-note">Проверка занимает до 30 секунд после подтверждения сети.</div>
+        </div>
+
+        <!-- Check payment button — only shown for TRC20 -->
+        <div id="checkPayWrap" style="width:100%;flex-shrink:0;margin-top:8px;display:none;">
+          <button id="checkPayBtn" onclick="startPaymentCheck()" style="
+            width:100%;height:42px;
+            background:rgba(80,50,25,0.12);
+            border:1px solid rgba(80,50,25,0.35);
+            border-radius:10px;
+            font-size:13px;font-weight:600;
+            color:rgb(55,38,22);
+            font-family:'Inter',sans-serif;
+            cursor:pointer;
+            transition:background 0.15s;
+            position:relative;overflow:hidden;
+          ">Я оплатил — проверить</button>
+          <div id="checkPayStatus" style="
+            text-align:center;font-size:11px;
+            color:rgba(55,38,22,0.5);
+            margin-top:6px;min-height:16px;
+            line-height:1.5;
+          "></div>
         </div>
       </div>
 
@@ -788,6 +812,148 @@ document.addEventListener('click', e => {
     const row = document.getElementById('giftRow');
     if (row.classList.contains('show') && !e.target.closest('.gift-wrap')) closeGift();
 });
+
+/* ── Payment checker ── */
+const API_BASE = 'https://panacea-ochre.vercel.app';
+const CHECK_INTERVAL_MS = 8000;  // poll every 8s
+const CHECK_MAX_ATTEMPTS = 15;   // give up after ~2 min
+
+let checkTimer = null;
+let checkAttempts = 0;
+let currentExpectedAmount = null;
+
+// Show/hide check button based on selected coin (only TRC20 supported for now)
+function updateCheckButton() {
+    const wrap = document.getElementById('checkPayWrap');
+    wrap.style.display = currentCoin === 'USDT_TRC20' ? 'block' : 'none';
+}
+
+// Extract numeric amount from displayed string like "5.03 USDT"
+function getNumericAmount() {
+    const raw = document.getElementById('fieldAmtVal').textContent || '';
+    const num = parseFloat(raw);
+    return isNaN(num) ? null : num;
+}
+
+function setCheckStatus(msg, color) {
+    const el = document.getElementById('checkPayStatus');
+    el.textContent = msg;
+    el.style.color = color || 'rgba(55,38,22,0.5)';
+}
+
+function setCheckBtnState(loading) {
+    const btn = document.getElementById('checkPayBtn');
+    btn.disabled = loading;
+    btn.textContent = loading ? 'Проверяем...' : 'Я оплатил — проверить';
+    btn.style.opacity = loading ? '0.6' : '1';
+    btn.style.cursor = loading ? 'not-allowed' : 'pointer';
+}
+
+async function doCheck() {
+    const address = WALLETS['USDT_TRC20'];
+    const amount = currentExpectedAmount;
+    const userRaw = localStorage.getItem('soma_user');
+    const user = userRaw ? JSON.parse(userRaw) : null;
+    const uid = user?.uid || 'guest';
+
+    try {
+        const resp = await fetch(`${API_BASE}/api/check-payment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ address, amount, uid })
+        });
+        const data = await resp.json();
+
+        if (data.paid) {
+            clearTimeout(checkTimer);
+            setCheckBtnState(false);
+            setCheckStatus('✓ Платёж подтверждён! Активируем подписку...', 'rgb(55,38,22)');
+            activatePremium(uid, data.txid);
+            return;
+        }
+
+        checkAttempts++;
+        if (checkAttempts >= CHECK_MAX_ATTEMPTS) {
+            clearTimeout(checkTimer);
+            setCheckBtnState(false);
+            setCheckStatus('Платёж не найден. Проверь сумму и сеть, затем попробуй снова.', 'rgba(180,60,40,0.8)');
+            return;
+        }
+
+        const remaining = CHECK_MAX_ATTEMPTS - checkAttempts;
+        setCheckStatus(`Ищем транзакцию... (ещё ${remaining} попыток)`, 'rgba(55,38,22,0.45)');
+        checkTimer = setTimeout(doCheck, CHECK_INTERVAL_MS);
+
+    } catch (err) {
+        console.error('[check-payment]', err);
+        checkAttempts++;
+        if (checkAttempts >= CHECK_MAX_ATTEMPTS) {
+            clearTimeout(checkTimer);
+            setCheckBtnState(false);
+            setCheckStatus('Ошибка соединения. Попробуй позже.', 'rgba(180,60,40,0.8)');
+            return;
+        }
+        checkTimer = setTimeout(doCheck, CHECK_INTERVAL_MS);
+    }
+}
+
+function startPaymentCheck() {
+    const amount = getNumericAmount();
+    if (!amount) {
+        setCheckStatus('Подожди, пока загрузится сумма.', 'rgba(180,60,40,0.8)');
+        return;
+    }
+
+    clearTimeout(checkTimer);
+    checkAttempts = 0;
+    currentExpectedAmount = amount;
+
+    setCheckBtnState(true);
+    setCheckStatus('Подключаемся к блокчейну...', 'rgba(55,38,22,0.45)');
+    doCheck();
+}
+
+function activatePremium(uid, txid) {
+    const expires = Date.now() + 30 * 24 * 60 * 60 * 1000;
+    localStorage.setItem('soma_premium', '1');
+    localStorage.setItem('soma_premium_expires', String(expires));
+    localStorage.setItem('soma_premium_date', String(Date.now()));
+
+    // Save to Firestore if logged in
+    const _userRaw = localStorage.getItem('soma_user');
+    const _user = _userRaw ? JSON.parse(_userRaw) : null;
+    if (_user && _user.uid && _user.p !== 'guest' && window._fbSaveSession) {
+        window._fbSaveSession(_user.uid, 'premium_status', {
+            active: true,
+            activatedAt: Date.now(),
+            expiresAt: expires,
+            txid: txid || null,
+            method: 'crypto_trc20'
+        });
+    }
+
+    setTimeout(() => {
+        setCheckStatus('Panacea Plus активирован!', 'rgb(55,38,22)');
+        setTimeout(() => {
+            const ov = document.getElementById('pageOverlay');
+            ov.classList.remove('hidden');
+            ov.classList.add('visible');
+            setTimeout(() => history.back(), 450);
+        }, 1500);
+    }, 500);
+}
+
+// Update check button visibility when coin changes
+document.querySelectorAll('.pay-option').forEach(opt => {
+    opt.addEventListener('click', () => setTimeout(updateCheckButton, 0));
+});
+
+// Also update when payment page opens
+const _origFlipToPayment = flipToPayment;
+window.flipToPayment = function(forGift) {
+    _origFlipToPayment(forGift);
+    setTimeout(updateCheckButton, 50);
+};
 
 // Beige favicon
 fetch('https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKey45.svg')
