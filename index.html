@@ -1148,6 +1148,17 @@ body.light .test-btn-reset:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,
 </div>
 </div>
 
+<!-- Gift received modal -->
+<div class="premium-overlay" id="giftReceivedOverlay">
+<div class="premium-modal" style="text-align:center;align-items:center;">
+    <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKeyGift.svg"
+         style="width:64px;height:64px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);" alt="">
+    <div class="premium-title">Panacea Plus</div>
+    <div class="premium-desc" id="giftReceivedDesc">Вам подарили подписку на месяц.</div>
+    <button class="premium-btn" onclick="document.getElementById('giftReceivedOverlay').classList.remove('show')">Хорошо</button>
+</div>
+</div>
+
 <!-- End session modal -->
 <!-- Delete session modal -->
 <div class="end-overlay" id="deleteSessionOverlay" style="z-index:700;">
@@ -1414,7 +1425,7 @@ onAuthStateChanged(auth, user => {
             if (userEmail && window._fbClaimGift) {
                 window._fbClaimGift(userEmail).then(gift => {
                     if (!gift) return;
-                    // Gift found — activate now, start 30-day countdown from today
+                    // Gift found — activate now, start countdown from today
                     const expires = Date.now() + (gift.durationDays || 30) * 24 * 60 * 60 * 1000;
                     localStorage.setItem('soma_premium', '1');
                     localStorage.setItem('soma_premium_expires', String(expires));
@@ -1424,7 +1435,7 @@ onAuthStateChanged(auth, user => {
                         document.body.classList.add('is-premium');
                         document.querySelectorAll('.ditem-star').forEach(el => el.style.display = 'none');
                     }
-                    // Save to user's premium_status
+                    // Save to user's premium_status in Firestore
                     const premRef = doc(db, 'sessions', user.uid, 'list', 'premium_status');
                     setDoc(premRef, {
                         active: true,
@@ -1435,8 +1446,17 @@ onAuthStateChanged(auth, user => {
                         giftFrom: gift.fromUid || null,
                         updatedAt: serverTimestamp()
                     }, { merge: true });
-                    // Mark gift as claimed so it can't be reused
+                    // Mark gift as claimed
                     window._fbMarkGiftClaimed(userEmail, user.uid);
+                    // Show gift modal with expiry date
+                    const expiryStr = new Date(expires).toLocaleDateString('ru-RU', {
+                        day: 'numeric', month: 'long', year: 'numeric'
+                    });
+                    const desc = document.getElementById('giftReceivedDesc');
+                    if (desc) desc.textContent = `Вам подарили подписку Panacea Plus на ${gift.durationDays || 30} дней. Она действует до ${expiryStr}.`;
+                    setTimeout(() => {
+                        document.getElementById('giftReceivedOverlay')?.classList.add('show');
+                    }, 800);
                 }).catch(() => {});
             }
         }
