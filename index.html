@@ -1418,47 +1418,44 @@ onAuthStateChanged(auth, user => {
                     localStorage.removeItem('soma_premium');
                     localStorage.removeItem('soma_premium_expires');
                 }
-            }).catch(() => {});
 
-            // ── Check for pending gift on this email ──
-            const userEmail = user.email;
-            if (userEmail && window._fbClaimGift) {
-                window._fbClaimGift(userEmail).then(gift => {
-                    if (!gift) return;
-                    // Gift found — activate now, start countdown from today
-                    const expires = Date.now() + (gift.durationDays || 30) * 24 * 60 * 60 * 1000;
-                    localStorage.setItem('soma_premium', '1');
-                    localStorage.setItem('soma_premium_expires', String(expires));
-                    localStorage.setItem('soma_premium_date', String(Date.now()));
-                    if (!isPremium) {
-                        isPremium = true;
-                        document.body.classList.add('is-premium');
-                        document.querySelectorAll('.ditem-star').forEach(el => el.style.display = 'none');
-                    }
-                    // Save to user's premium_status in Firestore
-                    const premRef = doc(db, 'sessions', user.uid, 'list', 'premium_status');
-                    setDoc(premRef, {
-                        active: true,
-                        activatedAt: Date.now(),
-                        expiresAt: expires,
-                        txid: gift.txid || null,
-                        method: gift.method || 'gift',
-                        giftFrom: gift.fromUid || null,
-                        updatedAt: serverTimestamp()
-                    }, { merge: true });
-                    // Mark gift as claimed
-                    window._fbMarkGiftClaimed(userEmail, user.uid);
-                    // Show gift modal with expiry date
-                    const expiryStr = new Date(expires).toLocaleDateString('ru-RU', {
-                        day: 'numeric', month: 'long', year: 'numeric'
-                    });
-                    const desc = document.getElementById('giftReceivedDesc');
-                    if (desc) desc.textContent = `Вам подарили подписку Panacea Plus на ${gift.durationDays || 30} дней. Она действует до ${expiryStr}.`;
-                    setTimeout(() => {
-                        document.getElementById('giftReceivedOverlay')?.classList.add('show');
-                    }, 800);
-                }).catch(() => {});
-            }
+                // ── Check for pending gift on this email ──
+                // Done INSIDE premium_status check to avoid race condition
+                const userEmail = user.email;
+                if (userEmail && window._fbClaimGift) {
+                    window._fbClaimGift(userEmail).then(gift => {
+                        if (!gift) return;
+                        const expires = Date.now() + (gift.durationDays || 30) * 24 * 60 * 60 * 1000;
+                        localStorage.setItem('soma_premium', '1');
+                        localStorage.setItem('soma_premium_expires', String(expires));
+                        localStorage.setItem('soma_premium_date', String(Date.now()));
+                        if (!isPremium) {
+                            isPremium = true;
+                            document.body.classList.add('is-premium');
+                            document.querySelectorAll('.ditem-star').forEach(el => el.style.display = 'none');
+                        }
+                        const premRef2 = doc(db, 'sessions', user.uid, 'list', 'premium_status');
+                        setDoc(premRef2, {
+                            active: true,
+                            activatedAt: Date.now(),
+                            expiresAt: expires,
+                            txid: gift.txid || null,
+                            method: gift.method || 'gift',
+                            giftFrom: gift.fromUid || null,
+                            updatedAt: serverTimestamp()
+                        }, { merge: true });
+                        window._fbMarkGiftClaimed(userEmail, user.uid);
+                        const expiryStr = new Date(expires).toLocaleDateString('ru-RU', {
+                            day: 'numeric', month: 'long', year: 'numeric'
+                        });
+                        const desc = document.getElementById('giftReceivedDesc');
+                        if (desc) desc.textContent = `Вам подарили подписку Panacea Plus на ${gift.durationDays || 30} дней. Она действует до ${expiryStr}.`;
+                        setTimeout(() => {
+                            document.getElementById('giftReceivedOverlay')?.classList.add('show');
+                        }, 800);
+                    }).catch(() => {});
+                }
+            }).catch(() => {});
         }
 
         // If on login screen — go to survey
