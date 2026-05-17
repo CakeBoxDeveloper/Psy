@@ -408,7 +408,7 @@ body.flipping{overflow:hidden;}
         <div class="pay-order-period">1 месяц</div>
       </div>
 
-      <div class="pay-label" id="payLabel">Выбери удобный способ оплаты подписки <span id="donatToggle" onclick="enterDonatMode()" style="cursor:pointer;opacity:0.5;">или пожертвования</span></div>
+      <div class="pay-label" id="payLabel" style="display:flex;justify-content:space-between;align-items:center;">Выбери удобный способ оплаты подписки <span id="donatToggle" onclick="enterDonatMode()" style="cursor:pointer;opacity:0.5;white-space:nowrap;">или пожертвования</span></div>
       <div class="pay-select-wrap" id="paySelectWrap">
         <div class="pay-select-trigger" id="payTrigger" onclick="toggleDropdown()">
           <span id="payTriggerText">USDT — TRC-20 (Tron)</span>
@@ -868,7 +868,8 @@ function exitDonatMode() {
 
     // Restore label
     document.getElementById('payLabel').innerHTML =
-        'Выбери удобный способ оплаты подписки <span id="donatToggle" onclick="enterDonatMode()" style="cursor:pointer;opacity:0.5;">или пожертвования</span>';
+        'Выбери удобный способ оплаты подписки <span id="donatToggle" onclick="enterDonatMode()" style="cursor:pointer;opacity:0.5;white-space:nowrap;">или пожертвования</span>';
+    document.getElementById('payLabel').style.cssText = 'display:flex;justify-content:space-between;align-items:center;';
 
     _donatTransition(() => {
         // Restore fields
