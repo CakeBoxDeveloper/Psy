@@ -48,7 +48,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 }
 .gift-logo-glow{animation:giftLogoGlow 2s ease-in-out infinite;}
 @keyframes giftBorderShimmer{0%{left:-100%;}65%,100%{left:150%;}}
-.gift-info-shimmer{position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.6) 50%,transparent 80%);animation:giftBorderShimmer 3s ease-in-out infinite;z-index:2;pointer-events:none;}
+.gift-modal-shimmer{position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.6) 50%,transparent 80%);animation:giftBorderShimmer 3s ease-in-out infinite;z-index:2;pointer-events:none;}
 
 /* Carousel */
 .carousel-wrap{width:100%;height:100%;background:rgb(28,23,20);overflow:hidden;position:relative;}
@@ -1158,27 +1158,27 @@ body.light .test-btn-reset:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,
 
 <!-- Gift received modal -->
 <div class="premium-overlay" id="giftReceivedOverlay">
-<div class="premium-modal" style="text-align:center;align-items:center;gap:16px;">
-    <!-- Logo with animated drop-shadow glow -->
-    <div style="display:flex;align-items:center;justify-content:center;width:72px;height:72px;">
-        <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKeyGift.svg"
-             class="gift-logo-glow"
-             style="width:56px;height:56px;" alt="">
-    </div>
-    <!-- Title -->
-    <div class="premium-title" style="font-size:22px;">Panacea Plus</div>
-    <!-- Info block -->
-    <div style="width:100%;position:relative;border-radius:8px;padding:1px;background:linear-gradient(105deg,rgba(210,190,165,0.15),rgba(210,190,165,0.4),rgba(210,190,165,0.15));overflow:hidden;">
-        <div class="gift-info-shimmer"></div>
-        <div style="background:rgba(255,255,255,0.06);border-radius:7px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;text-align:left;position:relative;z-index:1;">
-            <div style="font-size:13px;color:rgba(210,190,165,1);font-weight:700;width:100%;">Вам подарили подписку Panacea Plus</div>
+<div style="position:relative;border-radius:13px;padding:1px;background:linear-gradient(105deg,rgba(210,190,165,0.15),rgba(210,190,165,0.45),rgba(210,190,165,0.15));overflow:hidden;width:80%;max-width:340px;">
+    <div class="gift-modal-shimmer"></div>
+    <div class="premium-modal" style="text-align:center;align-items:center;gap:16px;border-radius:12px;position:relative;z-index:1;">
+        <!-- Logo with animated drop-shadow glow -->
+        <div style="display:flex;align-items:center;justify-content:center;width:72px;height:72px;">
+            <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKeyGift.svg"
+                 class="gift-logo-glow"
+                 style="width:56px;height:56px;" alt="">
+        </div>
+        <!-- Title -->
+        <div class="premium-title" style="font-size:22px;">Panacea Plus</div>
+        <!-- Info block — no shimmer, plain -->
+        <div style="width:100%;background:rgba(255,255,255,0.06);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;text-align:left;">
+            <div style="font-size:13px;color:rgba(210,190,165,1);font-weight:700;width:100%;text-align:left;display:block;">Вам подарили подписку Panacea Plus</div>
             <div id="giftReceivedDesc" style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:rgba(210,190,165,0.5);"></div>
         </div>
+        <button class="premium-btn" onclick="document.getElementById('giftReceivedOverlay').classList.remove('show')" style="position:relative;overflow:hidden;width:100%;">
+            <div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.18) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;pointer-events:none;"></div>
+            Хорошо
+        </button>
     </div>
-    <button class="premium-btn" onclick="document.getElementById('giftReceivedOverlay').classList.remove('show')" style="position:relative;overflow:hidden;width:100%;">
-        <div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.18) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;pointer-events:none;"></div>
-        Хорошо
-    </button>
 </div>
 </div>
 
