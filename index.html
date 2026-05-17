@@ -1420,7 +1420,7 @@ onAuthStateChanged(auth, user => {
                 }
 
                 // ── Check for pending gift on this email ──
-                // Done INSIDE premium_status check to avoid race condition
+                // Runs in both branches (active/inactive/no doc)
                 const userEmail = user.email;
                 if (userEmail && window._fbClaimGift) {
                     window._fbClaimGift(userEmail).then(gift => {
