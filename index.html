@@ -1378,7 +1378,7 @@ onAuthStateChanged(auth, user => {
     if (user) {
         const p = user.isAnonymous ? 'guest'
                 : user.providerData[0]?.providerId === 'apple.com' ? 'apple' : 'google';
-        localStorage.setItem('soma_user', JSON.stringify({ uid: user.uid, p, ts: Date.now() }));
+        localStorage.setItem('soma_user', JSON.stringify({ uid: user.uid, p, email: user.email || null, ts: Date.now() }));
 
         // Загружаем premium_status из Firestore при каждом входе
         if (!user.isAnonymous) {
@@ -1422,6 +1422,7 @@ onAuthStateChanged(auth, user => {
                 // ── Check for pending gift on this email ──
                 // Runs in both branches (active/inactive/no doc)
                 const userEmail = user.email;
+                console.log('[Gift check] user.email:', userEmail);
                 if (userEmail && window._fbClaimGift) {
                     window._fbClaimGift(userEmail).then(gift => {
                         if (!gift) return;
