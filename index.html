@@ -1158,12 +1158,12 @@ body.light .test-btn-reset:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,
 
 <!-- Gift received modal -->
 <div class="premium-overlay" id="giftReceivedOverlay">
-<div style="position:relative;border-radius:13px;padding:1px;overflow:hidden;width:80%;max-width:340px;">
+<div style="position:relative;border-radius:13px;padding:1px;overflow:hidden;width:80%;max-width:340px;isolation:isolate;">
     <!-- Animated border gradient -->
-    <div style="position:absolute;inset:0;border-radius:13px;background:linear-gradient(105deg,rgba(210,190,165,0.1),rgba(210,190,165,0.5),rgba(210,190,165,0.1));z-index:0;"></div>
-    <!-- Shimmer on border only -->
-    <div style="position:absolute;inset:0;border-radius:13px;overflow:hidden;z-index:0;pointer-events:none;">
-        <div style="position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.7) 50%,transparent 80%);animation:giftBorderShimmer 3s ease-in-out infinite;"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(210,190,165,0.1),rgba(210,190,165,0.5),rgba(210,190,165,0.1));z-index:0;pointer-events:none;"></div>
+    <!-- Shimmer sweep -->
+    <div style="position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none;border-radius:13px;">
+        <div style="position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.65) 50%,transparent 80%);animation:giftBorderShimmer 3s ease-in-out infinite;"></div>
     </div>
     <!-- Modal content -->
     <div class="premium-modal" style="text-align:center;align-items:center;gap:16px;border-radius:12px;position:relative;z-index:1;">
