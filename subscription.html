@@ -408,7 +408,7 @@ body.flipping{overflow:hidden;}
         <div class="pay-order-period">1 месяц</div>
       </div>
 
-      <div class="pay-label">Выбери удобный способ оплаты подписки</div>
+      <div class="pay-label" id="payLabel">Выбери удобный способ оплаты подписки <span id="donatToggle" onclick="enterDonatMode()" style="cursor:pointer;text-decoration:underline;text-underline-offset:2px;opacity:0.6;">или доната</span></div>
       <div class="pay-select-wrap" id="paySelectWrap">
         <div class="pay-select-trigger" id="payTrigger" onclick="toggleDropdown()">
           <span id="payTriggerText">USDT — TRC-20 (Tron)</span>
@@ -433,8 +433,6 @@ body.flipping{overflow:hidden;}
           <div class="pay-option" data-value="LTC">LTC — Litecoin</div>
           <div class="pay-option" data-value="XRP">XRP — Ripple</div>
           <div class="pay-option" data-value="DOGE">DOGE — Dogecoin</div>
-          <div class="pay-optgroup-label">Тест</div>
-          <div class="pay-option" data-value="TRX_TEST">TRX — тест (0.5 TRX)</div>
         </div>
       </div>
 
@@ -458,7 +456,7 @@ body.flipping{overflow:hidden;}
             <div class="pay-field-value" id="fieldAmtVal">—</div>
           </div>
         </div>
-        <div class="pay-instruction">
+        <div class="pay-instruction" id="payInstruction">
           <div class="pay-instruction-step"><b>I.</b>Выбери удобную сеть и скопируй адрес кошелька.</div>
           <div class="pay-instruction-step"><b>II.</b>Нажми на поле «Сумма» — она скопируется. Переводи именно её: сумма уникальна и нужна для идентификации платежа.</div>
           <div class="pay-instruction-step"><b>III.</b>Отправь транзакцию и нажми кнопку ниже.</div>
@@ -476,6 +474,11 @@ body.flipping{overflow:hidden;}
               text-align:center;
             ">Проверить оплату</button>
           </div>
+        </div>
+        <div class="pay-instruction" id="donatInstruction" style="display:none;">
+          <div class="pay-instruction-step"><b>I.</b>Скопируй адрес кошелька.</div>
+          <div class="pay-instruction-step"><b>II.</b>Отправь любую сумму — каждый донат помогает проекту развиваться.</div>
+          <div class="pay-instruction-step"><b>III.</b>Спасибо, что поддерживаешь Panacea.</div>
         </div>
 
         <!-- Result message below instruction block -->
@@ -823,6 +826,61 @@ document.addEventListener('click', e => {
     const row = document.getElementById('giftRow');
     if (row.classList.contains('show') && !e.target.closest('.gift-wrap')) closeGift();
 });
+
+/* ── Donat mode ── */
+let isDonatMode = false;
+
+function enterDonatMode() {
+    isDonatMode = true;
+
+    // Label
+    const label = document.getElementById('payLabel');
+    label.innerHTML = '<span id="donatToggle" onclick="exitDonatMode()" style="cursor:pointer;text-decoration:underline;text-underline-offset:2px;opacity:0.6;">Вернуться к выбору подписки</span>';
+
+    // Hide dropdown
+    document.getElementById('paySelectWrap').style.display = 'none';
+
+    // Hide amount field, stretch address to full width
+    const fieldAmt = document.getElementById('fieldAmt');
+    const fieldAddr = document.getElementById('fieldAddr');
+    fieldAmt.style.display = 'none';
+    fieldAddr.style.flex = '1 1 100%';
+
+    // Swap instructions
+    document.getElementById('payInstruction').style.display = 'none';
+    document.getElementById('donatInstruction').style.display = '';
+
+    // Hide check button
+    document.getElementById('checkPayWrap').style.display = 'none';
+
+    // Update QR to current address
+    const addr = document.getElementById('fieldAddrVal').textContent;
+    if (addr && addr !== '—') drawQR(addr);
+}
+
+function exitDonatMode() {
+    isDonatMode = false;
+
+    // Restore label
+    document.getElementById('payLabel').innerHTML =
+        'Выбери удобный способ оплаты подписки <span id="donatToggle" onclick="enterDonatMode()" style="cursor:pointer;text-decoration:underline;text-underline-offset:2px;opacity:0.6;">или доната</span>';
+
+    // Show dropdown
+    document.getElementById('paySelectWrap').style.display = '';
+
+    // Restore fields
+    const fieldAmt = document.getElementById('fieldAmt');
+    const fieldAddr = document.getElementById('fieldAddr');
+    fieldAmt.style.display = '';
+    fieldAddr.style.flex = '';
+
+    // Swap instructions back
+    document.getElementById('payInstruction').style.display = '';
+    document.getElementById('donatInstruction').style.display = 'none';
+
+    // Restore check button visibility
+    updateCheckButton();
+}
 
 /* ── Payment checker ── */
 const API_BASE = 'https://panacea-ochre.vercel.app';
