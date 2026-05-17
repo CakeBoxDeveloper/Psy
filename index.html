@@ -41,6 +41,7 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
 .modal{width:75%;max-width:380px;background:rgba(20,20,20,0.6);border:none;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.7);display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:28px 24px 24px;gap:20px;animation:fadeIn 0.6s ease-out forwards;}
 @keyframes fadeIn{from{opacity:0;filter:blur(8px);transform:translateY(12px);}to{opacity:1;filter:blur(0);transform:translateY(0);}}
 @keyframes shimmer{0%{left:-120%;}65%,100%{left:180%;}}
+@keyframes giftGlow{0%,100%{transform:scale(1);opacity:0.6;}50%{transform:scale(1.15);opacity:1;}}
 
 /* Carousel */
 .carousel-wrap{width:100%;height:100%;background:rgb(28,23,20);overflow:hidden;position:relative;}
@@ -1150,12 +1151,21 @@ body.light .test-btn-reset:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,
 
 <!-- Gift received modal -->
 <div class="premium-overlay" id="giftReceivedOverlay">
-<div class="premium-modal" style="text-align:center;align-items:center;">
-    <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKeyGift.svg"
-         style="width:64px;height:64px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);" alt="">
-    <div class="premium-title">Panacea Plus</div>
-    <div class="premium-desc" id="giftReceivedDesc">Вам подарили подписку на месяц.</div>
-    <button class="premium-btn" onclick="document.getElementById('giftReceivedOverlay').classList.remove('show')">Хорошо</button>
+<div class="premium-modal" style="text-align:center;align-items:center;gap:14px;">
+    <div style="position:relative;display:flex;align-items:center;justify-content:center;width:80px;height:80px;">
+        <div style="position:absolute;inset:0;border-radius:50%;animation:giftGlow 2.2s ease-in-out infinite;box-shadow:0 0 18px 6px rgba(210,190,165,0.5);"></div>
+        <div style="position:absolute;inset:-8px;border-radius:50%;animation:giftGlow 2.2s ease-in-out infinite 0.7s;box-shadow:0 0 28px 10px rgba(210,190,165,0.2);"></div>
+        <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/Psy/a1bdd4590d87398e75ae73f50af1119c5faf306c/PanaceaKeyGift.svg"
+             style="width:56px;height:56px;filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(100%);position:relative;z-index:1;" alt="">
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+        <div class="premium-title" style="font-size:18px;line-height:1.4;">Вам подарили подписку<br><strong>Panacea Plus</strong></div>
+    </div>
+    <div id="giftReceivedDesc" style="width:100%;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgba(210,190,165,0.65);padding:8px 12px;background:rgba(255,255,255,0.05);border-radius:8px;"></div>
+    <button class="premium-btn" onclick="document.getElementById('giftReceivedOverlay').classList.remove('show')" style="position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:-120%;width:120%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(210,190,165,0.18) 50%,transparent 80%);animation:shimmer 4.5s ease-in-out infinite;pointer-events:none;"></div>
+        Хорошо
+    </button>
 </div>
 </div>
 
@@ -1422,7 +1432,6 @@ onAuthStateChanged(auth, user => {
                 // ── Check for pending gift on this email ──
                 // Runs in both branches (active/inactive/no doc)
                 const userEmail = user.email;
-                console.log('[Gift check] user.email:', userEmail);
                 if (userEmail && window._fbClaimGift) {
                     window._fbClaimGift(userEmail).then(gift => {
                         if (!gift) return;
@@ -1450,7 +1459,7 @@ onAuthStateChanged(auth, user => {
                             day: 'numeric', month: 'long', year: 'numeric'
                         });
                         const desc = document.getElementById('giftReceivedDesc');
-                        if (desc) desc.textContent = `Вам подарили подписку Panacea Plus на ${gift.durationDays || 30} дней. Она действует до ${expiryStr}.`;
+                        if (desc) desc.innerHTML = `<span>Дата окончания</span><span>${expiryStr}</span>`;
                         setTimeout(() => {
                             document.getElementById('giftReceivedOverlay')?.classList.add('show');
                         }, 800);
