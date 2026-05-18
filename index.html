@@ -47,7 +47,10 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
     50%{filter:invert(82%) sepia(12%) saturate(250%) hue-rotate(5deg) brightness(110%) drop-shadow(0 6px 16px rgba(210,190,165,0.7));}
 }
 .gift-logo-glow{animation:giftLogoGlow 2s ease-in-out infinite;}
-@keyframes giftBorderShimmer{0%{background-position:-200% 0;}100%{background-position:200% 0;}}
+@keyframes giftBorderShimmer{
+    0%{background-position:0% 0%;}
+    100%{background-position:100% 100%;}
+}
 .gift-modal{
     border:none;
     overflow:visible;
@@ -55,22 +58,26 @@ html,body{width:100%;height:100%;background:#000;display:flex;justify-content:ce
     isolation:isolate;
 }
 .gift-modal > *{position:relative;z-index:1;}
-/* Border shimmer via ::before as the border layer */
 .gift-modal::before{
     content:'';
     position:absolute;
     inset:-1.5px;
     border-radius:inherit;
     padding:1.5px;
-    background:linear-gradient(105deg,
-        rgba(210,190,165,0.15) 0%,
-        rgba(210,190,165,0.15) 35%,
-        rgba(210,190,165,0.9) 50%,
-        rgba(210,190,165,0.15) 65%,
-        rgba(210,190,165,0.15) 100%
+    background:linear-gradient(
+        135deg,
+        rgba(210,190,165,0.12) 0%,
+        rgba(210,190,165,0.12) 20%,
+        rgba(210,190,165,0.12) 40%,
+        rgba(210,190,165,0.85) 48%,
+        rgba(255,245,230,1) 50%,
+        rgba(210,190,165,0.85) 52%,
+        rgba(210,190,165,0.12) 60%,
+        rgba(210,190,165,0.12) 80%,
+        rgba(210,190,165,0.12) 100%
     );
-    background-size:200% 100%;
-    animation:giftBorderShimmer 3s ease-in-out infinite;
+    background-size:400% 400%;
+    animation:giftBorderShimmer 6s linear infinite;
     -webkit-mask:
         linear-gradient(#fff 0 0) content-box,
         linear-gradient(#fff 0 0);
@@ -1194,8 +1201,8 @@ body.light .test-btn-reset:hover{background:rgba(60,45,35,0.15);color:rgb(40,28,
              class="gift-logo-glow" style="width:56px;height:56px;" alt="">
     </div>
     <div class="premium-title" style="font-size:22px;">Panacea Plus</div>
-    <div style="width:100%;background:rgba(255,255,255,0.06);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;">
-        <div style="font-size:13px;color:rgba(210,190,165,1);font-weight:700;text-align:left;width:100%;">Вам подарили подписку Panacea Plus</div>
+    <div style="align-self:stretch;background:rgba(255,255,255,0.06);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;">
+        <div style="font-size:13px;color:rgba(210,190,165,1);font-weight:700;text-align:left;">Вам подарили подписку Panacea Plus</div>
         <div id="giftReceivedDesc" style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:rgba(210,190,165,0.5);"></div>
     </div>
     <button class="premium-btn" onclick="document.getElementById('giftReceivedOverlay').classList.remove('show')" style="position:relative;overflow:hidden;width:100%;">
